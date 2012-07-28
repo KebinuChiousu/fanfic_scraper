@@ -143,7 +143,9 @@ Module ModOleDB
 
 
         'Initialize Debug Console
-        Initialize(frmDebug, forms.frmDebug)
+        Initialize( _
+                    forms.frmDebug _
+                  )
         'Update Data in Debug Console
         frmDebug.UpdateDBData(ds)
 
@@ -173,7 +175,9 @@ Module ModOleDB
 
 
         'Initialize Debug Console
-        Initialize(frmDebug, forms.frmDebug)
+        Initialize( _
+                    forms.frmDebug _
+                  )
         'Update Data in Debug Console
         frmDebug.UpdateDBData(ds)
 

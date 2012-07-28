@@ -9,25 +9,31 @@ Module FormManagement
     End Enum
 
     Sub Initialize( _
-                    ByRef frm As System.Windows.Forms.Form, _
                     ByVal cls As forms _
                   )
 
+        Dim frm As Object
+
+        frm = Nothing
+
+        Select Case cls
+            Case forms.frmDebug
+                frm = frmDebug
+        End Select
+
         If Not IsNothing(frm) Then
             If frm.IsDisposed Then
-                frm = CreateForm(cls)
+                CreateForm(cls)
             End If
         Else
-            frm = CreateForm(cls)
+            CreateForm(cls)
         End If
 
     End Sub
 
-    Function CreateForm( _
-                         ByVal cls As forms _
-                       ) As Form
-
-        CreateForm = Nothing
+    Sub CreateForm( _
+                    ByVal cls As forms _
+                  )
 
         Select Case cls
 
@@ -40,14 +46,11 @@ Module FormManagement
                 ' #################################
             Case forms.frmDebug
                 'Create an Instance of class frmDebug
-
-                CreateForm = New Debug
-
-
+                frmDebug = New Debug
 
         End Select
 
-    End Function
+    End Sub
 
     Sub PlaceDebugWindow()
         frmDebug.Top = frmMain.Top + 168 + 35

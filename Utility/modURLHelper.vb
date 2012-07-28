@@ -15,7 +15,7 @@ Module URLHelper
         Dim intPos1 As Integer
         Dim intPos2 As Integer
 
-        Dim retURL As URL
+        Dim retURL As New URL
 
         '1 look for a scheme it ends with ://
         intPos1 = InStr(strUrl, "://")

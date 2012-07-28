@@ -44,7 +44,7 @@ Retry:
             Dim oHttp As HttpWebRequest = System.Net.HttpWebRequest.Create(URL)
             Dim objResponse As HttpWebResponse
 
-            oHttp.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.5) Gecko/20070713 Firefox/2.0.0.5"
+            oHttp.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2"
             oHttp.Method = "GET"
             oHttp.Timeout = 360000
             objResponse = oHttp.GetResponse
@@ -69,8 +69,11 @@ Retry:
                     GoTo retry
                 Case "The underlying connection was closed: The server committed an HTTP protocol violation."
                     GoTo retry
+                Case "Unable to read data from the transport connection: The connection was closed."
+                    GoTo retry
                 Case Else
                     If InStr(ex.Message, "503") Then GoTo retry
+                    If InStr(ex.Message, "502") Then GoTo retry
                     Throw New System.Exception(ex.Message, ex)
             End Select
         End Try

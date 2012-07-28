@@ -32,13 +32,20 @@ Public Class IniFileReader
     Private m_CaseSensitive As Boolean = False
     Private m_SaveFilename As String
     Private m_initialized As Boolean = False
+
     Public Sub New(ByVal IniFilename As String)
         InitIniFileReader(IniFilename, False)
     End Sub
+
     Public Sub New(ByVal IniFilename As String, ByVal IsCaseSensitive As Boolean)
         InitIniFileReader(IniFilename, IsCaseSensitive)
     End Sub
-    Private Sub InitIniFileReader(ByVal IniFilename As String, ByVal IsCaseSensitive As Boolean)
+
+    Private Sub _
+    InitIniFileReader( _
+                       ByVal IniFilename As String, _
+                       ByVal IsCaseSensitive As Boolean _
+                     )
         Dim fi As FileInfo
         Dim s As String
         Dim tr As TextReader = Nothing
@@ -48,16 +55,20 @@ Public Class IniFileReader
         If ((IniFilename Is Nothing) OrElse (IniFilename.Trim() = "")) Then
             Return
         End If
+
         ' try to load the file as an XML file
         Try
             m_XmlDoc.Load(IniFilename)
             UpdateSections()
             m_IniFilename = IniFilename
             m_initialized = True
-
         Catch
             ' load the default XML
-            m_XmlDoc.LoadXml("<?xml version=""1.0"" encoding=""UTF-8""?><sections></sections>")
+            Dim xml As String
+            xml = "<?xml version=""1.0"" encoding=""UTF-8""?>"
+            xml += "<sections></sections>"
+            m_XmlDoc.LoadXml(xml)
+
             Try
                 fi = New FileInfo(IniFilename)
                 If (fi.Exists) Then
@@ -83,6 +94,7 @@ Public Class IniFileReader
             End Try
         End Try
     End Sub
+
     Public ReadOnly Property IniFilename() As String
         Get
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
@@ -511,26 +523,30 @@ Public Class IniFileReader
         If Not Initialized Then Throw New IniFileReaderNotInitializedException
         Try
 
-
             ' Create the XsltSettings object with script enabled.
-            'Dim settings As New XsltSettings(False, True)
+            Dim settings As New XsltSettings(True, True)
 
             ' Execute the transform.
-            'Dim xsl As New XslCompiledTransform()
+            Dim xsl As New XslCompiledTransform()
 
-            Dim xsl As XslTransform = New XslTransform
-            Xsl.Load(Application.StartupPath & "\\XMLToIni.xslt")
+            xsl.Load( _
+                      Application.StartupPath & "\\XMLToIni.xslt", _
+                      settings, _
+                      New XmlUrlResolver _
+                    )
 
-            'xsl.Load(Application.StartupPath & "\\XMLToIni.xslt", settings, New XmlUrlResolver)
             Dim sb As StringBuilder = New StringBuilder
             Dim sw As StringWriter = New StringWriter(sb)
-            xsl.Transform(m_XmlDoc, Nothing, sw)
+
+            xsl.Transform(New XmlNodeReader(m_XmlDoc), Nothing, sw)
+
             sw.Close()
             Return sb.ToString
         Catch e As Exception
             MessageBox.Show(e.Message)
             Return Nothing
         End Try
+
     End Function
 
     Public Sub SaveAsIniFile()
@@ -545,26 +561,36 @@ Public Class IniFileReader
                 fi.Delete()
                 Dim encUTF8 As Encoding = Encoding.UTF8
                 Dim sr As StreamReader
-                sr = New StreamReader(StringToStream(AsIniFile()))
                 Dim sw As StreamWriter
-                sw = New StreamWriter(OutputFilename, _
-                                       False, encUTF8)
-                sw.Write(sr.ReadToEnd)
-                sr.Close()
-                sw.Close()
-                sr = Nothing
-                sw = Nothing
 
+                Try
+                    sr = New StreamReader(StringToStream(AsIniFile()))
+                    sw = New StreamWriter(OutputFilename, _
+                                           False, encUTF8)
+                    sw.Write(sr.ReadToEnd)
+
+                    sr.Close()
+                    sw.Close()
+                Catch
+                Finally
+                    sr = Nothing
+                    sw = Nothing
+                End Try
             End If
         End If
     End Sub
 
     Private Function StringToStream(ByVal data As String) As Stream
 
-        Dim bytes As Byte() = System.Text.Encoding.UTF8.GetBytes(data)
-        Dim ms As MemoryStream = New MemoryStream(bytes)
+        If data <> "" Then
+            Dim bytes As Byte() = System.Text.Encoding.UTF8.GetBytes(data)
+            Dim ms As MemoryStream = New MemoryStream(bytes)
 
-        Return CType(ms, Stream)
+            Return CType(ms, Stream)
+        Else
+            Return Nothing
+        End If
+
 
     End Function
 

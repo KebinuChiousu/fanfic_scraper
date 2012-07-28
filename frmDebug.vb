@@ -71,21 +71,21 @@ Public Class Debug
         Me.grdData.HeaderForeColor = System.Drawing.SystemColors.ControlText
         Me.grdData.Location = New System.Drawing.Point(7, 7)
         Me.grdData.Name = "grdData"
-        Me.grdData.Size = New System.Drawing.Size(656, 177)
+        Me.grdData.Size = New System.Drawing.Size(656, 127)
         Me.grdData.TabIndex = 27
         '
         'grdDB
         '
         Me.grdDB.DataMember = ""
         Me.grdDB.HeaderForeColor = System.Drawing.SystemColors.ControlText
-        Me.grdDB.Location = New System.Drawing.Point(7, 187)
+        Me.grdDB.Location = New System.Drawing.Point(7, 140)
         Me.grdDB.Name = "grdDB"
         Me.grdDB.Size = New System.Drawing.Size(655, 176)
         Me.grdDB.TabIndex = 29
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(560, 367)
+        Me.Button3.Location = New System.Drawing.Point(562, 322)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(100, 21)
         Me.Button3.TabIndex = 31
@@ -93,7 +93,7 @@ Public Class Debug
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(560, 388)
+        Me.Button4.Location = New System.Drawing.Point(562, 343)
         Me.Button4.Name = "Button4"
         Me.Button4.Size = New System.Drawing.Size(100, 21)
         Me.Button4.TabIndex = 32
@@ -102,14 +102,14 @@ Public Class Debug
         'cmbSearch
         '
         Me.cmbSearch.Items.AddRange(New Object() {"Title", "Author", "Folder"})
-        Me.cmbSearch.Location = New System.Drawing.Point(330, 385)
+        Me.cmbSearch.Location = New System.Drawing.Point(332, 340)
         Me.cmbSearch.Name = "cmbSearch"
         Me.cmbSearch.Size = New System.Drawing.Size(84, 21)
         Me.cmbSearch.TabIndex = 33
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(330, 368)
+        Me.Label1.Location = New System.Drawing.Point(332, 323)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(80, 14)
         Me.Label1.TabIndex = 34
@@ -117,7 +117,7 @@ Public Class Debug
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(420, 369)
+        Me.Button1.Location = New System.Drawing.Point(422, 324)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(64, 42)
         Me.Button1.TabIndex = 35
@@ -125,7 +125,7 @@ Public Class Debug
         '
         'Button5
         '
-        Me.Button5.Location = New System.Drawing.Point(490, 369)
+        Me.Button5.Location = New System.Drawing.Point(492, 324)
         Me.Button5.Name = "Button5"
         Me.Button5.Size = New System.Drawing.Size(64, 42)
         Me.Button5.TabIndex = 36
@@ -133,7 +133,7 @@ Public Class Debug
         '
         'Button6
         '
-        Me.Button6.Location = New System.Drawing.Point(64, 368)
+        Me.Button6.Location = New System.Drawing.Point(66, 323)
         Me.Button6.Name = "Button6"
         Me.Button6.Size = New System.Drawing.Size(106, 21)
         Me.Button6.TabIndex = 37
@@ -141,7 +141,7 @@ Public Class Debug
         '
         'Button7
         '
-        Me.Button7.Location = New System.Drawing.Point(64, 388)
+        Me.Button7.Location = New System.Drawing.Point(66, 343)
         Me.Button7.Name = "Button7"
         Me.Button7.Size = New System.Drawing.Size(106, 21)
         Me.Button7.TabIndex = 38
@@ -149,7 +149,7 @@ Public Class Debug
         '
         'btnPath
         '
-        Me.btnPath.Location = New System.Drawing.Point(8, 368)
+        Me.btnPath.Location = New System.Drawing.Point(10, 323)
         Me.btnPath.Name = "btnPath"
         Me.btnPath.Size = New System.Drawing.Size(48, 40)
         Me.btnPath.TabIndex = 39
@@ -158,7 +158,7 @@ Public Class Debug
         'btnSave
         '
         Me.btnSave.Enabled = False
-        Me.btnSave.Location = New System.Drawing.Point(184, 368)
+        Me.btnSave.Location = New System.Drawing.Point(186, 323)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(72, 40)
         Me.btnSave.TabIndex = 40
@@ -171,7 +171,7 @@ Public Class Debug
         'btnSearch
         '
         Me.btnSearch.Enabled = False
-        Me.btnSearch.Location = New System.Drawing.Point(262, 368)
+        Me.btnSearch.Location = New System.Drawing.Point(264, 323)
         Me.btnSearch.Name = "btnSearch"
         Me.btnSearch.Size = New System.Drawing.Size(62, 40)
         Me.btnSearch.TabIndex = 41
@@ -180,7 +180,7 @@ Public Class Debug
         'Debug
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(665, 416)
+        Me.ClientSize = New System.Drawing.Size(665, 376)
         Me.Controls.Add(Me.btnSearch)
         Me.Controls.Add(Me.btnSave)
         Me.Controls.Add(Me.btnPath)
@@ -228,9 +228,12 @@ Public Class Debug
     End Sub
 
     Public Sub UpdateData(ByVal ds As DataSet)
-        grdData.DataMember = "entry"
-        grdData.DataSource = ds
-        grdData.Visible = True
+        Try
+            grdData.DataMember = ds.Tables(0).TableName
+            grdData.DataSource = ds
+            grdData.Visible = True
+        Catch
+        End Try
     End Sub
 
     Private Sub frmDebug_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
@@ -310,6 +313,10 @@ Public Class Debug
         Then
 
             ds.Tables(0).Rows(pos).Item("Count") = CInt(frmMain.lblChapterCount.Text)
+
+            If frmMain.lblUpdate.Text = "" Then
+                frmMain.lblUpdate.Text = frmMain.lblPublish.Text
+            End If
 
             ds.Tables(0).Rows(pos).Item("Update_Date") = CDate(frmMain.lblUpdate.Text)
 
@@ -687,9 +694,17 @@ bypass:
                     value = UCase(folder)
             End Select
 
-            If InStr(value, search) <> 0 Then
-                result = value
-            End If
+            Select Case cmbSearch.Text
+                Case "Folder"
+                    If InStr(value, search) = 1 Then
+                        result = value
+                    End If
+                Case Else
+                    If InStr(value, search) <> 0 Then
+                        result = value
+                    End If
+            End Select
+            
 
             If result <> "" Then
                 Exit For
@@ -717,9 +732,16 @@ bypass:
                         value = UCase(folder)
                 End Select
 
-                If InStr(value, search) <> 0 Then
-                    result = value
-                End If
+                Select Case cmbSearch.Text
+                    Case "Folder"
+                        If InStr(value, search) = 1 Then
+                            result = value
+                        End If
+                    Case Else
+                        If InStr(value, search) <> 0 Then
+                            result = value
+                        End If
+                End Select
 
                 If result <> "" Then
                     Exit For

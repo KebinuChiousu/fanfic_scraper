@@ -1,6 +1,7 @@
 Imports System.IO
 Imports System.Web
 Imports System.Text
+Imports System.Xml
 
 Imports System.data
 Imports System.Data.OleDb
@@ -99,7 +100,7 @@ Public Class HtmlGrabber
         '
         'btnURL
         '
-        Me.btnURL.Location = New System.Drawing.Point(20, 471)
+        Me.btnURL.Location = New System.Drawing.Point(26, 318)
         Me.btnURL.Name = "btnURL"
         Me.btnURL.Size = New System.Drawing.Size(133, 42)
         Me.btnURL.TabIndex = 1
@@ -107,11 +108,10 @@ Public Class HtmlGrabber
         '
         'txtUrl
         '
-        Me.txtUrl.Location = New System.Drawing.Point(20, 548)
+        Me.txtUrl.Location = New System.Drawing.Point(26, 395)
         Me.txtUrl.Name = "txtUrl"
         Me.txtUrl.Size = New System.Drawing.Size(260, 20)
         Me.txtUrl.TabIndex = 2
-        Me.txtUrl.Text = ""
         '
         'txtSource
         '
@@ -121,9 +121,8 @@ Public Class HtmlGrabber
         Me.txtSource.Name = "txtSource"
         Me.txtSource.ReadOnly = True
         Me.txtSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtSource.Size = New System.Drawing.Size(666, 347)
+        Me.txtSource.Size = New System.Drawing.Size(666, 189)
         Me.txtSource.TabIndex = 3
-        Me.txtSource.Text = ""
         '
         'ListChapters
         '
@@ -153,15 +152,14 @@ Public Class HtmlGrabber
         '
         'txtFileMask
         '
-        Me.txtFileMask.Location = New System.Drawing.Point(167, 492)
+        Me.txtFileMask.Location = New System.Drawing.Point(173, 339)
         Me.txtFileMask.Name = "txtFileMask"
         Me.txtFileMask.Size = New System.Drawing.Size(113, 20)
         Me.txtFileMask.TabIndex = 9
-        Me.txtFileMask.Text = ""
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(173, 471)
+        Me.Label1.Location = New System.Drawing.Point(179, 318)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(87, 21)
         Me.Label1.TabIndex = 11
@@ -169,7 +167,7 @@ Public Class HtmlGrabber
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(20, 534)
+        Me.Label2.Location = New System.Drawing.Point(26, 381)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(127, 14)
         Me.Label2.TabIndex = 12
@@ -206,12 +204,11 @@ Public Class HtmlGrabber
         Me.txtStart.Name = "txtStart"
         Me.txtStart.Size = New System.Drawing.Size(60, 20)
         Me.txtStart.TabIndex = 16
-        Me.txtStart.Text = ""
         Me.txtStart.Visible = False
         '
         'btnRSS
         '
-        Me.btnRSS.Location = New System.Drawing.Point(320, 471)
+        Me.btnRSS.Location = New System.Drawing.Point(326, 318)
         Me.btnRSS.Name = "btnRSS"
         Me.btnRSS.Size = New System.Drawing.Size(87, 41)
         Me.btnRSS.TabIndex = 17
@@ -219,15 +216,14 @@ Public Class HtmlGrabber
         '
         'urlAtom
         '
-        Me.urlAtom.Location = New System.Drawing.Point(420, 492)
+        Me.urlAtom.Location = New System.Drawing.Point(426, 339)
         Me.urlAtom.Name = "urlAtom"
         Me.urlAtom.Size = New System.Drawing.Size(260, 20)
         Me.urlAtom.TabIndex = 18
-        Me.urlAtom.Text = ""
         '
         'lblAtom
         '
-        Me.lblAtom.Location = New System.Drawing.Point(420, 471)
+        Me.lblAtom.Location = New System.Drawing.Point(426, 318)
         Me.lblAtom.Name = "lblAtom"
         Me.lblAtom.Size = New System.Drawing.Size(147, 13)
         Me.lblAtom.TabIndex = 19
@@ -235,14 +231,14 @@ Public Class HtmlGrabber
         '
         'cmbStory
         '
-        Me.cmbStory.Location = New System.Drawing.Point(320, 548)
+        Me.cmbStory.Location = New System.Drawing.Point(326, 395)
         Me.cmbStory.Name = "cmbStory"
         Me.cmbStory.Size = New System.Drawing.Size(360, 21)
         Me.cmbStory.TabIndex = 21
         '
         'lblStory
         '
-        Me.lblStory.Location = New System.Drawing.Point(320, 534)
+        Me.lblStory.Location = New System.Drawing.Point(326, 381)
         Me.lblStory.Name = "lblStory"
         Me.lblStory.Size = New System.Drawing.Size(127, 14)
         Me.lblStory.TabIndex = 22
@@ -298,7 +294,6 @@ Public Class HtmlGrabber
         Me.lblTitle.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.lblTitle.Size = New System.Drawing.Size(296, 20)
         Me.lblTitle.TabIndex = 31
-        Me.lblTitle.Text = ""
         '
         'lblAuthor
         '
@@ -309,7 +304,6 @@ Public Class HtmlGrabber
         Me.lblAuthor.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.lblAuthor.Size = New System.Drawing.Size(167, 20)
         Me.lblAuthor.TabIndex = 32
-        Me.lblAuthor.Text = ""
         '
         'lblStoryID
         '
@@ -320,12 +314,11 @@ Public Class HtmlGrabber
         Me.lblStoryID.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.lblStoryID.Size = New System.Drawing.Size(80, 20)
         Me.lblStoryID.TabIndex = 33
-        Me.lblStoryID.Text = ""
         '
         'HtmlGrabber
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(716, 579)
+        Me.ClientSize = New System.Drawing.Size(716, 430)
         Me.Controls.Add(Me.lblStoryID)
         Me.Controls.Add(Me.lblAuthor)
         Me.Controls.Add(Me.lblTitle)
@@ -355,6 +348,7 @@ Public Class HtmlGrabber
         Me.Name = "HtmlGrabber"
         Me.Text = "Fanfiction.net Story Grabber"
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -371,20 +365,35 @@ Public Class HtmlGrabber
 
 #Region "Interface Code"
 
-    Private Sub btnURL_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnURL.Click
+    Private Sub btnURL_Click( _
+                              ByVal sender As System.Object, _
+                              ByVal e As System.EventArgs _
+                            ) Handles btnURL.Click
         DownloadData()
     End Sub
 
-    Private Sub btnRSS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnRSS.Click
+    Private Sub btnRSS_Click( _
+                              ByVal sender As System.Object, _
+                              ByVal e As System.EventArgs _
+                            ) Handles btnRSS.Click
         ObtainFeed()
     End Sub
 
-    Private Sub Story_Selected(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbStory.SelectedIndexChanged
-        LoadStoryInfo(cmbStory.SelectedIndex, _
-                      cmbType.Items(cmbType.SelectedIndex))
+    Private Sub Story_Selected( _
+                                ByVal sender As System.Object, _
+                                ByVal e As System.EventArgs _
+                              ) Handles cmbStory.SelectedIndexChanged
+
+        LoadStoryInfo( _
+                       cmbStory.SelectedIndex, _
+                       cmbType.Items(cmbType.SelectedIndex) _
+                     )
     End Sub
 
-    Private Sub Source_Changed(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cmbType.SelectedIndexChanged
+    Private Sub Source_Changed( _
+                                ByVal sender As System.Object, _
+                                ByVal e As System.EventArgs _
+                              ) Handles cmbType.SelectedIndexChanged
 
         clsname = cmbType.Items(cmbType.SelectedIndex)
 
@@ -423,18 +432,31 @@ Public Class HtmlGrabber
 
     End Sub
 
-    Private Sub HtmlGrabber_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    Private Sub HtmlGrabber_Load( _
+                                  ByVal sender As System.Object, _
+                                  ByVal e As System.EventArgs _
+                                ) Handles MyBase.Load
         cmbType.SelectedIndex = 0
         frmMain = Me
     End Sub
 
-    Private Sub HtmlGrabber_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+    Private Sub HtmlGrabber_Closing( _
+                                     ByVal sender As Object, _
+                                     ByVal e As System.ComponentModel. _
+                                                CancelEventArgs _
+                                   ) Handles MyBase.Closing
         Application.Exit()
     End Sub
 
-    Private Sub ShowDebugWindow(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDebug.Click
+    Private Sub ShowDebugWindow( _
+                                 ByVal sender As System.Object, _
+                                 ByVal e As System.EventArgs _
+                               ) Handles btnDebug.Click
 
-        Initialize(frmDebug, forms.frmDebug)
+        Initialize( _
+                    forms.frmDebug _
+                  )
+
         frmDebug.myCaller = Me
 
         PlaceDebugWindow()
@@ -442,7 +464,12 @@ Public Class HtmlGrabber
 
     End Sub
 
-    Sub LoadStoryInfo(ByVal rowcount As Integer, ByVal clsname As String)
+#End Region
+
+    Sub LoadStoryInfo( _
+                          ByVal rowcount As Integer, _
+                          ByVal clsname As String _
+                        )
 
         btnURL.Text = "Get Chapters"
 
@@ -450,26 +477,24 @@ Public Class HtmlGrabber
         Dim start As Long
         Dim index As Integer
 
-        ' Story Name
-        lblTitle.Text = dsPubs.Tables("entry"). _
-                        Rows(rowcount).Item("title")
-
-        ' Story Author
-        lblAuthor.Text = dsPubs.Tables("author"). _
-                          Rows(rowcount).Item(0)
-        ' Story Location
-        txtUrl.Text = dsPubs.Tables("link"). _
-                          Rows(rowcount).Item(1)
-
-        'Process Summary
-        txtResult = dsPubs.Tables("summary"). _
-                    Rows(rowcount).Item(1) & vbCrLf
-
-
         Select Case clsname
 
             Case "FFNet"
 
+                ' Story Name
+                lblTitle.Text = dsPubs.Tables("entry"). _
+                                Rows(rowcount).Item("title")
+
+                ' Story Author
+                lblAuthor.Text = dsPubs.Tables("author"). _
+                                  Rows(rowcount).Item(0)
+                ' Story Location
+                txtUrl.Text = dsPubs.Tables("link"). _
+                                  Rows(rowcount).Item(1)
+
+                'Process Summary
+                txtResult = dsPubs.Tables("summary"). _
+                            Rows(rowcount).Item(1) & vbCrLf
 
                 start = InStr(dsPubs.Tables("entry").Rows(rowcount).Item("id"), "story.")
                 start = start + Len("story.")
@@ -484,7 +509,12 @@ Public Class HtmlGrabber
                 txtResult = Replace(txtResult, ", Words", "<br>Words")
                 txtResult = Replace(txtResult, ", Reviews", "<br>Reviews")
                 txtResult = Replace(txtResult, "Updated", "<br>Updated")
-                txtResult = Replace(txtResult, ", Published", "<br>Published")
+
+                If InStr(txtResult, "Updated") = 0 Then
+                    txtResult = Replace(txtResult, "Published", "<br><br>Published")
+                Else
+                    txtResult = Replace(txtResult, "Published", "<br>Published")
+                End If
 
                 txtSummary = Split(txtResult, "<br>")
 
@@ -516,37 +546,53 @@ Public Class HtmlGrabber
 
             Case "MediaMiner"
 
-                lblPublish.Text = dsPubs.Tables("entry"). _
-                                  Rows(rowcount).Item(1)
+                Dim htmldoc As XmlDocument
 
-                lblUpdate.Text = dsPubs.Tables("entry"). _
-                                  Rows(rowcount).Item(2)
+                ' Story Name
+                lblTitle.Text = dsPubs.Tables(0). _
+                                Rows(rowcount).Item("title")
+                lblTitle.Text = Mid(lblTitle.Text, 1, InStr(lblTitle.Text, "[") - 1)
 
-                lblProgress.Text = dsPubs.Tables("category"). _
-                                  Rows(rowcount).Item(1)
+                lblAuthor.Text = dsPubs.Tables(0). _
+                                 Rows(rowcount).Item("Author")
 
+                ' Story Location
+                txtUrl.Text = dsPubs.Tables(0). _
+                                  Rows(rowcount).Item("link")
 
-                txtSource.Text = HttpUtility.UrlDecode(txtResult)
+                lblPublish.Text = dsPubs.Tables(0). _
+                                  Rows(rowcount).Item("pubdate")
+                lblPublish.Text = "Last Updated: " & Format(CDate(lblPublish.Text), "MM/dd/yyyy")
+
+                Dim category As String
+
+                category = dsPubs.Tables(0). _
+                           Rows(rowcount).Item("category")
+                category = Mid(category, 1, InStr(category, "-") - 2)
+
+                lblProgress.Text = category
+
+                txtSource.Text = dsPubs.Tables(0).Rows(rowcount).Item("description")
+                htmldoc = CleanHTML(txtSource.Text)
+                txtSource.Text = htmldoc.InnerText
 
                 lblStoryID.Text = Replace(txtUrl.Text, "http://www.mediaminer.org/fanfic/view_st.php/", "")
 
-                txtResult = cls.InitialDownload(txtUrl.Text)
+                htmldoc = cls.initialdownload(txtUrl.Text)
 
                 ListChapters.Items.Clear()
-                cls.GetChapters(Me.ListChapters, txtResult)
+                cls.GetChapters(Me.ListChapters, htmldoc)
                 lblChapterCount.Text = ListChapters.Items.Count
 
-                
+
         End Select
 
 
     End Sub
 
-#End Region
-
-    
-
     Sub DownloadData()
+
+        Dim htmldoc As XmlDocument
         Dim data As String = ""
 
         Select Case btnURL.Text
@@ -557,16 +603,12 @@ Public Class HtmlGrabber
 
                 If txtUrl.Text = "" Then GoTo oops
 
-                txtResult = cls.InitialDownload(txtUrl.Text)
-
-                If InStr(txtResult, "FanFiction.Net Error") <> 0 Then
-                    txtResult = cls.InitialDownload(txtUrl.Text)
-                End If
-
+                htmldoc = cls.InitialDownload(txtUrl.Text)
+                txtResult = htmldoc.OuterXml
 
                 If InStr(LCase(txtResult), "story not found") = 0 Then
 
-                    lblTitle.Text = cls.GrabTitle(txtResult)
+                    lblTitle.Text = cls.GrabTitle(htmldoc)
 
                     If txtResult = "" Then
 oops:
@@ -577,38 +619,58 @@ oops:
                     End If
 
                     ListChapters.Items.Clear()
-                    cls.GetChapters(Me.ListChapters, txtResult)
+                    cls.GetChapters(Me.ListChapters, htmldoc)
 
-                    lblAuthor.Text = cls.GrabAuthor(txtResult)
-                    lblPublish.Text = cls.GrabDate(txtResult, "Published: ")
-                    lblUpdate.Text = cls.GrabDate(txtResult, "Updated: ")
+                    htmldoc = cls.ProcessChapters( _
+                                                   txtUrl.Text, _
+                                                   ListChapters, _
+                                                   0 _
+                                                 )
+
+                    lblAuthor.Text = cls.GrabAuthor(htmldoc)
+                    lblPublish.Text = cls.GrabDate(htmldoc, "Published: ")
+                    lblUpdate.Text = cls.GrabDate(htmldoc, "Updated: ")
 
                     btnURL.Text = "Process Chapters"
                     lblChapterCount.Text = ListChapters.Items.Count
                     lblProgress.Text = "< -- Enter Starting Chapter"
                     txtStart.Text = 1
 
-                    txtSource.Text = txtResult
+                    txtSource.Text = cls.grabbody(htmldoc)
 
                     lblStart.Visible = True
                     txtStart.Visible = True
+
                 Else
+
                     btnURL.Text = "Process Chapters"
                     txtSource.Text = txtResult
                     lblStart.Visible = True
                     txtStart.Visible = True
+
                 End If
 
             Case "Process Chapters"
 
                     'Process Chapters from Source
 
-
-
                     For i = (CInt(txtStart.Text) - 1) To (CInt(lblChapterCount.Text) - 1)
-                        lblProgress.Text = "Chapter " & (i + 1) & " of " & lblChapterCount.Text
-retry:
-                        txtResult = cls.ProcessChapters(txtUrl.Text, i, lblPublish.Text, lblUpdate.Text, ListChapters)
+
+                        lblProgress.Text = "Chapter " & _
+                                           (i + 1) & _
+                                           " of " & _
+                                           lblChapterCount.Text
+
+                        htmldoc = cls.ProcessChapters( _
+                                                       txtUrl.Text, _
+                                                       ListChapters, _
+                                                       i _
+                                                     )
+
+                        lblPublish.Text = cls.GrabDate(htmldoc, "Published: ")
+                        lblUpdate.Text = cls.GrabDate(htmldoc, "Updated: ")
+
+                        txtResult = htmldoc.OuterXml
 
                         Application.DoEvents()
 
@@ -616,17 +678,21 @@ retry:
                         And InStr(LCase(txtResult), "story not found") = 0 _
                         Then
 
-                            data = cls.GetBody(txtResult)
-                            If data = "retry" Then GoTo retry
+                            data = cls.GrabBody(htmldoc)
 
-                            txtSource.Text = "<p>" & data
+                            txtSource.Text = "<p></p>" & data
                             txtResult = "<html><body>"
                             txtResult &= "<p>" & lblTitle.Text & "</p>"
                             txtResult &= "<p>" & lblAuthor.Text & "</p>"
                             If lblAnime.Text <> "" Then
                                 txtResult &= "<p>" & lblAnime.Text & "</p>"
                             End If
-                            txtResult &= cls.WriteDate(lblPublish.Text, lblUpdate.Text, i + 1, CInt(lblChapterCount.Text))
+                            txtResult &= cls.WriteDate( _
+                                                        lblPublish.Text, _
+                                                        lblUpdate.Text, _
+                                                        i + 1, _
+                                                        CInt(lblChapterCount.Text) _
+                                                      )
                             txtResult &= "<p>----------------------------------</p>"
                             txtResult &= txtSource.Text
                         Else
@@ -679,9 +745,11 @@ retry:
 
         Dim host As String
         Dim temp As String
-        Dim temp2 As String
-        'Dim txtrow As String
+
+        Dim txtatom As String
         Dim txtresult As String
+
+        Dim htmldoc As New XmlDocument
 
         Dim rowcount As Integer
         'Dim sumcount As Integer
@@ -700,209 +768,132 @@ retry:
 
             Case "FFNet"
 
-                Dim txtatom As String
-
                 If urlAtom.Text = "" Then GoTo abort
 
                 urlAtom.Text = Replace(urlAtom.Text, " ", "")
                 urlAtom.Text = Replace(urlAtom.Text, "-", "")
-
+                
                 If InStr(urlAtom.Text, "http://www.fanfiction.net") = 0 Then
                     urlAtom.Text = Replace(urlAtom.Text, ".", "")
                     urlAtom.Text = "http://www.fanfiction.net/~" & urlAtom.Text
                 End If
 
-                txtresult = DownloadPage(urlAtom.Text)
-
-                If txtresult = "" Then
-abort:
-                    urlAtom.Text = ""
-                    MsgBox("Valid Atom Feed or Author Must Be Entered.", _
-                           MsgBoxStyle.Information, _
-                           "Fanfiction.Net Story Grabber")
-                    Exit Sub
-                End If
-
                 If (InStr(urlAtom.Text, "atom") = 0) Then
-                    txtresult = Mid(txtresult, _
-                                    InStr(txtresult, "<a href='/atom/u/") + _
-                                    Len("<a href='/atom/u/"))
-                    txtresult = Mid(txtresult, 1, InStr(txtresult, "/") - 1)
-                    txtatom = "http://www.fanfiction.net/atom/u/" & _
-                                   txtresult & "/"
-                    urlAtom.Text = txtatom
+
                     txtresult = DownloadPage(urlAtom.Text)
+
+
+                    htmldoc = CleanHTML(txtresult)
+                    htmldoc = ReturnNodes(htmldoc, "//a")
+                    txtatom = GetAttrValue(htmldoc, "a", "href", "/atom/")
+
+                    If txtatom = "" Then GoTo abort
+
+                    Dim url As URL
+                    url = ExtractUrl(urlAtom.Text)
+                    txtatom = url.Scheme & "://" & url.Host & txtatom
+
+                    urlAtom.Text = txtatom
+
                 End If
-
-                If txtresult = "" Then GoTo abort
-
-                btnURL.Text = "Get Chapters"
-                ListChapters.Items.Clear()
-
-                txtresult = Mid(txtresult, InStr(LCase(txtresult), "<entry>"))
-
-                txtatom = "<?xml version='1.0' encoding='UTF-8'?>" & vbCrLf
-                txtatom &= "<feed xmlns='http://www.w3.org/2005/Atom'>" & vbCrLf
-                txtatom &= txtresult
-
-                txtresult = txtatom
 
             Case "MediaMiner"
 
                 host = "http://www.mediaminer.org/"
                 temp = ""
 
-                Dim fldStoryUrl As String
-                Dim fldTitle As String
-                Dim fldAuthorUrl As String
-                Dim fldAuthor As String
-                Dim fldRevision As String
-                Dim fldSummary As String
-                Dim fldAnime As String
-                'Dim incomplete As Boolean
+                Dim author As String = HttpUtility.UrlEncode(urlAtom.Text)
 
-                urlAtom.Text = host & _
-               "fanfic/src.php?srcht=srcan&srch=" & _
-               HttpUtility.UrlEncode(urlAtom.Text) & _
-               "&show=Show%2FSearch&sort=dateD&gnr=&type=&rate=&lang=english"
+                If InStr(urlAtom.Text, host) = 0 Then
+                    urlAtom.Text = host
+                    urlAtom.Text += "fanfic/src.php?srcht=srcan&srch="
+                    urlAtom.Text += author
+                    urlAtom.Text += "&show=Show%2FSearch&sort=dateD&gnr=&type=&rate=AT&lang=english"
+                End If
 
-                txtresult = DownloadPage(urlAtom.Text)
+                If InStr(urlAtom.Text, "rss") = 0 Then
 
-                If txtresult = "" Then GoTo abort
+                    txtresult = DownloadPage(urlAtom.Text)
 
-                txtresult = Mid(txtresult, InStr(txtresult, "</form>") + _
-                            Len("</form></div>"))
-                txtresult = Mid(txtresult, 1, _
-                            InStr(txtresult, "</table>") + Len("</table>") - 1)
+                    If txtresult = "" Then GoTo abort
 
-                txtresult = Replace(txtresult, "<b>", "")
-                txtresult = Replace(txtresult, "</b>", "")
-                txtresult = Replace(txtresult, "<font class=" & _
-                            Chr(34) & "sm" & Chr(34) & ">", "")
-                txtresult = Replace(txtresult, "<br />", "")
-                txtresult = Replace(txtresult, "</font>", "")
+                    htmldoc = CleanHTML(txtresult)
+                    htmldoc = ReturnNodes(htmldoc, "//a")
+                    txtatom = GetAttrValue(htmldoc, "a", "href", "/rss/")
 
-                txtSource.Text = ""
+                    If InStr(txtatom, "rss") = 0 Then GoTo abort
 
-                'Feed Extractor
+                    Dim url As URL
+                    url = ExtractUrl(urlAtom.Text)
+                    txtatom = url.Scheme & "://" & url.Host & txtatom
 
-                While InStr(txtresult, "<a") <> 0
+                    urlAtom.Text = txtatom
 
-                    txtresult = Mid(txtresult, InStr(txtresult, "<a"))
-                    txtresult = Mid(txtresult, Len("<a href=") + 3)
-
-                    'Story Url
-                    fldStoryUrl = host & Mid(txtresult, 1, InStr(txtresult, ">") - 2)
-
-                    txtresult = Mid(txtresult, InStr(txtresult, ">") + 1)
-
-                    'Title
-                    fldTitle = Mid(txtresult, 1, InStr(txtresult, "</a>") - 1)
-
-                    txtresult = Mid(txtresult, InStr(txtresult, "<a href"))
-                    txtresult = Mid(txtresult, Len("<a href=") + 3)
-
-                    'Author URL
-                    fldAuthorUrl = host & Mid(txtresult, 1, InStr(txtresult, ">") - 2)
-
-                    txtresult = Mid(txtresult, InStr(txtresult, ">") + 1)
-
-                    'Author
-                    fldAuthor = Mid(txtresult, 1, InStr(txtresult, "</a>") - 1)
-
-                    'Anime
-                    fldAnime = Mid(txtresult, InStr(txtresult, "Anime") + _
-                                   Len("Anime: "))
-                    fldAnime = Mid(fldAnime, 1, InStr(fldAnime, "Genre") - 1)
-
-                    temp = ""
-
-                    While InStr(fldAnime, "</a>") <> 0
-                        fldAnime = Mid(fldAnime, InStr(fldAnime, ">") + 1)
-                        temp &= Mid(fldAnime, 1, InStr(fldAnime, "</a>") - 1)
-                        fldAnime = Mid(fldAnime, InStr(fldAnime, ">") + 1)
-                        If InStr(fldAnime, "<a") <> 0 Then
-                            temp &= Mid(fldAnime, 1, InStr(fldAnime, "<a") - 1)
-                        End If
-                    End While
-
-                    fldAnime = temp
-
-                    txtresult = Mid(txtresult, InStr(txtresult, "Latest Revision: "))
-                    temp2 = Mid(txtresult, 1, InStr(txtresult, "<br>") - 1) & vbCrLf
-                    temp2 = Mid(temp2, 1, InStr(temp2, "|") - 1)
-                    temp2 = Mid(temp2, InStr(temp2, ":") + 2)
-                    temp2 = Mid(temp2, 1, InStr(temp2, ",") + 5)
-
-                    'Date
-                    fldRevision = temp2
-
-                    txtresult = Mid(txtresult, InStr(txtresult, "<br>") + Len("<br>"))
-
-                    'Summary
-                    fldSummary = Mid(txtresult, 1, InStr(txtresult, "</td>") - 1)
-
-                    If InStr(fldSummary, "Review") <> 0 Then
-                        fldSummary = Mid(fldSummary, 1, InStr(fldSummary, "Review") - 1)
-                    End If
-
-                    If InStr(fldSummary, "<a") <> 0 Then
-                        fldSummary = Mid(fldSummary, 1, InStr(fldSummary, "<a") - 1)
-                        fldSummary &= "..."
-                    End If
-
-                    fldSummary = HttpUtility.UrlEncode(fldSummary)
-
-                    txtresult = Mid(txtresult, InStr(txtresult, "<tr"))
-
-                    txtSource.Text &= cls.xmlbuilder(fldStoryUrl, fldTitle, fldAuthorUrl, _
-                                          fldAuthor, fldRevision, fldSummary, fldAnime) & vbCrLf
-
-
-                End While
-
-                txtSource.Text = Replace(txtSource.Text, "<br>", "")
-
-                'Exit Sub
-
-                temp2 = "<?xml version='1.0' encoding='UTF-8'?>" & vbCrLf
-                temp2 &= "<feed xmlns='http://www.w3.org/2005/Atom'>" & vbCrLf
-
-                txtresult = temp2 & txtSource.Text & "</feed>"
+                End If
 
         End Select
 
+        htmldoc = DownloadXML(urlAtom.Text)
+        htmldoc = CleanXML(htmldoc)
+        htmldoc = CleanFeed(htmldoc)
+
+        If IsNothing(htmldoc) Then GoTo abort
+
+        btnURL.Text = "Get Chapters"
+        ListChapters.Items.Clear()
+
         ' Read in XML from file
-        dsPubs.ReadXml(StringToStream(txtresult))
+        dsPubs.ReadXml(StringToStream(htmldoc.OuterXml))
 
         'Send Information to Debug Console
-        Initialize(frmDebug, forms.frmDebug)
+        Initialize( _
+                    forms.frmDebug _
+                  )
+
         frmDebug.UpdateData(dsPubs)
 
-        For rowcount = 0 To dsPubs.Tables("entry").Rows.Count - 1
+        For rowcount = 0 To dsPubs.Tables(0).Rows.Count - 1
+            Select Case clsname
+                Case "FFNet"
+                    ' Story Title
+                    cmbStory.Items.Add(dsPubs.Tables("entry"). _
+                                       Rows(rowcount).Item("title"))
 
-            ' Story Title
-            cmbStory.Items.Add(dsPubs.Tables("entry"). _
-                               Rows(rowcount).Item("title"))
+                    ' Story Location
+                    lstStory.Items.Add(dsPubs.Tables("link"). _
+                                      Rows(rowcount).Item(1))
+                Case "MediaMiner"
+                    ' Story Title
+                    Dim title As String
 
-            ' Story Location
-            lstStory.Items.Add(dsPubs.Tables("link"). _
-                              Rows(rowcount).Item(1))
+                    title = dsPubs.Tables(0). _
+                            Rows(rowcount).Item("title")
+                    title = Mid(title, 1, InStr(title, "[") - 1)
+
+                    cmbStory.Items.Add(title)
+
+                    ' Story Location
+                    lstStory.Items.Add(dsPubs.Tables(0). _
+                                      Rows(rowcount).Item("link"))
+
+            End Select
         Next
 
         'Load Info for First Story
         cmbStory.SelectedIndex = 0
 
+        Exit Sub
+
+abort:
+        urlAtom.Text = ""
+        MsgBox("Valid Atom Feed or Author Must Be Entered.", _
+               MsgBoxStyle.Information, _
+               "Fanfiction.Net Story Grabber")
+        Exit Sub
+
     End Sub
 
-    Function StringToStream(ByVal data As String) As Stream
-
-        Dim bytes As Byte() = System.Text.Encoding.UTF8.GetBytes(data)
-        Dim ms As MemoryStream = New MemoryStream(bytes)
-
-        Return CType(ms, Stream)
-
-    End Function
+    
 
     Function FormatLineEndings(ByVal str As String) As String
         ' this function converts all line endings to Windows CrLf line endings
