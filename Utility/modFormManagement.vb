@@ -2,10 +2,12 @@ Module FormManagement
 
     Public frmDebug As Debug
     Public frmMain As HtmlGrabber
+    Public frmHtml As Html
 
     Public Enum forms
         frmMain = 0
         frmDebug = 1
+        frmHtml = 2
     End Enum
 
     Sub Initialize( _
@@ -19,6 +21,8 @@ Module FormManagement
         Select Case cls
             Case forms.frmDebug
                 frm = frmDebug
+            Case forms.frmHtml
+                frm = frmHtml
         End Select
 
         If Not IsNothing(frm) Then
@@ -47,6 +51,9 @@ Module FormManagement
             Case forms.frmDebug
                 'Create an Instance of class frmDebug
                 frmDebug = New Debug
+            Case forms.frmHtml
+                'Create an Instance of class frmHtml
+                frmHtml = New Html
 
         End Select
 
@@ -55,6 +62,11 @@ Module FormManagement
     Sub PlaceDebugWindow()
         frmDebug.Top = frmMain.Top + 168 + 35
         frmDebug.Left = frmMain.Left + 28
+    End Sub
+
+    Sub PlaceHtmlWindow()
+        frmHtml.Top = frmMain.Top + 168 + 35
+        frmHtml.Left = frmMain.Left + 28
     End Sub
 
 End Module

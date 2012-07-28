@@ -20,7 +20,7 @@ Module ModOleDB
 
         conn1 = Nothing
 
-        Dim connStr As String
+        Dim connStr As String = ""
 
         Select Case type
 
@@ -143,9 +143,11 @@ Module ModOleDB
 
 
         'Initialize Debug Console
-        Initialize(frmDebug, forms.frmDebug)
+        Initialize( _
+                    forms.frmDebug _
+                  )
         'Update Data in Debug Console
-        frmDebug.UpdateDBData(ds)
+        frmDebug.UpdateData(ds)
 
         Application.DoEvents()
         Application.DoEvents()
@@ -173,9 +175,11 @@ Module ModOleDB
 
 
         'Initialize Debug Console
-        Initialize(frmDebug, forms.frmDebug)
+        Initialize( _
+                    forms.frmDebug _
+                  )
         'Update Data in Debug Console
-        frmDebug.UpdateDBData(ds)
+        frmDebug.UpdateData(ds)
 
         Application.DoEvents()
         Application.DoEvents()

@@ -6,7 +6,6 @@ Imports System.Text
 Public Class frmPath
     Inherits System.Windows.Forms.Form
 
-    Dim ifr As IniFileReader
 
 #Region " Windows Form Designer generated code "
 
@@ -136,6 +135,7 @@ Public Class frmPath
                                   btnRanma.Click
         Dim dlg As OpenFileDialog = New OpenFileDialog
         dlg.DefaultExt = "mdb"
+        dlg.Filter = "Access Database|*.mdb"
         dlg.CheckFileExists = True
         dlg.CheckPathExists = True
         dlg.Title = "Select Path to Database."
@@ -153,32 +153,67 @@ Public Class frmPath
         End Try
     End Sub
 
-    Private Sub frmPath_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    Private Sub frmPath_Load( _
+                              ByVal sender As Object, _
+                              ByVal e As System.EventArgs _
+                            ) Handles MyBase.Load
+        'Legacy Ini Code
+        InitIniFile()
+
+        'App.Config Code
+        InitConfigFile()
+
+    End Sub
+
+    Private Sub btnUpdate_Click( _
+                                 ByVal sender As System.Object, _
+                                 ByVal e As System.EventArgs _
+                               ) Handles btnUpdate.Click
+
+        'App.Config Code
+        UpdateConfigFile()
+
+        'Legacy Ini Code
+        UpdateIniFile()
+
+        My.Settings.Reload()
+
+        Me.Dispose()
+
+    End Sub
+
+#Region "config.ini Manipulation Routines"
+
+    Dim ifr As IniFileReader
+
+    Sub InitIniFile()
+
         Dim fi As FileInfo
         Dim sc As StringCollection
         fi = New FileInfo(Application.StartupPath & "\\" & "config.ini")
         If fi.Exists Then
             ifr = New IniFileReader(Application.StartupPath & "\config.ini", True)
-            txtHP.Text = ifr.GetIniValue("Harry Potter", "Path")
+            txtHP.Text = ifr.GetIniValue("HP", "Path")
             txtRanma.Text = ifr.GetIniValue("Ranma", "Path")
         Else
             ifr = New IniFileReader(Application.StartupPath & "\config.ini", True)
             sc = ifr.GetIniComments(Nothing)
             sc.Add("Fanfiction Downloader DB Configuration")
             ifr.SetIniComments(Nothing, sc)
-            ifr.SetIniValue("Harry Potter", "Path", "No Path Set")
+            ifr.SetIniValue("HP", "Path", "No Path Set")
             ifr.SetIniValue("Ranma", "Path", "No Path Set")
             ifr.OutputFilename = Application.StartupPath & "\config.ini"
             ifr.SaveAsIniFile()
         End If
+
     End Sub
 
-    Private Sub btnUpdate_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnUpdate.Click
+    Sub UpdateIniFile()
 
         If txtHP.Text = "" Then
-            ifr.SetIniValue("Harry Potter", "Path", "No Path Set")
+            ifr.SetIniValue("HP", "Path", "No Path Set")
         Else
-            ifr.SetIniValue("Harry Potter", "Path", txtHP.Text)
+            ifr.SetIniValue("HP", "Path", txtHP.Text)
         End If
 
         If txtRanma.Text = "" Then
@@ -190,7 +225,36 @@ Public Class frmPath
         ifr.OutputFilename = Application.StartupPath & "\config.ini"
         ifr.SaveAsIniFile()
 
-        Me.Dispose()
+    End Sub
+
+#End Region
+
+#Region "app.config Manipulation Routines"
+
+    Dim conf As clsConfig
+
+    Sub InitConfigFile()
+
+        conf = New clsConfig
+
+        txtHP.Text = conf.GetConnStr("HP")
+        txtRanma.Text = conf.GetConnStr("Ranma")
 
     End Sub
+
+    Sub UpdateConfigFile()
+
+        If txtHP.Text <> "" Then
+            conf.UpdateConnStr("HP", txtHP.Text)
+        End If
+
+        If txtRanma.Text <> "" Then
+            conf.UpdateConnStr("Ranma", txtRanma.Text)
+        End If
+
+    End Sub
+
+#End Region
+
 End Class
+

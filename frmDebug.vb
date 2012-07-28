@@ -1,4 +1,4 @@
-
+Imports System.IO
 
 Public Class Debug
     Inherits System.Windows.Forms.Form
@@ -31,48 +31,48 @@ Public Class Debug
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    Friend WithEvents grdData As System.Windows.Forms.DataGrid
+    Friend WithEvents grdRSS As System.Windows.Forms.DataGrid
     Friend WithEvents grdDB As System.Windows.Forms.DataGrid
-    Friend WithEvents Button3 As System.Windows.Forms.Button
-    Friend WithEvents Button4 As System.Windows.Forms.Button
+    Friend WithEvents btnUpdateDB As System.Windows.Forms.Button
+    Friend WithEvents btnUpdateStoryID As System.Windows.Forms.Button
     Friend WithEvents cmbSearch As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Button5 As System.Windows.Forms.Button
-    Friend WithEvents Button6 As System.Windows.Forms.Button
-    Friend WithEvents Button7 As System.Windows.Forms.Button
+    Friend WithEvents btnBatch As System.Windows.Forms.Button
+    Friend WithEvents btnOpenDB As System.Windows.Forms.Button
     Friend WithEvents btnPath As System.Windows.Forms.Button
     Friend WithEvents tmrDownload As System.Windows.Forms.Timer
     Friend WithEvents btnSearch As System.Windows.Forms.Button
+    Friend WithEvents cmbChooseDB As System.Windows.Forms.ComboBox
+    Friend WithEvents lblStatus As System.Windows.Forms.Label
     Friend WithEvents btnSave As System.Windows.Forms.Button
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container
-        Me.grdData = New System.Windows.Forms.DataGrid
+        Me.grdRSS = New System.Windows.Forms.DataGrid
         Me.grdDB = New System.Windows.Forms.DataGrid
-        Me.Button3 = New System.Windows.Forms.Button
-        Me.Button4 = New System.Windows.Forms.Button
+        Me.btnUpdateDB = New System.Windows.Forms.Button
+        Me.btnUpdateStoryID = New System.Windows.Forms.Button
         Me.cmbSearch = New System.Windows.Forms.ComboBox
         Me.Label1 = New System.Windows.Forms.Label
-        Me.Button1 = New System.Windows.Forms.Button
-        Me.Button5 = New System.Windows.Forms.Button
-        Me.Button6 = New System.Windows.Forms.Button
-        Me.Button7 = New System.Windows.Forms.Button
+        Me.btnBatch = New System.Windows.Forms.Button
+        Me.btnOpenDB = New System.Windows.Forms.Button
         Me.btnPath = New System.Windows.Forms.Button
         Me.btnSave = New System.Windows.Forms.Button
         Me.tmrDownload = New System.Windows.Forms.Timer(Me.components)
         Me.btnSearch = New System.Windows.Forms.Button
-        CType(Me.grdData, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cmbChooseDB = New System.Windows.Forms.ComboBox
+        Me.lblStatus = New System.Windows.Forms.Label
+        CType(Me.grdRSS, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grdDB, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'grdData
+        'grdRSS
         '
-        Me.grdData.DataMember = ""
-        Me.grdData.HeaderForeColor = System.Drawing.SystemColors.ControlText
-        Me.grdData.Location = New System.Drawing.Point(7, 7)
-        Me.grdData.Name = "grdData"
-        Me.grdData.Size = New System.Drawing.Size(656, 127)
-        Me.grdData.TabIndex = 27
+        Me.grdRSS.DataMember = ""
+        Me.grdRSS.HeaderForeColor = System.Drawing.SystemColors.ControlText
+        Me.grdRSS.Location = New System.Drawing.Point(7, 7)
+        Me.grdRSS.Name = "grdRSS"
+        Me.grdRSS.Size = New System.Drawing.Size(656, 127)
+        Me.grdRSS.TabIndex = 27
         '
         'grdDB
         '
@@ -83,26 +83,28 @@ Public Class Debug
         Me.grdDB.Size = New System.Drawing.Size(655, 176)
         Me.grdDB.TabIndex = 29
         '
-        'Button3
+        'btnUpdateDB
         '
-        Me.Button3.Location = New System.Drawing.Point(562, 322)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(100, 21)
-        Me.Button3.TabIndex = 31
-        Me.Button3.Text = "Update Database"
+        Me.btnUpdateDB.Enabled = False
+        Me.btnUpdateDB.Location = New System.Drawing.Point(562, 322)
+        Me.btnUpdateDB.Name = "btnUpdateDB"
+        Me.btnUpdateDB.Size = New System.Drawing.Size(100, 21)
+        Me.btnUpdateDB.TabIndex = 31
+        Me.btnUpdateDB.Text = "Update Database"
         '
-        'Button4
+        'btnUpdateStoryID
         '
-        Me.Button4.Location = New System.Drawing.Point(562, 343)
-        Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(100, 21)
-        Me.Button4.TabIndex = 32
-        Me.Button4.Text = "Update StoryID"
+        Me.btnUpdateStoryID.Enabled = False
+        Me.btnUpdateStoryID.Location = New System.Drawing.Point(562, 343)
+        Me.btnUpdateStoryID.Name = "btnUpdateStoryID"
+        Me.btnUpdateStoryID.Size = New System.Drawing.Size(100, 21)
+        Me.btnUpdateStoryID.TabIndex = 32
+        Me.btnUpdateStoryID.Text = "Update StoryID"
         '
         'cmbSearch
         '
         Me.cmbSearch.Items.AddRange(New Object() {"Title", "Author", "Folder"})
-        Me.cmbSearch.Location = New System.Drawing.Point(332, 340)
+        Me.cmbSearch.Location = New System.Drawing.Point(328, 344)
         Me.cmbSearch.Name = "cmbSearch"
         Me.cmbSearch.Size = New System.Drawing.Size(84, 21)
         Me.cmbSearch.TabIndex = 33
@@ -115,41 +117,26 @@ Public Class Debug
         Me.Label1.TabIndex = 34
         Me.Label1.Text = "Search By"
         '
-        'Button1
+        'btnBatch
         '
-        Me.Button1.Location = New System.Drawing.Point(422, 324)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(64, 42)
-        Me.Button1.TabIndex = 35
-        Me.Button1.Text = "Automate HP"
+        Me.btnBatch.Enabled = False
+        Me.btnBatch.Location = New System.Drawing.Point(417, 343)
+        Me.btnBatch.Name = "btnBatch"
+        Me.btnBatch.Size = New System.Drawing.Size(142, 21)
+        Me.btnBatch.TabIndex = 35
+        Me.btnBatch.Text = "Batch Download Updates"
         '
-        'Button5
+        'btnOpenDB
         '
-        Me.Button5.Location = New System.Drawing.Point(492, 324)
-        Me.Button5.Name = "Button5"
-        Me.Button5.Size = New System.Drawing.Size(64, 42)
-        Me.Button5.TabIndex = 36
-        Me.Button5.Text = "Automate Ranma"
-        '
-        'Button6
-        '
-        Me.Button6.Location = New System.Drawing.Point(66, 323)
-        Me.Button6.Name = "Button6"
-        Me.Button6.Size = New System.Drawing.Size(106, 21)
-        Me.Button6.TabIndex = 37
-        Me.Button6.Text = "Open HP DB"
-        '
-        'Button7
-        '
-        Me.Button7.Location = New System.Drawing.Point(66, 343)
-        Me.Button7.Name = "Button7"
-        Me.Button7.Size = New System.Drawing.Size(106, 21)
-        Me.Button7.TabIndex = 38
-        Me.Button7.Text = "Open Ranma DB"
+        Me.btnOpenDB.Location = New System.Drawing.Point(61, 343)
+        Me.btnOpenDB.Name = "btnOpenDB"
+        Me.btnOpenDB.Size = New System.Drawing.Size(119, 21)
+        Me.btnOpenDB.TabIndex = 38
+        Me.btnOpenDB.Text = "Open DB"
         '
         'btnPath
         '
-        Me.btnPath.Location = New System.Drawing.Point(10, 323)
+        Me.btnPath.Location = New System.Drawing.Point(7, 323)
         Me.btnPath.Name = "btnPath"
         Me.btnPath.Size = New System.Drawing.Size(48, 40)
         Me.btnPath.TabIndex = 39
@@ -177,29 +164,48 @@ Public Class Debug
         Me.btnSearch.TabIndex = 41
         Me.btnSearch.Text = "Search DB"
         '
+        'cmbChooseDB
+        '
+        Me.cmbChooseDB.FormattingEnabled = True
+        Me.cmbChooseDB.Items.AddRange(New Object() {"", "HP", "Ranma"})
+        Me.cmbChooseDB.Location = New System.Drawing.Point(61, 322)
+        Me.cmbChooseDB.Name = "cmbChooseDB"
+        Me.cmbChooseDB.Size = New System.Drawing.Size(119, 21)
+        Me.cmbChooseDB.TabIndex = 42
+        '
+        'lblStatus
+        '
+        Me.lblStatus.AutoSize = True
+        Me.lblStatus.Location = New System.Drawing.Point(430, 322)
+        Me.lblStatus.Name = "lblStatus"
+        Me.lblStatus.Size = New System.Drawing.Size(25, 13)
+        Me.lblStatus.TabIndex = 43
+        Me.lblStatus.Text = "DB:"
+        '
         'Debug
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(665, 376)
+        Me.Controls.Add(Me.lblStatus)
+        Me.Controls.Add(Me.cmbChooseDB)
         Me.Controls.Add(Me.btnSearch)
         Me.Controls.Add(Me.btnSave)
         Me.Controls.Add(Me.btnPath)
-        Me.Controls.Add(Me.Button7)
-        Me.Controls.Add(Me.Button6)
-        Me.Controls.Add(Me.Button5)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.btnOpenDB)
+        Me.Controls.Add(Me.btnBatch)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.cmbSearch)
-        Me.Controls.Add(Me.Button4)
-        Me.Controls.Add(Me.Button3)
+        Me.Controls.Add(Me.btnUpdateStoryID)
+        Me.Controls.Add(Me.btnUpdateDB)
         Me.Controls.Add(Me.grdDB)
-        Me.Controls.Add(Me.grdData)
+        Me.Controls.Add(Me.grdRSS)
         Me.Name = "Debug"
         Me.ShowInTaskbar = False
         Me.Text = "frmDebug"
-        CType(Me.grdData, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.grdRSS, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grdDB, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -211,247 +217,128 @@ Public Class Debug
     End Enum
 
     Public myCaller As HtmlGrabber
-    Dim DB As String
-
     Public Navigate As Process
 
-#Region "Interface Code"
+#Region "Database Routines"
 
-    Private Sub Button1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Me.Close()
-    End Sub
+    Public Enum Database
+        HP = 0
+        Ranma = 1
+    End Enum
 
-    Public Sub UpdateDBData(ByVal ds As DataSet, Optional ByVal DataMember As String = "Table")
-        grdDB.DataMember = DataMember
-        grdDB.DataSource = ds
-        grdDB.Visible = True
-    End Sub
+    Public DB As Database
 
-    Public Sub UpdateData(ByVal ds As DataSet)
+    Function GetData() As DataTable
+
+        Dim dt As DataTable
+
+        Dim taHP As dsFanFicTableAdapters.HPTableAdapter
+        Dim taRanma As dsFanFicTableAdapters.RanmaTableAdapter
+
+        Select Case DB
+            Case Database.HP
+                taHP = New dsFanFicTableAdapters.HPTableAdapter
+                dt = taHP.GetDataByStatus(False, False)
+                taHP.Dispose()
+            Case Database.Ranma
+                taRanma = New dsFanFicTableAdapters.RanmaTableAdapter
+                dt = taRanma.GetDataByStatus(False, False)
+                taRanma.Dispose()
+            Case Else
+                Return Nothing
+        End Select
+
+        GetData = dt
+
+        dt.Dispose()
+
+    End Function
+
+    Private Function UpdateData(ByVal dt As DataTable) As Integer
+
+        Dim result As Integer = 0
+
+        Dim taHP As dsFanFicTableAdapters.HPTableAdapter
+        Dim taRanma As dsFanFicTableAdapters.RanmaTableAdapter
+
+        Select Case DB
+
+            Case Database.HP
+                taHP = New dsFanFicTableAdapters.HPTableAdapter
+                result = taHP.Update(dt)
+                taHP.Dispose()
+            Case Database.Ranma
+                taRanma = New dsFanFicTableAdapters.RanmaTableAdapter
+                result = taRanma.Update(dt)
+                taRanma.Dispose()
+            Case Else
+                result = -1
+        End Select
+
+        Return result
+
+    End Function
+
+    Public Sub UpdateRSS(ByVal ds As DataSet)
+
+        'Initialize Debug Console
+        Initialize( _
+                    forms.frmDebug _
+                  )
+
+        'Update Data in Debug Console
         Try
-            grdData.DataMember = ds.Tables(0).TableName
-            grdData.DataSource = ds
-            grdData.Visible = True
+            grdRSS.DataMember = ds.Tables(0).TableName
+            grdRSS.DataSource = ds
+            grdRSS.Visible = True
         Catch
         End Try
     End Sub
 
-    Private Sub frmDebug_Closing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+    Private Sub UpdateDateBase( _
+                                  ByVal sender As System.Object, _
+                                  ByVal e As System.EventArgs _
+                                ) Handles btnUpdateDB.Click
+        Dim dt As DataTable
 
-        e.Cancel = True
-        Me.Hide()
+        dt = grdDB.DataSource
+
+        UpdateData(dt)
+
     End Sub
 
 #End Region
 
-    Private Sub UpdateDateBase(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
-        Dim ds As New DataSet
+#Region "Interface Code"
 
-        ds = grdDB.DataSource
 
-        CreateConnection(ModOleDB.DatabaseType.Access)
-        SynchData(ds)
 
+    Private Sub SetStoryID( _
+                            ByVal sender As System.Object, _
+                            ByVal e As System.EventArgs _
+                          ) Handles btnUpdateStoryID.Click
+        StoryID(True)
     End Sub
 
-    Private Sub GetStoryID(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button4.Click
-        StoryID()
+    Private Sub btnPath_Click( _
+                                  ByVal sender As System.Object, _
+                                  ByVal e As System.EventArgs _
+                                ) Handles btnPath.Click
+        Dim frmpath As New frmPath
+        frmpath.Show()
     End Sub
 
-    Private Sub GotoNextRecord(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub GotoNextRecord( _
+                                   ByVal sender As System.Object, _
+                                   ByVal e As System.EventArgs _
+                                 )
         MoveNext()
     End Sub
 
-    Private Sub frmDebug_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
-        PlaceDebugWindow()
-        cmbSearch.SelectedIndex = 0
-
-    End Sub
-
-    Sub UpdateAtom(ByVal url As String)
-        ' update urlAtom with AuthorPage
-        frmMain.urlAtom.Text = url
-        ' Obtain Feed From Site
-        frmMain.ObtainFeed()
-    End Sub
-
-
-    Sub UpdateURL(ByVal url As String)
-        'Update txtUrl with story Page
-        frmMain.txtUrl.Text = url
-        'Reset frmMain
-        ResetInfo()
-        'Update btnURL Caption for Correct Processing
-        frmMain.btnURL.Text = "Get Chapters"
-        'Obtain Story Info From Story Page
-        frmMain.DownloadData()
-    End Sub
-
-    Sub ProcessStory(ByVal ds As DataSet, ByVal pos As Long)
-
-        frmMain.txtStart.Text = _
-                                ds.Tables(0). _
-                                Rows(pos). _
-                                Item("Count") + 1
-
-        frmMain.txtFileMask.Text = _
-                                   ds.Tables(0). _
-                                   Rows(pos). _
-                                   Item("Folder") & "-"
-
-        If InStr(LCase(frmMain.txtSource.Text), "story not found") <> 0 Then
-            frmMain.lblChapterCount.Text = _
-                 CInt(ds.Tables(0).Rows(pos).Item("Count")) + 1
-            frmMain.DownloadData()
-            Exit Sub
-        End If
-
-        If frmMain.lblChapterCount.Text > _
-           ds.Tables(0).Rows(pos). _
-           Item("Count") _
-        Then
-
-            ds.Tables(0).Rows(pos).Item("Count") = CInt(frmMain.lblChapterCount.Text)
-
-            If frmMain.lblUpdate.Text = "" Then
-                frmMain.lblUpdate.Text = frmMain.lblPublish.Text
-            End If
-
-            ds.Tables(0).Rows(pos).Item("Update_Date") = CDate(frmMain.lblUpdate.Text)
-
-            frmMain.DownloadData()
-
-            CreateConnection(DatabaseType.Access)
-            SynchData(ds)
-
-        End If
-    End Sub
-
-    Function MoveNext(Optional ByVal initial As Boolean = False) As Integer
-
-        Dim pos As Long
-        Dim ds As DataSet
-        Dim url As String = ""
-        Dim data As String = ""
-
-        ds = grdDB.DataSource
-
-        If initial Then
-            grdDB.CurrentRowIndex = 0
-        End If
-
-bypass:
-
-        pos = grdDB.CurrentRowIndex
-
-        If (pos < (ds.Tables(0).Rows.Count - 1)) Then
-            If initial = False Then
-                grdDB.CurrentRowIndex = grdDB.CurrentRowIndex + 1
-                pos = grdDB.CurrentRowIndex
-            End If
-        Else
-            Return -1
-        End If
-
-        Select Case Navigate
-            Case Process.AuthorPage
-                url = GetAtom(ds)
-            Case Process.StoryPage
-                url = GetStory(ds)
-        End Select
-
-
-        If (InStr(url, "fanfiction") = 0 And _
-           pos < ds.Tables(0).Rows.Count - 1) _
-        Or _
-              (ds.Tables(0).Rows(pos). _
-                Item("Complete") = True) _
-        Then
-            initial = False
-            GoTo bypass
-        Else
-            Select Case Navigate
-                Case Process.AuthorPage
-                    UpdateAtom(url)
-                Case Process.StoryPage
-                    UpdateURL(url)
-                    Application.DoEvents()
-                    ProcessStory(ds, pos)
-            End Select
-        End If
-
-        Return pos
-
-    End Function
-
-    Function GetStory(ByVal ds As DataSet) As String
-        Dim StoryID As String
-
-        If ds.Tables(0). _
-              Rows(grdDB.CurrentRowIndex). _
-              Item("StoryId").GetType Is GetType(DBNull) _
-        Then
-            GetStory = ""
-        Else
-
-            StoryID = ds.Tables(0). _
-                         Rows(grdDB.CurrentRowIndex). _
-                         Item("StoryID")
-            GetStory = "http://www.fanfiction.net/s/" & _
-                       StoryID & _
-                       "/1/"
-        End If
-
-    End Function
-
-    Function GetAtom(ByVal ds As DataSet) As String
-
-        If ds.Tables(0). _
-              Rows(grdDB.CurrentRowIndex). _
-              Item("Internet").GetType Is GetType(DBNull) _
-        Then
-            GetAtom = ""
-        Else
-
-            GetAtom = Replace( _
-                                   ds.Tables(0). _
-                                   Rows(grdDB.CurrentRowIndex). _
-                                   Item("Internet") _
-                                   , "#", "")
-        End If
-
-    End Function
-
-    Private Sub StoryID()
-        Dim ds As New DataSet
-
-        ds = grdDB.DataSource
-
-        ds.Tables(0). _
-        Rows(grdDB.CurrentRowIndex). _
-        Item("StoryID") _
-        = _
-        frmMain.lblStoryID.Text
-
-    End Sub
-
-    Sub ResetInfo()
-        'Clear Information from source
-        frmMain.ListChapters.Items.Clear()
-        frmMain.lblChapterCount.Text = ""
-        frmMain.lblProgress.Text = ""
-        frmMain.lblStart.Visible = False
-        frmMain.txtStart.Text = "1"
-        frmMain.txtStart.Visible = False
-        frmMain.txtSource.Text = ""
-    End Sub
-
-
     Private Sub cmbProcess_SelectedIndexChanged( _
-                                                 ByVal sender As System.Object, _
-                                                 ByVal e As System.EventArgs _
-                                               ) Handles cmbSearch.SelectedIndexChanged
+                                                    ByVal sender As System.Object, _
+                                                    ByVal e As System.EventArgs _
+                                                  ) Handles cmbSearch.SelectedIndexChanged
 
         'Select Case cmbSearch.Text
         '    Case "StoryID"
@@ -464,17 +351,185 @@ bypass:
 
     End Sub
 
-    Private Sub AutomateHP( _
-                            ByVal sender As System.Object, _
-                            ByVal e As System.EventArgs _
-                          ) Handles Button1.Click
-        Dim ds As New DataSet
+#End Region
+
+#Region "Form Handling Routines"
+
+    Sub InitConfig()
+
+        Const empty As String = "No Path Set"
+
+        Dim fi As FileInfo
+
+        Dim ifr As IniFileReader
+        Dim conf As New clsConfig
+
+        Dim val As String
+
+        fi = New FileInfo(Application.StartupPath & "\\" & "config.ini")
+
+        If fi.Exists Then
+            ifr = New IniFileReader(Application.StartupPath & "\config.ini", True)
+
+            val = ifr.GetIniValue("HP", "Path")
+
+            If val <> empty Then
+                conf.UpdateConnStr("HP", val)
+            End If
+
+            val = ifr.GetIniValue("Ranma", "Path")
+
+            If val <> empty Then
+                conf.UpdateConnStr("Ranma", val)
+            End If
+
+        End If
+
+        ifr = Nothing
+        conf = Nothing
+
+        My.Settings.Reload()
+
+    End Sub
+
+    Private Sub frmDebug_Load( _
+                               ByVal sender As System.Object, _
+                               ByVal e As System.EventArgs _
+                             ) Handles MyBase.Load
+
+        PlaceDebugWindow()
+        cmbSearch.SelectedIndex = 0
+        cmbChooseDB.SelectedIndex = 0
+        InitConfig()
+
+    End Sub
+
+    Private Sub frmDebug_Closing( _
+                                  ByVal sender As Object, _
+                                  ByVal e As System. _
+                                             ComponentModel. _
+                                             CancelEventArgs _
+                                ) Handles MyBase.Closing
+
+        e.Cancel = True
+        Me.Hide()
+
+    End Sub
+
+#End Region
+
+    Sub ProcessStory( _
+                      ByVal dt As DataTable, _
+                      ByVal pos As Long _
+                    )
+
+        frmMain.lblTitle.Text = dt.Rows(pos). _
+                                Item("Title")
+
+        frmMain.txtStart.Text = dt.Rows(pos). _
+                                Item("Count") + 1
+
+        frmMain.txtFileMask.Text = dt.Rows(pos). _
+                                   Item("Folder") & "-"
+
+        If InStr(LCase(frmMain.txtSource.Text), "story not found") <> 0 Then
+            frmMain.lblChapterCount.Text = _
+                 CInt(dt.Rows(pos).Item("Count")) + 1
+            frmMain.DownloadData()
+            Exit Sub
+        End If
+
+        If frmMain.lblChapterCount.Text > _
+           dt.Rows(pos).Item("Count") _
+        Then
+
+            dt.Rows(pos).Item("Count") = CInt(frmMain.lblChapterCount.Text)
+
+            If frmMain.lblUpdate.Text = "" Then
+                frmMain.lblUpdate.Text = frmMain.lblPublish.Text
+            End If
+
+            dt.Rows(pos).Item("Update_Date") = CDate(frmMain.lblUpdate.Text)
+
+            frmMain.DownloadData()
+
+            UpdateData(dt)
+
+        End If
+    End Sub
+
+    Function MoveNext( _
+                       Optional ByVal initial As Boolean = False _
+                     ) As Integer
+
+        Dim pos As Long
+        Dim dt As DataTable
+        Dim url As String = ""
+        Dim data As String = ""
+
+        dt = grdDB.DataSource
+
+        If initial Then
+            grdDB.CurrentRowIndex = 0
+        End If
+
+bypass:
+
+        pos = grdDB.CurrentRowIndex
+
+        If (pos < (dt.Rows.Count - 1)) Then
+            If initial = False Then
+                grdDB.CurrentRowIndex = grdDB.CurrentRowIndex + 1
+                pos = grdDB.CurrentRowIndex
+            End If
+        Else
+            Return -1
+        End If
+
+        Select Case Navigate
+            Case Process.AuthorPage
+                url = GetAtom(dt)
+            Case Process.StoryPage
+                url = GetStory(dt)
+        End Select
+
+
+        If (InStr(url, "fanfiction") = 0 And _
+           pos < dt.Rows.Count - 1) _
+        Or _
+              (dt.Rows(pos). _
+                Item("Complete") = True) _
+        Then
+            initial = False
+            GoTo bypass
+        Else
+            Select Case Navigate
+                Case Process.AuthorPage
+                    UpdateAtom(url)
+                Case Process.StoryPage
+                    StoryID(False)
+                    UpdateURL(url)
+                    Application.DoEvents()
+                    ProcessStory(dt, pos)
+            End Select
+        End If
+
+        Return pos
+
+    End Function
+
+    Private Sub ProcessBatch( _
+                              ByVal sender As System.Object, _
+                              ByVal e As System.EventArgs _
+                            ) Handles btnBatch.Click
+
+        Dim dt As New DataTable
         'Dim pos As Long
         Dim start As Integer
 
-        GetHPData()
+        dt = GetData()
 
-        ds = grdDB.DataSource
+        grdDB.DataSource = dt
 
         start = MoveNext(True)
 
@@ -487,79 +542,60 @@ bypass:
 
     End Sub
 
-    Private Sub AutomateRanma( _
-                               ByVal sender As System.Object, _
-                               ByVal e As System.EventArgs _
-                             ) Handles Button5.Click
-        Dim ds As New DataSet
-        'Dim pos As Long
-        Dim start As Integer
+    Private Sub OpenDB( _
+                        ByVal sender As System.Object, _
+                        ByVal e As System.EventArgs _
+                      ) Handles btnOpenDB.Click
 
-        GetRanmaData()
+        Dim dt As DataTable
 
-        ds = grdDB.DataSource
+        Dim val As String
+        val = cmbChooseDB.SelectedItem.ToString
 
-        start = MoveNext(True)
+        Select Case val
+            Case "HP"
+                DB = Database.HP
+            Case "Ranma"
+                DB = Database.Ranma
+            Case Else
+                MsgBox("Please choose a valid database.")
+                Exit Sub
+        End Select
 
-        tmrDownload.Enabled = True
+        dt = GetData()
 
-        'For pos = start To (ds.Tables(0).Rows.Count - 1)
-        '    pos = MoveNext()
-        '    If pos = -1 Then Exit For
-        'Next
-
-    End Sub
-
-    Private Sub Button6_Click( _
-                               ByVal sender As System.Object, _
-                               ByVal e As System.EventArgs _
-                             ) Handles Button6.Click
-        GetHPData()
-        DB = "HP"
+        lblStatus.Text = "DB: " & DB.ToString & " - (1 of " & dt.Rows.Count & ")"
 
         btnSave.Enabled = True
         btnSearch.Enabled = True
 
+        btnBatch.Enabled = True
+
+        btnUpdateDB.Enabled = True
+        btnUpdateStoryID.Enabled = True
+
+        grdDB.DataSource = dt
         grdDB.CurrentRowIndex = 0
+
     End Sub
 
-    Private Sub Button7_Click( _
+    Private Sub btnSave_Click( _
                                ByVal sender As System.Object, _
                                ByVal e As System.EventArgs _
-                             ) Handles Button7.Click
-        GetRanmaData()
+                             ) Handles btnSave.Click
+        Dim dt As DataTable
 
-        DB = "Ranma"
+        dt = grdDB.DataSource
 
-        btnSave.Enabled = True
-        btnSearch.Enabled = True
-
-
-        grdDB.CurrentRowIndex = 0
-    End Sub
-
-    Private Sub btnPath_Click( _
-                               ByVal sender As System.Object, _
-                               ByVal e As System.EventArgs _
-                             ) Handles btnPath.Click
-        Dim frmpath As New frmPath
-        frmpath.Show()
-    End Sub
-
-    Private Sub btnSave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnSave.Click
-        Dim ds As DataSet
-
-        ds = grdDB.DataSource
-
-        Dim NewRow As Integer = ds.Tables(0).Rows.Count
+        Dim NewRow As Integer = dt.Rows.Count
 
 
         Select Case DB
-            Case "HP"
+            Case Database.HP
                 Dim iYesNo As Integer = MsgBox("Add New Record?", MsgBoxStyle.YesNo)
 
                 If iYesNo = vbYes Then
-                    Dim dr As DataRow = ds.Tables(0).NewRow
+                    Dim dr As DataRow = dt.NewRow
 
                     dr("Title") = myCaller.lblTitle.Text
                     dr("Author") = myCaller.lblAuthor.Text
@@ -580,9 +616,9 @@ bypass:
                                                        ) _
                                               )
 
-                    ds.Tables(0).Rows.Add(dr)
+                    dt.Rows.Add(dr)
 
-                    grdDB.DataSource = ds
+                    grdDB.DataSource = dt
                     grdDB.CurrentRowIndex = NewRow
 
                     'CreateConnection(ModOleDB.DatabaseType.Access)
@@ -590,11 +626,11 @@ bypass:
 
                 End If
 
-            Case "Ranma"
+            Case Database.Ranma
                 Dim iYesNo As Integer = MsgBox("Add New Record?", MsgBoxStyle.YesNo)
 
                 If iYesNo = vbYes Then
-                    Dim dr As DataRow = ds.Tables(0).NewRow
+                    Dim dr As DataRow = dt.NewRow
 
                     dr("Title") = myCaller.lblTitle.Text
                     dr("Author") = myCaller.lblAuthor.Text
@@ -609,15 +645,15 @@ bypass:
                     dr("Complete") = False
 
 
-                    ds.Tables(0).Rows.Add(dr)
+                    dt.Rows.Add(dr)
 
-                    grdDB.DataSource = ds
+                    grdDB.DataSource = dt
                     grdDB.CurrentRowIndex = NewRow
 
                 End If
         End Select
 
-        ds = Nothing
+        dt = Nothing
 
     End Sub
 
@@ -655,7 +691,7 @@ bypass:
         Dim result As String = ""
 
         Dim value As String = ""
-        
+
 
         search = InputBox("Enter Value to Search For.", "Fanfiction DB")
         search = UCase(search)
@@ -667,16 +703,16 @@ bypass:
 
         start = grdDB.CurrentRowIndex
 
-        Dim ds As DataSet
-        ds = grdDB.DataSource
+        Dim dt As DataTable
+        dt = grdDB.DataSource
 
-        If start < (ds.Tables(0).Rows.Count - 1) Then
+        If start < (dt.Rows.Count - 1) Then
             start = start + 1
         Else
             start = 0
         End If
 
-        For count = start To (ds.Tables(0).Rows.Count - 1)
+        For count = start To (dt.Rows.Count - 1)
 
             grdDB.CurrentRowIndex = count
             Application.DoEvents()
@@ -704,7 +740,7 @@ bypass:
                         result = value
                     End If
             End Select
-            
+
 
             If result <> "" Then
                 Exit For
@@ -762,6 +798,118 @@ bypass:
                   )
 
         End If
+
+    End Sub
+
+#Region "Utility Routines"
+
+    Function GetAtom( _
+                      ByVal dt As DataTable _
+                    ) As String
+
+        If dt.Rows(grdDB.CurrentRowIndex). _
+           Item("Internet").GetType Is GetType(DBNull) _
+        Then
+            GetAtom = ""
+        Else
+            GetAtom = Replace( _
+                               dt.Rows(grdDB.CurrentRowIndex). _
+                               Item("Internet") _
+                               , _
+                               "#", _
+                               "" _
+                             )
+        End If
+
+    End Function
+
+    Function GetStory( _
+                       ByVal dt As DataTable _
+                     ) As String
+
+        Dim StoryID As String
+
+        If dt.Rows(grdDB.CurrentRowIndex). _
+           Item("StoryId").GetType Is GetType(DBNull) _
+        Then
+            GetStory = ""
+        Else
+
+            StoryID = dt.Rows(grdDB.CurrentRowIndex). _
+                      Item("StoryID")
+
+            GetStory = "http://www.fanfiction.net/s/" & _
+                       StoryID & _
+                       "/1/"
+        End If
+
+    End Function
+
+    Private Sub StoryID(Optional ByVal Update As Boolean = True)
+
+        Dim dt As DataTable
+        dt = grdDB.DataSource
+
+        If Update Then
+
+            dt.Rows(grdDB.CurrentRowIndex). _
+            Item("StoryID") _
+            = _
+            frmMain.lblStoryID.Text
+
+        Else
+
+            frmMain.lblStoryID.Text = _
+            dt.Rows(grdDB.CurrentRowIndex). _
+            Item("StoryID")
+        End If
+
+    End Sub
+
+    Sub UpdateAtom(ByVal url As String)
+        ' update urlAtom with AuthorPage
+        frmMain.urlAtom.Text = url
+        ' Obtain Feed From Site
+        frmMain.ObtainFeed()
+    End Sub
+
+    Sub UpdateURL(ByVal url As String)
+        'Update txtUrl with story Page
+        frmMain.txtUrl.Text = url
+        'Reset frmMain
+        ResetInfo()
+        'Update btnURL Caption for Correct Processing
+        frmMain.btnURL.Text = "Get Chapters"
+        'Obtain Story Info From Story Page
+        frmMain.DownloadData()
+    End Sub
+
+    Sub ResetInfo()
+        'Clear Information from source
+        frmMain.ListChapters.Items.Clear()
+        frmMain.lblChapterCount.Text = ""
+        frmMain.lblProgress.Text = ""
+        frmMain.lblStart.Visible = False
+        frmMain.txtStart.Text = "1"
+        frmMain.txtStart.Visible = False
+        frmMain.txtSource.Text = ""
+    End Sub
+
+#End Region
+
+    Private Sub grdDB_CurrentCellChanged( _
+                                          ByVal sender As Object, _
+                                          ByVal e As System.EventArgs _
+                                        ) Handles grdDB.CurrentCellChanged
+
+        Dim grdDB As DataGrid = CType(sender, DataGrid)
+        Dim dt As DataTable
+
+        dt = grdDB.DataSource
+
+
+        lblStatus.Text = "DB: " & DB.ToString & " - (" & (grdDB.CurrentRowIndex + 1) & " of " & dt.Rows.Count & ")"
+
 
     End Sub
 End Class

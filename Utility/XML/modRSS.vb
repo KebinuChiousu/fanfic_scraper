@@ -2,6 +2,8 @@ Imports System.Xml
 
 Module modRSS
 
+#Region "RSS Feed Conversion"
+
     Function RDFtoRSS(ByVal xmlDoc As XmlDocument) As XmlDocument
 
         Dim xml_Doc As New XmlDocument
@@ -162,6 +164,8 @@ Module modRSS
 
     End Function
 
+#End Region
+
     Function CleanFeed(ByVal xmlDoc As XmlDocument) As XmlDocument
 
         Dim rss As XmlDocument
@@ -186,6 +190,5 @@ Module modRSS
         Return rss
 
     End Function
-
 
 End Module

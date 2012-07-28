@@ -44,9 +44,14 @@ Retry:
             Dim oHttp As HttpWebRequest = System.Net.HttpWebRequest.Create(URL)
             Dim objResponse As HttpWebResponse
 
-            oHttp.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2"
+            oHttp.UserAgent = "Mozilla/5.0 " & _
+                              "(Windows; U; Windows NT 5.1; en-US; rv:1.9.1.3) " & _
+                              "Gecko/20090824 " & _
+                              "Firefox/3.5.3 " & _
+                              "(.NET CLR 3.5.30729)"
+
             oHttp.Method = "GET"
-            oHttp.Timeout = 360000
+            oHttp.Timeout = (360 * 1000) '6 Minutes
             objResponse = oHttp.GetResponse
 
             Dim sr As StreamReader
@@ -61,17 +66,23 @@ Retry:
             sr.Close()
 
             Return sResult
+
         Catch ex As System.Exception
             Select Case ex.Message
                 Case "The remote server returned an error: (404) Not Found."
                     Return ""
-                Case "The remote server returned an error: (500) Internal Server Error."
+                Case "Invalid URI: The format of the URI could not be determined."
+                    MsgBox("Please enter a valid URL")
+                    Return Nothing
+                Case "The underlying connection was closed: " & _
+                     "The server committed an HTTP protocol violation."
                     GoTo retry
-                Case "The underlying connection was closed: The server committed an HTTP protocol violation."
+                Case "Unable to read data from the transport connection: " & _
+                     "The connection was closed."
                     GoTo retry
-                Case "Unable to read data from the transport connection: The connection was closed."
-                    GoTo retry
+                
                 Case Else
+                    If InStr(ex.Message, "500") Then GoTo retry
                     If InStr(ex.Message, "503") Then GoTo retry
                     If InStr(ex.Message, "502") Then GoTo retry
                     Throw New System.Exception(ex.Message, ex)

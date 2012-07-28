@@ -80,6 +80,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -89,6 +90,7 @@
     <Reference Include="System.Web">
       <Name>System.Web</Name>
     </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
@@ -113,23 +115,36 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="XML\modRSS.vb" />
+    <Compile Include="Data\dsFanFic.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsFanFic.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Data\clsConfig.vb" />
+    <Compile Include="frmHtml.Designer.vb">
+      <DependentUpon>frmHtml.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmHtml.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPath.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Sites\clsFanfic.vb" />
+    <Compile Include="Utility\XML\modRSS.vb" />
     <Compile Include="Sites\clsFFNet.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Sites\clsMediaMiner.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utility\clsWinInet.vb">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Utility\cookie.vb">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\DataSet1.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataSet1.xsd</DependentUpon>
     </Compile>
     <Compile Include="frmDebug.vb">
       <SubType>Form</SubType>
@@ -137,10 +152,7 @@
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmPath.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Utility\INIFileReader.vb">
+    <Compile Include="Data\INIFileReader.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\modFileManipulation.vb">
@@ -149,46 +161,47 @@
     <Compile Include="Utility\modFormManagement.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\ModOleDB.vb">
+    <None Include="Data\ModOleDB.vb.old">
       <SubType>Code</SubType>
-    </Compile>
+    </None>
     <Compile Include="Utility\modURLHelper.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\modUtility.vb" />
-    <Compile Include="XML\modXML.vb" />
-    <Compile Include="XML\modXMLUtilty.vb" />
-    <Content Include="Data\DataSet1.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSet1.Designer.vb</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Data\XMLtoINI.xslt" />
-    <None Include="app.config" />
-    <None Include="Data\DataSet1.xsc">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
-    <None Include="Data\DataSet1.xss">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
-    <None Include="Data\DataSet1.xsx">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
+    <Compile Include="Utility\XML\modXML.vb" />
+    <Compile Include="Utility\XML\modXMLUtilty.vb" />
+    <EmbeddedResource Include="Data\XMLtoINI.xslt" />
     <EmbeddedResource Include="frmDebug.resx">
       <DependentUpon>frmDebug.vb</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmHtml.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmHtml.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPath.resx">
-      <DependentUpon>frmPath.vb</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="My Project\" />
+    <None Include="app.config" />
+    <None Include="Data\dsFanFic.xsc">
+      <DependentUpon>dsFanFic.xsd</DependentUpon>
+    </None>
+    <None Include="Data\dsFanFic.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsFanFic.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="Data\dsFanFic.xss">
+      <DependentUpon>dsFanFic.xsd</DependentUpon>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

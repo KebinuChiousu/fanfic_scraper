@@ -3,9 +3,9 @@
     <configSections>
     </configSections>
     <connectionStrings>
-        <add name="HtmlGrabber.My.MySettings.Ranma" connectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot;C:\Documents and Settings\Kevin\Desktop\Ranma Fanfiction\Ranma.mdb&quot;;Persist Security Info=True"
+        <add name="HtmlGrabber.My.MySettings.Ranma" connectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot;I:\Books\Ranma\Ranma.mdb&quot;;Persist Security Info=True"
             providerName="System.Data.OleDb" />
-        <add name="HtmlGrabber.My.MySettings.HP" connectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot;C:\Documents and Settings\Kevin\Desktop\Harry Potter\HP.mdb&quot;;Persist Security Info=True"
+        <add name="HtmlGrabber.My.MySettings.HP" connectionString="Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot;I:\Books\HP\HP.mdb&quot;;Persist Security Info=True"
             providerName="System.Data.OleDb" />
     </connectionStrings>
     <system.diagnostics>

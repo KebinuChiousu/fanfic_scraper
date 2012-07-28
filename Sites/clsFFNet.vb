@@ -5,19 +5,56 @@ Imports System.IO
 Imports System.Xml
 
 Class FFNet
+    Inherits Fanfic
 
 #Region "Retrieval Functions"
 
-    Public Function GrabTitle(ByVal page As XmlDocument) As String
+    Public Overrides _
+    Function GrabTitle( _
+                        ByVal page As XmlDocument _
+                      ) As String
+
+        Dim ch As Integer = 0
 
         Dim value As String = GetFirstNodeValue(page, "//title")
 
-        GrabTitle = Replace(value, " - FanFiction.Net", "")
-        GrabTitle = Replace(GrabTitle, "", "")
+        value = Replace(value, " - FanFiction.Net", "")
+
+        value = Split(value, ",")(0)
+
+        ch = InStr(value, "Chapter")
+
+        If ch > 0 Then
+            value = Mid(value, 1, ch - 1) & "<br><br>" & Mid(value, ch)
+        End If
+
+        Return value
+
 
     End Function
 
-    Public Function GrabDate(ByVal xmldoc As XmlDocument, ByVal title As String) As String
+
+    Public Overrides _
+    Function GrabSeries(ByVal page As XmlDocument) As String
+
+
+        Dim value As String = GetFirstNodeValue(page, "//title")
+        value = Replace(value, "FanFiction.Net", "")
+
+        If value <> "" Then
+            value = Replace(value, " - ", "")
+            value = Split(value, ",")(1)
+        End If
+
+        Return value
+
+    End Function
+
+    Public Overrides _
+    Function GrabDate( _
+                       ByVal xmldoc As XmlDocument, _
+                       ByVal title As String _
+                     ) As String
 
         Dim temp As String = ""
         Dim XmlList As XmlNodeList
@@ -43,7 +80,8 @@ Class FFNet
 
     End Function
 
-    Public Function GrabAuthor(ByVal xmldoc As XmlDocument) As String
+    Public Overrides _
+    Function GrabAuthor(ByVal xmldoc As XmlDocument) As String
 
         Dim temp As String = ""
         Dim XmlList As XmlNodeList
@@ -74,7 +112,8 @@ Class FFNet
 
     End Function
 
-    Public Function GrabBody(ByVal xmldoc As XmlDocument) As String
+    Public Overrides _
+    Function GrabBody(ByVal xmldoc As XmlDocument) As String
 
         Dim XmlList As XmlNodeList
         Dim value As String
@@ -91,55 +130,16 @@ Class FFNet
 
     End Function
 
-    Function GetOptionValues( _
-                                 ByVal xmldoc As XmlDocument, _
-                                 ByVal param As String _
-                               ) As String()
-
-        Dim result As String = ""
-
-        Dim values() As String
-
-        Dim XmlList As XmlNodeList
-
-        XmlList = GetNodes(xmldoc, "//select[@title='" & param & "']")
-
-        If XmlList.Count = 0 Then
-            Return Nothing
-        End If
-
-        result = XmlList(0).InnerXml
-
-        Dim xml_doc As New XmlDocument
-
-        result = "<select>" & result & "</select>"
-
-        xml_doc.LoadXml(result)
-
-        Dim count As Integer
-        Dim node As XmlNode
-
-        With xml_doc.DocumentElement.ChildNodes
-
-            ReDim values(.Count - 1)
-
-            For count = 0 To (.Count - 1)
-                node = .Item(count)
-                values(count) = node.InnerText
-            Next
-
-        End With
-
-        Return values
-
-    End Function
-
-    Public Sub GetChapters(ByVal lst As ListBox, ByVal page As XmlDocument)
+    Public Overrides _
+    Sub GetChapters( _
+                     ByVal lst As ListBox, _
+                     ByVal xmldoc As XmlDocument _
+                   )
 
         Dim data() As String
         Dim count As Integer
 
-        data = GetOptionValues(page, "chapter navigation")
+        data = GetOptionValues(xmldoc, "chapter navigation")
 
         If Not IsNothing(data) Then
             For count = 0 To UBound(data)
@@ -151,69 +151,74 @@ Class FFNet
 
     End Sub
 
-
 #End Region
 
-    Function GetXML(ByVal html As String) As XmlDocument
+    Public Overrides _
+    Function GrabData(ByVal url As String) As System.Xml.XmlDocument
 
-        Dim htmlDoc As New XmlDocument
+        Dim htmldoc As XmlDocument
 
-        htmlDoc = CleanHTML(html)
+        htmldoc = MyBase.GrabData(url)
 
-        htmlDoc = StripTags(htmlDoc, "menulinks", paramType.Attribute)
-        htmlDoc = StripTags(htmlDoc, "menu-child xxhide", paramType.Attribute)
-        htmlDoc = StripTags(htmlDoc, "xxmenu", paramType.Attribute)
-        htmlDoc = StripTags(htmlDoc, "javascript", paramType.Attribute, partialM.Yes)
-        htmlDoc = StripTags(htmlDoc, "#", paramType.Attribute, partialM.Yes)
+        htmldoc = StripTags(htmldoc, "menulinks", paramType.Attribute)
+        htmldoc = StripTags(htmldoc, "menu-child xxhide", paramType.Attribute)
+        htmldoc = StripTags(htmldoc, "xxmenu", paramType.Attribute)
+        htmldoc = StripTags(htmldoc, "javascript", paramType.Attribute, partialM.Yes)
+        htmldoc = StripTags(htmldoc, "#", paramType.Attribute, partialM.Yes)
 
-        Return htmlDoc
+        Return htmldoc
 
     End Function
-   
-    Public Function InitialDownload(ByRef url As String) As XmlDocument
-        Dim host As String = "http://www.fanfiction.net/s/"
-        Dim txtResult As String
 
-        txtResult = Replace(url, host, "")
-        host = host & Mid(txtResult, 1, InStr(txtResult, "/") - 1)
+    Public Overrides _
+    Function InitialDownload(ByVal url As String) As XmlDocument
 
-        url = host & "/"
-        txtResult = DownloadPage(url & "1/")
-
+        Dim host As String
         Dim xmlDoc As XmlDocument
 
-        xmlDoc = GetXML(txtResult)
+        host = "http://www.fanfiction.net/s/"
+        url = Replace(url, host, "")
+        host = host & Mid(url, 1, InStr(url, "/") - 1)
+        url = host & "/1/"
+
+        xmlDoc = MyBase.GrabData(url)
 
         InitialDownload = xmlDoc
 
     End Function
 
-    Public Function ProcessChapters( _
-                                     ByVal URL As String, _
-                                     ByVal list As ListBox, _
-                                     ByVal index As Integer _
-                                   ) As XmlDocument
+    Public Overrides _
+    Function ProcessChapters( _
+                              ByVal URL As String, _
+                              ByVal list As ListBox, _
+                              ByVal index As Integer _
+                            ) As XmlDocument
+
+        Dim host As String
+        Dim temp As String
+        Dim params() As String
+        host = "http://www.fanfiction.net/s/"
+
+        temp = Replace(URL, host, "")
+        params = Split(temp, "/")
+
+        URL = host & params(0) & "/"
 
         Dim xmldoc As XmlDocument
 
-        Dim txtResult As String
-
-retry:
-        txtResult = DownloadPage(URL & (index + 1) & "/")
-        If txtResult = "" Then GoTo retry
-
-        xmldoc = GetXML(txtResult)
+        xmldoc = MyBase.GrabData(URL & (index + 1) & "/")
 
         ProcessChapters = xmldoc
 
     End Function
 
-    Public Function WriteDate( _
-                               ByVal publish As String, _
-                               ByVal update As String, _
-                               ByVal index As Integer, _
-                               ByVal lstop As Integer _
-                             ) As String
+    Public Overrides _
+    Function WriteDate( _
+                        ByVal publish As String, _
+                        ByVal update As String, _
+                        ByVal index As Integer, _
+                        ByVal lstop As Integer _
+                      ) As String
 
         WriteDate = ""
 
