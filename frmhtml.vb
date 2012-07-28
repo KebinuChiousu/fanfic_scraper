@@ -47,7 +47,6 @@ Public Class Html
 
     Private Sub btnClean_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnClean.Click
 
-        Dim htmldoc As XmlDocument
         Dim fs As FileStream
         Dim html As String
 
@@ -65,9 +64,9 @@ Public Class Html
         sr.Close()
         sr.Dispose()
 
-        htmldoc = CleanHTML(html)
+        CleanHTML(html)
 
-        frmMain.ProcessChapter(htmldoc, txtPrefix.Text, txtChapter.Text)
+        frmMain.ProcessChapter(html, txtPrefix.Text, txtChapter.Text)
 
     End Sub
 

@@ -417,8 +417,10 @@ Public Class Debug
 
 #End Region
 
+#Region "Validation Routines"
+
     Function isStale( _
-                      ByVal dt As DataTable, _
+                      ByRef dt As DataTable, _
                       ByVal pos As Long _
                     ) As Boolean
 
@@ -478,12 +480,38 @@ Public Class Debug
 
     End Function
 
+    Function isValid( _
+                      ByRef dt As DataTable, _
+                      ByVal pos As Long _
+                    ) As Boolean
+
+        Dim ret As Boolean = False
+        Dim link As String
+
+        If dt.Rows(grdDB.CurrentRowIndex). _
+           Item("Internet").GetType Is GetType(DBNull) _
+        Then
+            ret = False
+        Else
+
+            link = dt.Rows(grdDB.CurrentRowIndex).Item("Internet")
+            link = Replace(link, "#", "")
+
+            ret = myCaller.CheckUrl(link)
+
+        End If
+
+        Return ret
+
+    End Function
+
+#End Region
+
+
     Sub ProcessStory( _
                       ByVal dt As DataTable, _
                       ByVal pos As Long _
                     )
-
-        'dt.Rows(pos).Item("Publish_Date") = CDate(frmMain.lblPublish.Text)
 
         frmMain.lblTitle.Text = dt.Rows(pos). _
                                 Item("Title")
@@ -494,7 +522,7 @@ Public Class Debug
         frmMain.txtFileMask.Text = dt.Rows(pos). _
                                    Item("Folder") & "-"
 
-        If InStr(LCase(frmMain.txtSource.Text), "story not found") <> 0 Then
+        If InStr(LCase(frmMain.txtSource.Text), frmMain.cls.ErrorMessage) <> 0 Then
             frmMain.lblChapterCount.Text = _
                  CInt(dt.Rows(pos).Item("Count")) + 1
             frmMain.DownloadData()
@@ -564,32 +592,22 @@ bypass:
 
         abort = False
 
-        If Not isStale(dt, pos) Then
 
-            Select Case Navigate
-                Case Process.AuthorPage
-                    url = GetAtom(dt)
-                Case Process.StoryPage
-                    url = GetStory(dt)
-            End Select
+        If Not isValid(dt, pos) Then
+            abort = True
+        Else
+            If Not isStale(dt, pos) Then
 
-            If (InStr(url, "fanfiction") = 0 _
-            And pos < dt.Rows.Count - 1) _
-            Then
+                Select Case Navigate
+                    Case Process.AuthorPage
+                        url = GetAtom(dt)
+                    Case Process.StoryPage
+                        url = GetStory(dt)
+                End Select
+            Else
                 abort = True
             End If
-
-        Else
-            abort = True
         End If
-
-        'If (dt.Rows(pos).Item("Complete") = True then
-        '    abort = True
-        'End If
-
-        'If (dt.Rows(pos).Item("Abandoned") = True) Then
-        '    abort = True
-        'End If
 
         If abort Then
             initial = False
@@ -616,7 +634,6 @@ bypass:
                             ) Handles btnBatch.Click
 
         Dim dt As New DataTable
-        'Dim pos As Long
         Dim start As Integer
 
         dt = GetData(CInt(cmbChooseDB.SelectedValue))
@@ -628,18 +645,9 @@ bypass:
 
         grdDB.DataSource = dt
 
-        'RefreshDB()
-
         start = MoveNext(True)
 
         tmrDownload.Enabled = True
-
-
-
-        'For pos = start To (ds.Tables(0).Rows.Count - 1)
-        '    pos = MoveNext()
-        '    If pos = -1 Then Exit For
-        'Next
 
     End Sub
 
@@ -648,9 +656,6 @@ bypass:
         Dim dt As DataTable
 
         Dim cat_id As Integer
-
-        'Dim val As String
-        'val = cmbChooseDB.SelectedItem.ToString
 
         cat_id = CInt(cmbChooseDB.SelectedValue.ToString)
 
@@ -678,7 +683,9 @@ bypass:
 
     End Sub
 
-    Private Sub OpenDB( _
+#Region "Interface Code"
+
+    Private Sub btnOpenDB_Click( _
                         ByVal sender As System.Object, _
                         ByVal e As System.EventArgs _
                       ) Handles btnOpenDB.Click
@@ -712,8 +719,8 @@ bypass:
             'dr("Matchup") = "" ' Matchup
             dr("Description") = Trim(myCaller.txtSource.Text)
             dr("Internet") = myCaller.lblAuthor.Text & _
-                             "#" & Replace(myCaller.urlAtom.Text, "atom/", "") & "#"
-            dr("StoryId") = myCaller.lblStoryID.Text
+                             "#" & myCaller.cls.GetAuthorURL(myCaller.urlAtom.Text) & "#"
+            dr("StoryId") = myCaller.cls.GetStoryID(myCaller.txtUrl.Text)
             dr("Complete") = False
             dr("Publish_Date") = CDate( _
                                         Replace( _
@@ -882,106 +889,10 @@ bypass:
 
     End Sub
 
-#Region "Utility Routines"
-
-    Function GetAtom( _
-                      ByVal dt As DataTable _
-                    ) As String
-
-        If dt.Rows(grdDB.CurrentRowIndex). _
-           Item("Internet").GetType Is GetType(DBNull) _
-        Then
-            GetAtom = ""
-        Else
-            GetAtom = Replace( _
-                               dt.Rows(grdDB.CurrentRowIndex). _
-                               Item("Internet") _
-                               , _
-                               "#", _
-                               "" _
-                             )
-        End If
-
-    End Function
-
-    Function GetStory( _
-                       ByVal dt As DataTable _
-                     ) As String
-
-        Dim StoryID As String
-
-        If dt.Rows(grdDB.CurrentRowIndex). _
-           Item("StoryId").GetType Is GetType(DBNull) _
-        Then
-            GetStory = ""
-        Else
-
-            StoryID = dt.Rows(grdDB.CurrentRowIndex). _
-                      Item("StoryID")
-
-            GetStory = "http://www.fanfiction.net/s/" & _
-                       StoryID & _
-                       "/1/"
-        End If
-
-    End Function
-
-    Private Sub StoryID(Optional ByVal Update As Boolean = True)
-
-        Dim dt As DataTable
-        dt = grdDB.DataSource
-
-        If Update Then
-
-            dt.Rows(grdDB.CurrentRowIndex). _
-            Item("StoryID") _
-            = _
-            frmMain.lblStoryID.Text
-
-        Else
-
-            frmMain.lblStoryID.Text = _
-            dt.Rows(grdDB.CurrentRowIndex). _
-            Item("StoryID")
-        End If
-
-    End Sub
-
-    Sub UpdateAtom(ByVal url As String)
-        ' update urlAtom with AuthorPage
-        frmMain.urlAtom.Text = url
-        ' Obtain Feed From Site
-        frmMain.ObtainFeed()
-    End Sub
-
-    Sub UpdateURL(ByVal url As String)
-        'Update txtUrl with story Page
-        frmMain.txtUrl.Text = url
-        'Reset frmMain
-        ResetInfo()
-        'Update btnURL Caption for Correct Processing
-        frmMain.btnURL.Text = "Get Chapters"
-        'Obtain Story Info From Story Page
-        frmMain.DownloadData()
-    End Sub
-
-    Sub ResetInfo()
-        'Clear Information from source
-        frmMain.ListChapters.Items.Clear()
-        frmMain.lblChapterCount.Text = ""
-        frmMain.lblProgress.Text = ""
-        frmMain.lblStart.Visible = False
-        frmMain.txtStart.Text = "1"
-        frmMain.txtStart.Visible = False
-        frmMain.txtSource.Text = ""
-    End Sub
-
-#End Region
-
     Private Sub grdDB_CurrentCellChanged( _
-                                          ByVal sender As Object, _
-                                          ByVal e As System.EventArgs _
-                                        ) Handles grdDB.CurrentCellChanged
+                                         ByVal sender As Object, _
+                                         ByVal e As System.EventArgs _
+                                       ) Handles grdDB.CurrentCellChanged
 
         Dim grdDB As DataGrid = CType(sender, DataGrid)
         Dim dt As DataTable
@@ -1016,4 +927,113 @@ bypass:
         frmStory.TopMost = False
 
     End Sub
+
+#End Region
+
+#Region "Retrieval Functions"
+
+    Function GetStory( _
+                       ByVal dt As DataTable _
+                     ) As String
+
+        Dim link As String
+        Dim StoryID As String
+
+        If dt.Rows(grdDB.CurrentRowIndex). _
+           Item("StoryId").GetType Is GetType(DBNull) _
+        Then
+            link = ""
+        Else
+
+            StoryID = dt.Rows(grdDB.CurrentRowIndex). _
+                      Item("StoryID")
+
+            If StoryID = "" Then
+                link = ""
+            Else
+                link = myCaller.cls.GetStoryURL(StoryID)
+            End If
+
+        End If
+
+        Return link
+
+    End Function
+
+    Function GetAtom( _
+                         ByVal dt As DataTable _
+                       ) As String
+
+        If dt.Rows(grdDB.CurrentRowIndex). _
+           Item("Internet").GetType Is GetType(DBNull) _
+        Then
+            GetAtom = ""
+        Else
+            GetAtom = Replace( _
+                               dt.Rows(grdDB.CurrentRowIndex). _
+                               Item("Internet") _
+                               , _
+                               "#", _
+                               "" _
+                             )
+        End If
+
+    End Function
+
+#End Region
+
+#Region "Utility Routines"
+
+    Private Sub StoryID(Optional ByVal Update As Boolean = True)
+
+        Dim dt As DataTable
+        dt = grdDB.DataSource
+
+        If Update Then
+
+            dt.Rows(grdDB.CurrentRowIndex). _
+            Item("StoryID") _
+            = _
+            frmMain.lblStoryID.Text
+
+        Else
+
+            frmMain.lblStoryID.Text = _
+            dt.Rows(grdDB.CurrentRowIndex). _
+            Item("StoryID")
+        End If
+
+    End Sub
+
+    Sub UpdateAtom(ByVal url As String)
+        ' update urlAtom with AuthorPage
+        frmMain.urlAtom.Text = url
+        ' Obtain Feed From Site
+        frmMain.ObtainFeed(url)
+    End Sub
+
+    Sub UpdateURL(ByVal url As String)
+        'Update txtUrl with story Page
+        frmMain.txtUrl.Text = url
+        'Reset frmMain
+        ResetInfo()
+        'Update btnURL Caption for Correct Processing
+        frmMain.btnURL.Text = "Get Chapters"
+        'Obtain Story Info From Story Page
+        frmMain.DownloadData()
+    End Sub
+
+    Sub ResetInfo()
+        'Clear Information from source
+        frmMain.ListChapters.Items.Clear()
+        frmMain.lblChapterCount.Text = ""
+        frmMain.lblProgress.Text = ""
+        frmMain.lblStart.Visible = False
+        frmMain.txtStart.Text = "1"
+        frmMain.txtStart.Visible = False
+        frmMain.txtSource.Text = ""
+    End Sub
+
+#End Region
+
 End Class

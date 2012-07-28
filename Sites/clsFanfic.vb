@@ -1,4 +1,5 @@
 Imports System.Xml
+Imports System.Data
 
 Public MustInherit Class Fanfic
 
@@ -7,50 +8,70 @@ Public MustInherit Class Fanfic
                               ByVal URL As String, _
                               ByVal list As ListBox, _
                               ByVal index As Integer _
-                            ) As XmlDocument
+                            ) As String
 
-    Public MustOverride _
-    Function WriteDate( _
-                        ByVal publish As String, _
-                        ByVal update As String, _
-                        ByVal index As Integer, _
-                        ByVal lstop As Integer _
-                      ) As String
+    Public Overridable _
+   Function WriteDate( _
+                       ByVal publish As String, _
+                       ByVal update As String, _
+                       ByVal index As Integer, _
+                       ByVal lstop As Integer _
+                     ) As String
+
+        WriteDate = ""
+
+        If index = 1 Then
+            WriteDate = "<p>" & publish & "</p>"
+        ElseIf index = lstop Then
+            WriteDate = "<p>" & update & "</p>"
+        End If
+
+    End Function
 
 #Region "Data Extraction"
 
     Public MustOverride _
     Function GrabTitle( _
-                        ByVal page As XmlDocument _
+                        ByVal htmlDoc As String _
                       ) As String
 
     Public MustOverride _
-    Function GrabSeries(ByVal page As XmlDocument) As String
+    Function GrabSeries(ByVal htmlDoc As String) As String
 
     Public MustOverride _
     Function GrabDate( _
-                       ByVal xmldoc As XmlDocument, _
+                       ByVal htmlDoc As String, _
                        ByVal title As String _
                      ) As String
 
     Public MustOverride _
-    Function GrabAuthor(ByVal xmldoc As XmlDocument) As String
+    Function GrabAuthor(ByVal htmlDoc As String) As String
 
     Public MustOverride _
-    Function GrabBody(ByVal xmldoc As XmlDocument) As String
+    Function GrabBody(ByVal htmldoc As String) As String
+
+    Public MustOverride _
+    Function GetAuthorURL(ByVal link As String) As String
+
+    Public MustOverride _
+    Function GetStoryID(ByVal link As String) As String
+
+    Public MustOverride _
+    Function GetStoryURL(ByVal id As String) As String
+
 
 #Region "Chapter Extraction"
 
     Public Overridable _
     Sub GetChapters( _
                      ByVal lst As ListBox, _
-                     ByVal xmlDoc As XmlDocument _
+                     ByVal htmlDoc As String _
                    )
 
         Dim data() As String
         Dim count As Integer
 
-        data = GetOptionValues(xmlDoc)
+        data = GetOptionValues(htmlDoc)
 
         If Not IsNothing(data) Then
             For count = 0 To UBound(data)
@@ -64,12 +85,20 @@ Public MustInherit Class Fanfic
 
     Protected _
     Function GetOptionValues( _
-                              ByVal xmldoc As XmlDocument, _
+                              ByVal htmlDoc As String, _
                               Optional ByVal param As String = "" _
                             ) As String()
 
+        Dim xmldoc As New XmlDocument
+
+        xmldoc.LoadXml(htmlDoc)
+
         Dim result As String = ""
         Dim values() As String
+        Dim idx As Integer = 0
+
+        ReDim values(0)
+
         Dim XmlList As XmlNodeList
 
         If param = "" Then
@@ -96,14 +125,20 @@ Public MustInherit Class Fanfic
 
         With xml_doc.DocumentElement.ChildNodes
 
-            ReDim values(.Count - 1)
 
             For count = 0 To (.Count - 1)
                 node = .Item(count)
-                values(count) = node.InnerText
+
+                If node.InnerText <> "" Then
+                    ReDim Preserve values(idx)
+                    values(idx) = node.InnerText
+                    idx = idx + 1
+                End If
             Next
 
         End With
+
+        xmldoc = Nothing
 
         Return values
 
@@ -116,9 +151,9 @@ Public MustInherit Class Fanfic
 #Region "Download Routines"
 
     Public Overridable _
-    Function InitialDownload(ByVal url As String) As XmlDocument
+    Function InitialDownload(ByVal url As String) As String
 
-        Dim htmldoc As XmlDocument
+        Dim htmldoc As String
 
         htmldoc = GrabData(url)
 
@@ -126,17 +161,56 @@ Public MustInherit Class Fanfic
 
     End Function
 
-    Public Overridable Function GrabData(ByVal url As String) As XmlDocument
+    Public Overridable Function GrabData(ByVal url As String) As String
 
-        Dim htmldoc As XmlDocument
         Dim html As String
 
         html = DownloadPage(url)
-        htmldoc = CleanHTML(html)
 
-        Return htmldoc
+        CleanHTML(html)
+
+        Return html
 
     End Function
+
+    Public MustOverride _
+    Function GrabFeed(ByRef rss As String) As XmlDocument
+
+#End Region
+
+#Region "RSS Routines"
+
+    Public MustOverride _
+    Function GrabStoryInfo(ByRef dsRSS As DataSet, ByVal idx As Integer) As Fanfic.Story
+
+    Structure Story
+        Dim ID As String
+        Dim Title As String
+        Dim Author As String
+        Dim URL As String
+        Dim Category As String
+        Dim ChapterCount As String
+        Dim PublishDate As String
+        Dim UpdateDate As String
+        Dim Summary As String
+    End Structure
+
+#End Region
+
+#Region "Properties"
+
+    Public MustOverride _
+    ReadOnly Property ErrorMessage() As String
+
+    Public Overridable _
+    ReadOnly Property HostName() As String
+        Get
+            Return ""
+        End Get
+    End Property
+
+    Public MustOverride _
+    ReadOnly Property Name() As String
 
 #End Region
 

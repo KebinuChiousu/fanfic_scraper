@@ -153,13 +153,9 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlReaderWriter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="HtmlAgilityPack, Version=1.3.9.1, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libraries\HtmlReaderWriter.dll</HintPath>
-    </Reference>
-    <Reference Include="SgmlReaderDll, Version=1.8.2.32628, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Libraries\SgmlReaderDll.dll</HintPath>
+      <HintPath>Libraries\HtmlAgilityPack\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -171,6 +167,7 @@
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Web">
       <Name>System.Web</Name>
     </Reference>
@@ -228,15 +225,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Sites\clsAFF.vb" />
     <Compile Include="Sites\clsFanfic.vb" />
+    <Compile Include="Utility\XML\HTML\clsCookie.vb" />
+    <Compile Include="Utility\XML\HTML\modHTML.vb" />
     <Compile Include="Utility\XML\modRSS.vb" />
     <Compile Include="Sites\clsFFNet.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Sites\clsMediaMiner.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utility\cookie.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="frmDebug.vb">
@@ -248,7 +242,7 @@
     <Compile Include="Data\INIFileReader.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utility\modFileManipulation.vb">
+    <Compile Include="Utility\XML\HTML\modWeb.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\modFormManagement.vb">
@@ -257,10 +251,11 @@
     <None Include="Data\ModOleDB.vb.old">
       <SubType>Code</SubType>
     </None>
-    <Compile Include="Utility\modURLHelper.vb">
+    <Compile Include="Utility\XML\HTML\modURLHelper.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\modUtility.vb" />
+    <Compile Include="Utility\XML\modStripTags.vb" />
     <Compile Include="Utility\XML\modXML.vb" />
     <Compile Include="Utility\XML\modXMLUtilty.vb" />
     <EmbeddedResource Include="Data\XMLtoINI.xslt" />

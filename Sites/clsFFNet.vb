@@ -11,14 +11,18 @@ Class FFNet
 
     Public Overrides _
     Function GrabTitle( _
-                        ByVal page As XmlDocument _
+                        ByVal htmlDoc As String _
                       ) As String
+
+        Dim xmldoc As New XmlDocument
+
+        xmldoc.LoadXml(htmlDoc)
 
         Dim ch As Integer = 0
 
         Dim title As String
 
-        Dim value As String = GetFirstNodeValue(page, "//title")
+        Dim value As String = GetFirstNodeValue(xmlDoc, "//title")
 
         value = Replace(value, " - FanFiction.Net", "")
 
@@ -33,6 +37,8 @@ Class FFNet
 
         End If
 
+        xmldoc = Nothing
+
         Return value
 
 
@@ -40,10 +46,13 @@ Class FFNet
 
 
     Public Overrides _
-    Function GrabSeries(ByVal page As XmlDocument) As String
+    Function GrabSeries(ByVal htmlDoc As String) As String
 
+        Dim xmldoc As New XmlDocument
 
-        Dim value As String = GetFirstNodeValue(page, "//title")
+        xmldoc.LoadXml(htmlDoc)
+
+        Dim value As String = GetFirstNodeValue(xmldoc, "//title")
         value = Replace(value, "FanFiction.Net", "")
 
         If value <> "" Then
@@ -51,15 +60,21 @@ Class FFNet
             value = Trim(Mid(value, InStr(value, ", a") + 1))
         End If
 
+        xmldoc = Nothing
+
         Return value
 
     End Function
 
     Public Overrides _
     Function GrabDate( _
-                       ByVal xmldoc As XmlDocument, _
+                       ByVal htmlDoc As String, _
                        ByVal title As String _
                      ) As String
+
+        Dim xmldoc As New XmlDocument
+
+        xmldoc.LoadXml(htmlDoc)
 
         Dim temp As String = ""
         Dim XmlList As XmlNodeList
@@ -83,10 +98,16 @@ Class FFNet
 
         GrabDate = Mid(temp, sstart, 8)
 
+        xmldoc = Nothing
+
     End Function
 
     Public Overrides _
-    Function GrabAuthor(ByVal xmldoc As XmlDocument) As String
+    Function GrabAuthor(ByVal htmldoc As String) As String
+
+        Dim xmldoc As New XmlDocument
+
+        xmldoc.LoadXml(htmldoc)
 
         Dim temp As String = ""
         Dim XmlList As XmlNodeList
@@ -113,12 +134,18 @@ Class FFNet
             End If
         Next
 
+        xmldoc = Nothing
+
         GrabAuthor = temp
 
     End Function
 
     Public Overrides _
-    Function GrabBody(ByVal xmldoc As XmlDocument) As String
+    Function GrabBody(ByVal htmldoc As String) As String
+
+        Dim xmldoc As New XmlDocument
+
+        xmldoc.LoadXml(htmldoc)
 
         Dim XmlList As XmlNodeList
         Dim value As String
@@ -131,6 +158,8 @@ Class FFNet
             value = xmldoc.InnerXml
         End Try
 
+        xmldoc = Nothing
+
         Return value
 
     End Function
@@ -138,13 +167,13 @@ Class FFNet
     Public Overrides _
     Sub GetChapters( _
                      ByVal lst As ListBox, _
-                     ByVal xmldoc As XmlDocument _
+                     ByVal htmlDoc As String _
                    )
 
         Dim data() As String
         Dim count As Integer
 
-        data = GetOptionValues(xmldoc, "Chapter Navigation")
+        data = GetOptionValues(htmlDoc, "Chapter Navigation")
 
         If Not IsNothing(data) Then
             For count = 0 To UBound(data)
@@ -159,9 +188,9 @@ Class FFNet
 #End Region
 
     Public Overrides _
-    Function GrabData(ByVal url As String) As System.Xml.XmlDocument
+    Function GrabData(ByVal url As String) As String
 
-        Dim htmldoc As XmlDocument
+        Dim htmldoc As String
 
         htmldoc = MyBase.GrabData(url)
 
@@ -169,27 +198,79 @@ Class FFNet
         StripTags(htmldoc, "menu-child xxhide", paramType.Attribute)
         StripTags(htmldoc, "xxmenu", paramType.Attribute)
         StripTags(htmldoc, "javascript", paramType.Attribute, partialM.Yes)
-        StripTags(htmldoc, "#", paramType.Attribute, partialM.Yes)
         StripTags(htmldoc, "a2a", paramType.Attribute, partialM.Yes)
 
         Return htmldoc
 
     End Function
 
+    Public Overrides Function GrabFeed(ByRef rss As String) As System.Xml.XmlDocument
+
+        Dim txtatom As String
+        Dim txtresult As String
+        Dim xmldoc As XmlDocument
+
+        rss = Replace(rss, " ", "")
+        rss = Replace(rss, "-", "")
+        rss = Replace(rss, "'", "")
+
+        If InStr(rss, Me.HostName) = 0 Then
+            rss = Replace(rss, ".", "")
+            rss = "http://www.fanfiction.net/~" & rss
+        End If
+
+        If (InStr(rss, "atom") = 0) Then
+
+            txtresult = DownloadPage(rss)
+
+            txtresult = Mid(txtresult, InStr(txtresult, "id: "))
+            txtresult = Mid(txtresult, 1, InStr(txtresult, "<") - 1)
+            If InStr(txtresult, ",") > 0 Then
+                txtresult = Mid(txtresult, 1, InStr(txtresult, ",") - 1)
+            End If
+
+            txtatom = "/atom/u/"
+            txtatom += Replace(txtresult, "id: ", "")
+
+            If txtatom = "" Then rss = ""
+
+            Dim url As URL
+            url = ExtractUrl(rss)
+
+            If InStr(txtatom, url.Scheme) = 0 Then
+                txtatom = url.Scheme & "://" & url.Host & txtatom
+            End If
+
+            rss = txtatom
+
+        End If
+
+        If rss = "" Then
+            xmldoc = Nothing
+        Else
+            xmldoc = DownloadXML(rss)
+            xmldoc = CleanXML(xmldoc)
+            xmldoc = CleanFeed(xmldoc)
+        End If
+
+        Return xmldoc
+
+    End Function
+
     Public Overrides _
-    Function InitialDownload(ByVal url As String) As XmlDocument
+    Function InitialDownload(ByVal url As String) As String
 
         Dim host As String
-        Dim xmlDoc As XmlDocument
+        Dim htmlDoc As String
 
         host = "http://www.fanfiction.net/s/"
         url = Replace(url, host, "")
         host = host & Mid(url, 1, InStr(url, "/") - 1)
         url = host & "/1/"
 
-        xmlDoc = GrabData(url)
+        htmlDoc = GrabData(url)
 
-        InitialDownload = xmlDoc
+        InitialDownload = htmlDoc
 
     End Function
 
@@ -198,7 +279,7 @@ Class FFNet
                               ByVal URL As String, _
                               ByVal list As ListBox, _
                               ByVal index As Integer _
-                            ) As XmlDocument
+                            ) As String
 
         Dim host As String
         Dim temp As String
@@ -210,30 +291,147 @@ Class FFNet
 
         URL = host & params(0) & "/"
 
-        Dim xmldoc As XmlDocument
+        Dim htmldoc As String
 
-        xmldoc = GrabData(URL & (index + 1) & "/")
+        htmldoc = GrabData(URL & (index + 1) & "/")
 
-        ProcessChapters = xmldoc
+        ProcessChapters = htmldoc
 
     End Function
 
-    Public Overrides _
-    Function WriteDate( _
-                        ByVal publish As String, _
-                        ByVal update As String, _
-                        ByVal index As Integer, _
-                        ByVal lstop As Integer _
-                      ) As String
+   
 
-        WriteDate = ""
+    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As Fanfic.Story
 
-        If index = 1 Then
-            WriteDate = "<p>" & publish & "</p>"
-        ElseIf index = lstop Then
-            WriteDate = "<p>" & update & "</p>"
+        Dim fic As New Fanfic.Story
+
+        Dim txtSummary() As String
+        Dim txtResult As String
+        Dim category As String
+
+        Dim index As Integer
+
+
+        ' Story Name
+        fic.Title = dsRSS.Tables("entry"). _
+                        Rows(idx).Item("title")
+
+        ' Story Author
+        fic.Author = dsRSS.Tables("author"). _
+                          Rows(idx).Item(0)
+        ' Story Location
+        fic.URL = dsRSS.Tables("link"). _
+                          Rows(idx).Item(1)
+
+        'Process Summary
+        txtResult = dsRSS.Tables("summary"). _
+                    Rows(idx).Item(1) & vbCrLf
+
+        fic.ID = Me.GetStoryID(fic.URL)
+
+        txtResult = Replace(txtResult, "<hr>", "<br>")
+        txtResult = Replace(txtResult, "<hr size=1>", "<br>")
+
+        txtResult = Replace(txtResult, ", Words", "<br>Words")
+        txtResult = Replace(txtResult, ", Reviews", "<br>Reviews")
+        txtResult = Replace(txtResult, "Updated", "<br>Updated")
+
+        If InStr(txtResult, "Updated") = 0 Then
+            txtResult = Replace(txtResult, "Published", "<br><br>Published")
+        Else
+            txtResult = Replace(txtResult, "Published", "<br>Published")
         End If
 
+        txtSummary = Split(txtResult, "<br>")
+
+        'Category
+        category = Mid(txtSummary(1), Len("Category: "))
+        category = Mid(category, (InStr(category, ">") + 1))
+        category = Replace(category, "</a>", "")
+
+        fic.Category = category
+
+        If InStr(txtSummary(4), "Pairing") <> 0 Then
+            index = 5
+        Else
+            index = 4
+        End If
+
+
+        'Chapter Count
+        fic.ChapterCount = txtSummary(index)
+
+        'Last Updated
+        fic.UpdateDate = txtSummary(index + 3)
+
+        'Published
+        fic.PublishDate = txtSummary(index + 4)
+
+        'Summary
+
+        fic.Summary = txtSummary(index + 6)
+
+        Return fic
+
     End Function
+
+
+    Public Overrides Function GetStoryID(ByVal link As String) As String
+
+        Dim ret As String
+        Dim hl As URL
+        Dim parms() As String
+
+        hl = ExtractUrl(link)
+
+        parms = Split(hl.URI, "/")
+
+        ret = parms(2)
+
+        Return ret
+
+    End Function
+
+    Public Overrides Function GetStoryURL(ByVal id As String) As String
+
+        Dim link As String
+
+        link = "http://www.fanfiction.net/s/" & id & "/1/"
+
+        Return link
+
+    End Function
+
+    Public Overrides Function GetAuthorURL(ByVal link As String) As String
+
+        Dim ret As String
+
+        ret = Replace(link, "atom/", "")
+
+        Return ret
+
+    End Function
+
+#Region "Properties"
+
+    Public Overrides ReadOnly Property ErrorMessage() As String
+        Get
+            Return "story not found"
+        End Get
+    End Property
+
+    Public Overrides ReadOnly Property HostName() As String
+        Get
+            Return "fanfiction.net"
+        End Get
+    End Property
+
+    Public Overrides ReadOnly Property Name() As String
+        Get
+            Return "FFNet"
+        End Get
+    End Property
+
+#End Region
 
 End Class

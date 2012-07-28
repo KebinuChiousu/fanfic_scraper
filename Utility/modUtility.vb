@@ -109,4 +109,42 @@ Module modUtility
 
     End Function
 
+    Function FormatLineEndings(ByVal str As String) As String
+        ' this function converts all line endings to Windows CrLf line endings
+        Dim prevChar As String
+        Dim nextChar As String
+        Dim curChar As String
+
+        Dim strRet As String
+
+        Dim X As Long
+
+        prevChar = ""
+        nextChar = ""
+        curChar = ""
+        strRet = ""
+
+        For X = 1 To Len(str)
+            prevChar = curChar
+            curChar = Mid$(str, X, 1)
+
+            If nextChar <> vbNullString And curChar <> nextChar Then
+                curChar = curChar & nextChar
+                nextChar = ""
+            ElseIf curChar = vbLf Then
+                If prevChar <> vbCr Then
+                    curChar = vbCrLf
+                End If
+
+                nextChar = ""
+            ElseIf curChar = vbCr Then
+                nextChar = vbLf
+            End If
+
+            strRet = strRet & curChar
+        Next X
+
+        FormatLineEndings = strRet
+    End Function
+
 End Module
