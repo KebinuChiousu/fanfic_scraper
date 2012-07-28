@@ -23,8 +23,10 @@ Module modXML
 
         htmlDoc.LoadXml(xml)
 
-        xmlDoc = StripTags(htmlDoc, "dd")
-        'xmlDoc = htmlDoc
+        'StripTags(htmlDoc, "dd")
+        StripTags(htmlDoc, "cdata", paramType.Tag, partialM.Yes)
+
+        xmlDoc = htmlDoc
 
         htmlDoc = Nothing
 
@@ -43,6 +45,8 @@ Module modXML
         Dim writer As HtmlWriter
 
         reader = New HtmlReader(html)
+
+        reader.CaseFolding = Sgml.CaseFolding.ToLower
 
         outputFile = New StringWriter()
         writer = New HtmlWriter(outputFile)
@@ -104,8 +108,8 @@ Module modXML
 
         htmlDoc.LoadXml(xml)
 
-        xmlDoc = StripTags(htmlDoc, "dd")
-        'xmlDoc = htmlDoc
+        StripTags(htmlDoc, "dd")
+        xmlDoc = htmlDoc
 
         htmlDoc = Nothing
 

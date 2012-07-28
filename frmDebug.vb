@@ -71,7 +71,7 @@ Public Class Debug
         Me.grdRSS.HeaderForeColor = System.Drawing.SystemColors.ControlText
         Me.grdRSS.Location = New System.Drawing.Point(7, 7)
         Me.grdRSS.Name = "grdRSS"
-        Me.grdRSS.Size = New System.Drawing.Size(656, 127)
+        Me.grdRSS.Size = New System.Drawing.Size(712, 127)
         Me.grdRSS.TabIndex = 27
         '
         'grdDB
@@ -80,13 +80,13 @@ Public Class Debug
         Me.grdDB.HeaderForeColor = System.Drawing.SystemColors.ControlText
         Me.grdDB.Location = New System.Drawing.Point(7, 140)
         Me.grdDB.Name = "grdDB"
-        Me.grdDB.Size = New System.Drawing.Size(655, 176)
+        Me.grdDB.Size = New System.Drawing.Size(712, 176)
         Me.grdDB.TabIndex = 29
         '
         'btnUpdateDB
         '
         Me.btnUpdateDB.Enabled = False
-        Me.btnUpdateDB.Location = New System.Drawing.Point(562, 322)
+        Me.btnUpdateDB.Location = New System.Drawing.Point(619, 318)
         Me.btnUpdateDB.Name = "btnUpdateDB"
         Me.btnUpdateDB.Size = New System.Drawing.Size(100, 21)
         Me.btnUpdateDB.TabIndex = 31
@@ -95,7 +95,7 @@ Public Class Debug
         'btnUpdateStoryID
         '
         Me.btnUpdateStoryID.Enabled = False
-        Me.btnUpdateStoryID.Location = New System.Drawing.Point(562, 343)
+        Me.btnUpdateStoryID.Location = New System.Drawing.Point(619, 344)
         Me.btnUpdateStoryID.Name = "btnUpdateStoryID"
         Me.btnUpdateStoryID.Size = New System.Drawing.Size(100, 21)
         Me.btnUpdateStoryID.TabIndex = 32
@@ -104,14 +104,14 @@ Public Class Debug
         'cmbSearch
         '
         Me.cmbSearch.Items.AddRange(New Object() {"Title", "Author", "Folder"})
-        Me.cmbSearch.Location = New System.Drawing.Point(328, 344)
+        Me.cmbSearch.Location = New System.Drawing.Point(355, 344)
         Me.cmbSearch.Name = "cmbSearch"
         Me.cmbSearch.Size = New System.Drawing.Size(84, 21)
         Me.cmbSearch.TabIndex = 33
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(332, 323)
+        Me.Label1.Location = New System.Drawing.Point(352, 322)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(80, 14)
         Me.Label1.TabIndex = 34
@@ -120,9 +120,9 @@ Public Class Debug
         'btnBatch
         '
         Me.btnBatch.Enabled = False
-        Me.btnBatch.Location = New System.Drawing.Point(417, 343)
+        Me.btnBatch.Location = New System.Drawing.Point(445, 344)
         Me.btnBatch.Name = "btnBatch"
-        Me.btnBatch.Size = New System.Drawing.Size(142, 21)
+        Me.btnBatch.Size = New System.Drawing.Size(168, 21)
         Me.btnBatch.TabIndex = 35
         Me.btnBatch.Text = "Batch Download Updates"
         '
@@ -130,7 +130,7 @@ Public Class Debug
         '
         Me.btnOpenDB.Location = New System.Drawing.Point(61, 343)
         Me.btnOpenDB.Name = "btnOpenDB"
-        Me.btnOpenDB.Size = New System.Drawing.Size(119, 21)
+        Me.btnOpenDB.Size = New System.Drawing.Size(139, 21)
         Me.btnOpenDB.TabIndex = 38
         Me.btnOpenDB.Text = "Open DB"
         '
@@ -145,7 +145,7 @@ Public Class Debug
         'btnSave
         '
         Me.btnSave.Enabled = False
-        Me.btnSave.Location = New System.Drawing.Point(186, 323)
+        Me.btnSave.Location = New System.Drawing.Point(206, 325)
         Me.btnSave.Name = "btnSave"
         Me.btnSave.Size = New System.Drawing.Size(72, 40)
         Me.btnSave.TabIndex = 40
@@ -153,12 +153,12 @@ Public Class Debug
         '
         'tmrDownload
         '
-        Me.tmrDownload.Interval = 250
+        Me.tmrDownload.Interval = 1000
         '
         'btnSearch
         '
         Me.btnSearch.Enabled = False
-        Me.btnSearch.Location = New System.Drawing.Point(264, 323)
+        Me.btnSearch.Location = New System.Drawing.Point(284, 325)
         Me.btnSearch.Name = "btnSearch"
         Me.btnSearch.Size = New System.Drawing.Size(62, 40)
         Me.btnSearch.TabIndex = 41
@@ -167,16 +167,15 @@ Public Class Debug
         'cmbChooseDB
         '
         Me.cmbChooseDB.FormattingEnabled = True
-        Me.cmbChooseDB.Items.AddRange(New Object() {"", "HP", "Ranma"})
-        Me.cmbChooseDB.Location = New System.Drawing.Point(61, 322)
+        Me.cmbChooseDB.Location = New System.Drawing.Point(61, 323)
         Me.cmbChooseDB.Name = "cmbChooseDB"
-        Me.cmbChooseDB.Size = New System.Drawing.Size(119, 21)
+        Me.cmbChooseDB.Size = New System.Drawing.Size(139, 21)
         Me.cmbChooseDB.TabIndex = 42
         '
         'lblStatus
         '
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Location = New System.Drawing.Point(430, 322)
+        Me.lblStatus.Location = New System.Drawing.Point(442, 324)
         Me.lblStatus.Name = "lblStatus"
         Me.lblStatus.Size = New System.Drawing.Size(25, 13)
         Me.lblStatus.TabIndex = 43
@@ -185,7 +184,7 @@ Public Class Debug
         'Debug
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(665, 376)
+        Me.ClientSize = New System.Drawing.Size(726, 376)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.cmbChooseDB)
         Me.Controls.Add(Me.btnSearch)
@@ -200,7 +199,6 @@ Public Class Debug
         Me.Controls.Add(Me.grdDB)
         Me.Controls.Add(Me.grdRSS)
         Me.Name = "Debug"
-        Me.ShowInTaskbar = False
         Me.Text = "frmDebug"
         CType(Me.grdRSS, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grdDB, System.ComponentModel.ISupportInitialize).EndInit()
@@ -221,32 +219,30 @@ Public Class Debug
 
 #Region "Database Routines"
 
-    Public Enum Database
-        HP = 0
-        Ranma = 1
-    End Enum
+    Public DB As String
 
-    Public DB As Database
-
-    Function GetData() As DataTable
+    Function GetData( _
+                      ByVal Category_ID As Integer, _
+                      Optional ByVal ALL As Boolean = False _
+                    ) As DataTable
 
         Dim dt As DataTable
+        Dim taFF As New dsFanFicTableAdapters.FanficTableAdapter
 
-        Dim taHP As dsFanFicTableAdapters.HPTableAdapter
-        Dim taRanma As dsFanFicTableAdapters.RanmaTableAdapter
+        DB = cmbChooseDB.Text
 
-        Select Case DB
-            Case Database.HP
-                taHP = New dsFanFicTableAdapters.HPTableAdapter
-                dt = taHP.GetDataByStatus(False, False)
-                taHP.Dispose()
-            Case Database.Ranma
-                taRanma = New dsFanFicTableAdapters.RanmaTableAdapter
-                dt = taRanma.GetDataByStatus(False, False)
-                taRanma.Dispose()
-            Case Else
-                Return Nothing
-        End Select
+        Try
+            If ALL Then
+                dt = taFF.GetDataByCat(Category_ID)
+            Else
+                dt = taFF.GetDataByStatus(False, False, Category_ID)
+            End If
+
+        Catch
+            dt = Nothing
+        Finally
+            taFF.Dispose()
+        End Try
 
         GetData = dt
 
@@ -258,22 +254,15 @@ Public Class Debug
 
         Dim result As Integer = 0
 
-        Dim taHP As dsFanFicTableAdapters.HPTableAdapter
-        Dim taRanma As dsFanFicTableAdapters.RanmaTableAdapter
+        Dim taFF As New dsFanFicTableAdapters.FanficTableAdapter
 
-        Select Case DB
-
-            Case Database.HP
-                taHP = New dsFanFicTableAdapters.HPTableAdapter
-                result = taHP.Update(dt)
-                taHP.Dispose()
-            Case Database.Ranma
-                taRanma = New dsFanFicTableAdapters.RanmaTableAdapter
-                result = taRanma.Update(dt)
-                taRanma.Dispose()
-            Case Else
-                result = -1
-        End Select
+        Try
+            result = taFF.Update(dt)
+        Catch
+            result = -1
+        Finally
+            taFF.Dispose()
+        End Try
 
         Return result
 
@@ -371,16 +360,10 @@ Public Class Debug
         If fi.Exists Then
             ifr = New IniFileReader(Application.StartupPath & "\config.ini", True)
 
-            val = ifr.GetIniValue("HP", "Path")
+            val = ifr.GetIniValue("FanFic", "Path")
 
             If val <> empty Then
-                conf.UpdateConnStr("HP", val)
-            End If
-
-            val = ifr.GetIniValue("Ranma", "Path")
-
-            If val <> empty Then
-                conf.UpdateConnStr("Ranma", val)
+                conf.UpdateConnStr("FanFic", val)
             End If
 
         End If
@@ -396,13 +379,29 @@ Public Class Debug
                                ByVal sender As System.Object, _
                                ByVal e As System.EventArgs _
                              ) Handles MyBase.Load
-
+        
         PlaceDebugWindow()
         cmbSearch.SelectedIndex = 0
-        cmbChooseDB.SelectedIndex = 0
         InitConfig()
 
+        FillCategories()
+
     End Sub
+
+    Private Sub FillCategories()
+
+        Dim dt As DataTable
+
+        Dim taCat As New dsFanFicTableAdapters.CategoryTableAdapter
+
+        dt = taCat.GetData()
+
+        cmbChooseDB.DataSource = dt
+        cmbChooseDB.ValueMember = "Index"
+        cmbChooseDB.DisplayMember = "Name"
+
+    End Sub
+
 
     Private Sub frmDebug_Closing( _
                                   ByVal sender As Object, _
@@ -418,10 +417,73 @@ Public Class Debug
 
 #End Region
 
+    Function isStale( _
+                      ByVal dt As DataTable, _
+                      ByVal pos As Long _
+                    ) As Boolean
+
+        Dim ret As Boolean = False
+
+        Dim publish_date As Date
+        Dim update_date As Date
+        Dim last_checked As Date
+        Dim tsDelta As TimeSpan
+
+        Dim wait As Integer
+
+
+        If dt.Rows(pos).Item("Last_Checked").ToString = "" Then
+            dt.Rows(pos).Item("Last_checked") = CDate(Date.Today)
+            UpdateData(dt)
+            ret = False
+            Return ret
+        End If
+
+        publish_date = CDate(dt.Rows(pos).Item("Publish_Date").ToString)
+
+        If dt.Rows(pos).Item("Update_Date").ToString = "" Then
+            update_date = publish_date
+        Else
+            update_date = CDate(dt.Rows(pos).Item("Update_Date").ToString)
+        End If
+
+        last_checked = CDate(dt.Rows(pos).Item("Last_Checked").ToString)
+
+        tsDelta = last_checked.Subtract(update_date)
+
+        Select Case tsDelta.Days
+            Case Is > 360
+                wait = 180
+            Case Is > 180
+                wait = 90
+            Case Is > 90
+                wait = 60
+            Case Is > 60
+                wait = 30
+            Case Is > 30
+                wait = 7
+            Case Else
+                wait = 0
+        End Select
+
+        tsDelta = Date.Today.Subtract(last_checked)
+        If tsDelta.Days < wait Then
+            ret = True
+        Else
+            dt.Rows(pos).Item("Last_Checked") = CDate(Date.Today)
+            UpdateData(dt)
+        End If
+
+        Return ret
+
+    End Function
+
     Sub ProcessStory( _
                       ByVal dt As DataTable, _
                       ByVal pos As Long _
                     )
+
+        'dt.Rows(pos).Item("Publish_Date") = CDate(frmMain.lblPublish.Text)
 
         frmMain.lblTitle.Text = dt.Rows(pos). _
                                 Item("Title")
@@ -439,6 +501,11 @@ Public Class Debug
             Exit Sub
         End If
 
+        If dt.Rows(pos).Item("Publish_Date").ToString = "" Then
+            dt.Rows(pos).Item("Publish_Date") = CDate(frmMain.lblPublish.Text)
+            UpdateData(dt)
+        End If
+
         If frmMain.lblChapterCount.Text > _
            dt.Rows(pos).Item("Count") _
         Then
@@ -447,6 +514,10 @@ Public Class Debug
 
             If frmMain.lblUpdate.Text = "" Then
                 frmMain.lblUpdate.Text = frmMain.lblPublish.Text
+            End If
+
+            If dt.Rows(pos).Item("Publish_Date").ToString = "" Then
+                dt.Rows(pos).Item("Update_Date") = CDate(frmMain.lblPublish.Text)
             End If
 
             dt.Rows(pos).Item("Update_Date") = CDate(frmMain.lblUpdate.Text)
@@ -466,6 +537,7 @@ Public Class Debug
         Dim dt As DataTable
         Dim url As String = ""
         Dim data As String = ""
+        Dim abort As Boolean
 
         dt = grdDB.DataSource
 
@@ -477,29 +549,49 @@ bypass:
 
         pos = grdDB.CurrentRowIndex
 
-        If (pos < (dt.Rows.Count - 1)) Then
+        If (pos <= (dt.Rows.Count - 1)) Then
             If initial = False Then
                 grdDB.CurrentRowIndex = grdDB.CurrentRowIndex + 1
+                If pos = grdDB.CurrentRowIndex Then
+                    Return -1
+                End If
                 pos = grdDB.CurrentRowIndex
+                If pos = 0 Then Return -1
             End If
         Else
             Return -1
         End If
 
-        Select Case Navigate
-            Case Process.AuthorPage
-                url = GetAtom(dt)
-            Case Process.StoryPage
-                url = GetStory(dt)
-        End Select
+        abort = False
 
+        If Not isStale(dt, pos) Then
 
-        If (InStr(url, "fanfiction") = 0 And _
-           pos < dt.Rows.Count - 1) _
-        Or _
-              (dt.Rows(pos). _
-                Item("Complete") = True) _
-        Then
+            Select Case Navigate
+                Case Process.AuthorPage
+                    url = GetAtom(dt)
+                Case Process.StoryPage
+                    url = GetStory(dt)
+            End Select
+
+            If (InStr(url, "fanfiction") = 0 _
+            And pos < dt.Rows.Count - 1) _
+            Then
+                abort = True
+            End If
+
+        Else
+            abort = True
+        End If
+
+        'If (dt.Rows(pos).Item("Complete") = True then
+        '    abort = True
+        'End If
+
+        'If (dt.Rows(pos).Item("Abandoned") = True) Then
+        '    abort = True
+        'End If
+
+        If abort Then
             initial = False
             GoTo bypass
         Else
@@ -527,13 +619,22 @@ bypass:
         'Dim pos As Long
         Dim start As Integer
 
-        dt = GetData()
+        dt = GetData(CInt(cmbChooseDB.SelectedValue))
+
+        If dt.Rows.Count = 0 Then
+            MsgBox("No new stories to download!", MsgBoxStyle.Exclamation)
+            Exit Sub
+        End If
 
         grdDB.DataSource = dt
+
+        'RefreshDB()
 
         start = MoveNext(True)
 
         tmrDownload.Enabled = True
+
+
 
         'For pos = start To (ds.Tables(0).Rows.Count - 1)
         '    pos = MoveNext()
@@ -542,29 +643,18 @@ bypass:
 
     End Sub
 
-    Private Sub OpenDB( _
-                        ByVal sender As System.Object, _
-                        ByVal e As System.EventArgs _
-                      ) Handles btnOpenDB.Click
+    Private Sub RefreshDB()
 
         Dim dt As DataTable
 
-        Dim val As String
-        val = cmbChooseDB.SelectedItem.ToString
+        Dim cat_id As Integer
 
-        Select Case val
-            Case "HP"
-                DB = Database.HP
-            Case "Ranma"
-                DB = Database.Ranma
-            Case Else
-                MsgBox("Please choose a valid database.")
-                Exit Sub
-        End Select
+        'Dim val As String
+        'val = cmbChooseDB.SelectedItem.ToString
 
-        dt = GetData()
+        cat_id = CInt(cmbChooseDB.SelectedValue.ToString)
 
-        lblStatus.Text = "DB: " & DB.ToString & " - (1 of " & dt.Rows.Count & ")"
+        dt = GetData(cat_id, True)
 
         btnSave.Enabled = True
         btnSearch.Enabled = True
@@ -576,6 +666,24 @@ bypass:
 
         grdDB.DataSource = dt
         grdDB.CurrentRowIndex = 0
+
+        If dt.Rows.Count > 0 Then
+
+            lblStatus.Text = "(" & _
+                             (grdDB.CurrentRowIndex + 1) & _
+                             " of " & dt.Rows.Count & ")"
+        Else
+            lblStatus.Text = "(0 of 0)"
+        End If
+
+    End Sub
+
+    Private Sub OpenDB( _
+                        ByVal sender As System.Object, _
+                        ByVal e As System.EventArgs _
+                      ) Handles btnOpenDB.Click
+
+        RefreshDB()
 
     End Sub
 
@@ -589,69 +697,40 @@ bypass:
 
         Dim NewRow As Integer = dt.Rows.Count
 
+        Dim iYesNo As Integer
 
-        Select Case DB
-            Case Database.HP
-                Dim iYesNo As Integer = MsgBox("Add New Record?", MsgBoxStyle.YesNo)
+        iYesNo = MsgBox("Add New Record?", MsgBoxStyle.YesNo)
 
-                If iYesNo = vbYes Then
-                    Dim dr As DataRow = dt.NewRow
+        If iYesNo = vbYes Then
+            Dim dr As DataRow = dt.NewRow
 
-                    dr("Title") = myCaller.lblTitle.Text
-                    dr("Author") = myCaller.lblAuthor.Text
-                    dr("Folder") = InputBox("Enter File Name") 'Folder Name
-                    'dr("Chapter") = "" 'Current Chapter
-                    dr("Count") = 0 'Chapter Count
-                    'dr("Matchup") = "" ' Matchup
-                    dr("Description") = Trim(myCaller.txtSource.Text)
-                    dr("Internet") = myCaller.lblAuthor.Text & _
-                                     "#" & Replace(myCaller.urlAtom.Text, "atom/", "") & "#"
-                    dr("StoryId") = myCaller.lblStoryID.Text
-                    dr("Complete") = False
-                    dr("Publish_Date") = CDate( _
-                                                Replace( _
-                                                         frmMain.lblPublish.Text, _
-                                                         "Published:", _
-                                                         "" _
-                                                       ) _
-                                              )
+            dr("Title") = myCaller.lblTitle.Text
+            dr("Author") = myCaller.lblAuthor.Text
+            dr("Folder") = InputBox("Enter File Name") 'Folder Name
+            'dr("Chapter") = "" 'Current Chapter
+            dr("Count") = 0 'Chapter Count
+            'dr("Matchup") = "" ' Matchup
+            dr("Description") = Trim(myCaller.txtSource.Text)
+            dr("Internet") = myCaller.lblAuthor.Text & _
+                             "#" & Replace(myCaller.urlAtom.Text, "atom/", "") & "#"
+            dr("StoryId") = myCaller.lblStoryID.Text
+            dr("Complete") = False
+            dr("Publish_Date") = CDate( _
+                                        Replace( _
+                                                 frmMain.lblPublish.Text, _
+                                                 "Published:", _
+                                                 "" _
+                                               ) _
+                                      )
 
-                    dt.Rows.Add(dr)
+            dr("Category_Index") = CInt(cmbChooseDB.SelectedValue)
 
-                    grdDB.DataSource = dt
-                    grdDB.CurrentRowIndex = NewRow
+            dt.Rows.Add(dr)
 
-                    'CreateConnection(ModOleDB.DatabaseType.Access)
-                    'SynchData(ds)
+            grdDB.DataSource = dt
+            grdDB.CurrentRowIndex = NewRow
 
-                End If
-
-            Case Database.Ranma
-                Dim iYesNo As Integer = MsgBox("Add New Record?", MsgBoxStyle.YesNo)
-
-                If iYesNo = vbYes Then
-                    Dim dr As DataRow = dt.NewRow
-
-                    dr("Title") = myCaller.lblTitle.Text
-                    dr("Author") = myCaller.lblAuthor.Text
-                    dr("Folder") = InputBox("Enter File Name") 'Folder Name
-                    'dr("Chapter") = "" 'Current Chapter
-                    dr("Count") = 0 'Chapter Count
-                    'dr("Crossover") = "" ' Matchup
-                    dr("Description") = Trim(myCaller.txtSource.Text)
-                    dr("Internet") = myCaller.lblAuthor.Text & _
-                                     "#" & Replace(myCaller.urlAtom.Text, "atom/", "") & "#"
-                    dr("StoryId") = myCaller.lblStoryID.Text
-                    dr("Complete") = False
-
-
-                    dt.Rows.Add(dr)
-
-                    grdDB.DataSource = dt
-                    grdDB.CurrentRowIndex = NewRow
-
-                End If
-        End Select
+        End If
 
         dt = Nothing
 
@@ -669,6 +748,8 @@ bypass:
 
         If pos <> -1 Then
             tmrDownload.Enabled = True
+        Else
+            RefreshDB()
         End If
 
     End Sub
@@ -907,9 +988,32 @@ bypass:
 
         dt = grdDB.DataSource
 
+        If dt.Rows.Count > 0 Then
+            lblStatus.Text = "(" & _
+                             (grdDB.CurrentRowIndex + 1) & _
+                             " of " & dt.Rows.Count & ")"
+        Else
+            lblStatus.Text = "(0 of 0)"
+        End If
 
-        lblStatus.Text = "DB: " & DB.ToString & " - (" & (grdDB.CurrentRowIndex + 1) & " of " & dt.Rows.Count & ")"
+    End Sub
 
+    Private Sub grdDB_DoubleClick( _
+                                   ByVal sender As Object, _
+                                   ByVal e As System.EventArgs _
+                                 ) Handles grdDB.DoubleClick
+
+        Initialize( _
+                    forms.frmStory _
+                  )
+
+        frmStory.myCaller = Me
+
+        frmStory.Show()
+
+        frmStory.TopMost = True
+        frmStory.RefreshData()
+        frmStory.TopMost = False
 
     End Sub
 End Class

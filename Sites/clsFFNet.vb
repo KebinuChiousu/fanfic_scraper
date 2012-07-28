@@ -16,16 +16,21 @@ Class FFNet
 
         Dim ch As Integer = 0
 
+        Dim title As String
+
         Dim value As String = GetFirstNodeValue(page, "//title")
 
         value = Replace(value, " - FanFiction.Net", "")
 
-        value = Split(value, ",")(0)
-
         ch = InStr(value, "Chapter")
 
         If ch > 0 Then
-            value = Mid(value, 1, ch - 1) & "<br><br>" & Mid(value, ch)
+            title = Trim(Mid(value, 1, ch - 1))
+            value = Replace(value, title, "")
+            ch = InStr(value, ", a")
+            value = title & "<br><br>" & Mid(value, 1, ch - 1)
+            'value = title
+
         End If
 
         Return value
@@ -43,7 +48,7 @@ Class FFNet
 
         If value <> "" Then
             value = Replace(value, " - ", "")
-            value = Split(value, ",")(1)
+            value = Trim(Mid(value, InStr(value, ", a") + 1))
         End If
 
         Return value
@@ -139,7 +144,7 @@ Class FFNet
         Dim data() As String
         Dim count As Integer
 
-        data = GetOptionValues(xmldoc, "chapter navigation")
+        data = GetOptionValues(xmldoc, "Chapter Navigation")
 
         If Not IsNothing(data) Then
             For count = 0 To UBound(data)
@@ -160,11 +165,12 @@ Class FFNet
 
         htmldoc = MyBase.GrabData(url)
 
-        htmldoc = StripTags(htmldoc, "menulinks", paramType.Attribute)
-        htmldoc = StripTags(htmldoc, "menu-child xxhide", paramType.Attribute)
-        htmldoc = StripTags(htmldoc, "xxmenu", paramType.Attribute)
-        htmldoc = StripTags(htmldoc, "javascript", paramType.Attribute, partialM.Yes)
-        htmldoc = StripTags(htmldoc, "#", paramType.Attribute, partialM.Yes)
+        StripTags(htmldoc, "menulinks", paramType.Attribute)
+        StripTags(htmldoc, "menu-child xxhide", paramType.Attribute)
+        StripTags(htmldoc, "xxmenu", paramType.Attribute)
+        StripTags(htmldoc, "javascript", paramType.Attribute, partialM.Yes)
+        StripTags(htmldoc, "#", paramType.Attribute, partialM.Yes)
+        StripTags(htmldoc, "a2a", paramType.Attribute, partialM.Yes)
 
         Return htmldoc
 
@@ -181,7 +187,7 @@ Class FFNet
         host = host & Mid(url, 1, InStr(url, "/") - 1)
         url = host & "/1/"
 
-        xmlDoc = MyBase.GrabData(url)
+        xmlDoc = GrabData(url)
 
         InitialDownload = xmlDoc
 
@@ -206,7 +212,7 @@ Class FFNet
 
         Dim xmldoc As XmlDocument
 
-        xmldoc = MyBase.GrabData(URL & (index + 1) & "/")
+        xmldoc = GrabData(URL & (index + 1) & "/")
 
         ProcessChapters = xmldoc
 

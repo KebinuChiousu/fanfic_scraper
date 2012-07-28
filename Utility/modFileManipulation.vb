@@ -1,6 +1,7 @@
 Imports System
 Imports System.IO.File
 Imports System.IO
+Imports System.IO.Compression
 Imports System.Text
 Imports System.Net
 
@@ -28,16 +29,6 @@ Module FileManipulation
 
     Function DownloadPage(ByVal URL As String) As String
 
-        'On Error Resume Next
-
-        'Dim httpReader As New WinInet
-        'Dim bytesRead As Byte()
-        'bytesRead = httpReader.GetHttpFile(URL)
-        'DownloadPage = System.Text.UTF8Encoding.UTF8.GetString(bytesRead)
-        'httpReader.Dispose()
-        'httpReader = Nothing
-
-        'On Error GoTo 0
 Retry:
         Try
             Dim sResult As String
@@ -45,13 +36,14 @@ Retry:
             Dim objResponse As HttpWebResponse
 
             oHttp.UserAgent = "Mozilla/5.0 " & _
-                              "(Windows; U; Windows NT 5.1; en-US; rv:1.9.1.3) " & _
-                              "Gecko/20090824 " & _
-                              "Firefox/3.5.3 " & _
-                              "(.NET CLR 3.5.30729)"
+                              "(Windows NT 6.1; WOW64) " & _
+                              "AppleWebKit/536.11 (KHTML, like Gecko) " & _
+                              "Chrome/20.0.1132.47 " & _
+                              "Safari/536.11"
 
             oHttp.Method = "GET"
-            oHttp.Timeout = (360 * 1000) '6 Minutes
+            oHttp.Timeout = (180 * 1000) '3 Minutes
+            oHttp.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
             objResponse = oHttp.GetResponse
 
             Dim sr As StreamReader

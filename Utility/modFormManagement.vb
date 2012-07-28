@@ -3,11 +3,13 @@ Module FormManagement
     Public frmDebug As Debug
     Public frmMain As HtmlGrabber
     Public frmHtml As Html
+    Public frmStory As Story
 
     Public Enum forms
         frmMain = 0
         frmDebug = 1
         frmHtml = 2
+        frmStory = 3
     End Enum
 
     Sub Initialize( _
@@ -23,6 +25,9 @@ Module FormManagement
                 frm = frmDebug
             Case forms.frmHtml
                 frm = frmHtml
+            Case forms.frmStory
+                frm = frmStory
+
         End Select
 
         If Not IsNothing(frm) Then
@@ -54,7 +59,9 @@ Module FormManagement
             Case forms.frmHtml
                 'Create an Instance of class frmHtml
                 frmHtml = New Html
-
+            Case forms.frmStory
+                frmStory = New Story
+                PlaceStoryWindow()
         End Select
 
     End Sub
@@ -68,5 +75,14 @@ Module FormManagement
         frmHtml.Top = frmMain.Top + 168 + 35
         frmHtml.Left = frmMain.Left + 28
     End Sub
+
+    Sub PlaceStoryWindow()
+
+        frmStory.Top = frmDebug.Top - frmDebug.grdRSS.Height
+        frmStory.Left = frmDebug.Left
+
+    End Sub
+
+
 
 End Module

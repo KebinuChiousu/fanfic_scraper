@@ -60,9 +60,9 @@ Class MediaMiner
 
         xpath = "//td[@class='m']"
         xml_doc = ReturnNodes(xml_doc, xpath)
-        xml_doc = StripTags(xml_doc, "table")
+        StripTags(xml_doc, "table")
         'xml_doc = StripTags(xml_doc, "div")
-        xml_doc = StripTags(xml_doc, "a")
+        StripTags(xml_doc, "a")
 
         xmllist = xml_doc.SelectNodes("//td")
 

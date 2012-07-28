@@ -5,6 +5,7 @@ Module modXMLUtilty
     Public Enum paramType
         Tag = 1
         Attribute = 2
+        Value = 3
     End Enum
 
     Public Enum partialM
@@ -14,27 +15,21 @@ Module modXMLUtilty
 
 #Region "Tag Removal"
 
-    Function StripTags( _
-                        ByVal xmlDoc As XmlDocument, _
+    Sub StripTags( _
+                        ByRef xmlDoc As XmlDocument, _
                         ByVal param As String, _
                         Optional ByVal type As paramType = paramType.Tag, _
                         Optional ByVal partialMatch As partialM = partialM.No _
-                      ) As XmlDocument
-
-        Dim xml_Doc As New XmlDocument
-
-        xml_Doc = xmlDoc
+                      )
 
         StripChildTags( _
-                        xml_Doc.DocumentElement, _
+                        xmlDoc.DocumentElement, _
                         param, _
                         type, _
                         partialMatch _
                       )
 
-        Return xml_Doc
-
-    End Function
+    End Sub
 
     Sub StripChildTags( _
                         ByRef xml_node As XmlNode, _
@@ -58,10 +53,17 @@ Module modXMLUtilty
                 Case paramType.Tag
 
                     name = child_node.LocalName
-                    If name = param Then
-                        child_node.RemoveAll()
-                        xml_node.RemoveChild(child_node)
-                    End If
+                    Select Case partialMatch
+                        Case partialM.No
+                            If name = param Then
+                                child_node.RemoveAll()
+                            End If
+                        Case partialM.Yes
+                            If InStr(name, param) > 0 Then
+                                child_node.RemoveAll()
+                            End If
+                    End Select
+
 
                 Case paramType.Attribute
                     If Not IsNothing(child_node.Attributes) Then
@@ -77,13 +79,14 @@ Module modXMLUtilty
                                     Case partialM.Yes
                                         match = (InStr(name, param) > 0)
                                 End Select
+
                                 If match Then
                                     child_node.RemoveAll()
-                                    xml_node.RemoveChild(child_node)
                                 End If
                             End If
                         Next
                     End If
+
             End Select
 
             If child_node.ChildNodes.Count > 0 Then
@@ -91,6 +94,10 @@ Module modXMLUtilty
             End If
 
         Next count
+
+    End Sub
+
+    Sub StripByClass()
 
     End Sub
 

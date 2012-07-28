@@ -649,6 +649,7 @@ oops:
                                                    0 _
                                                  )
 
+                    lblTitle.Text = cls.GrabTitle(htmldoc)
                     lblAuthor.Text = cls.GrabAuthor(htmldoc)
                     lblPublish.Text = cls.GrabDate(htmldoc, "Published: ")
                     lblUpdate.Text = cls.GrabDate(htmldoc, "Updated: ")
@@ -775,6 +776,13 @@ oops:
         Dim sr As StreamReader
         sr = New StreamReader(StringToStream(txtResult))
         Dim sw As StreamWriter
+
+        FileMask = Replace(FileMask, "-", "")
+
+        If IsNumeric(Mid(FileMask, Len(FileMask), 1)) Then
+            FileMask += "-"
+        End If
+
         sw = New StreamWriter(Environment.GetFolderPath( _
                                Environment.SpecialFolder.Desktop) _
                                & "\" & FileMask & _
@@ -822,8 +830,9 @@ oops:
 
                 urlAtom.Text = Replace(urlAtom.Text, " ", "")
                 urlAtom.Text = Replace(urlAtom.Text, "-", "")
-                
-                If InStr(urlAtom.Text, "http://www.fanfiction.net") = 0 Then
+                urlAtom.Text = Replace(urlAtom.Text, "'", "")
+
+                If InStr(urlAtom.Text, "fanfiction.net") = 0 Then
                     urlAtom.Text = Replace(urlAtom.Text, ".", "")
                     urlAtom.Text = "http://www.fanfiction.net/~" & urlAtom.Text
                 End If
@@ -832,16 +841,27 @@ oops:
 
                     txtresult = DownloadPage(urlAtom.Text)
 
+                    txtresult = Mid(txtresult, InStr(txtresult, "id: "))
+                    txtresult = Mid(txtresult, 1, InStr(txtresult, "<") - 1)
+                    If InStr(txtresult, ",") > 0 Then
+                        txtresult = Mid(txtresult, 1, InStr(txtresult, ",") - 1)
+                    End If
 
-                    htmldoc = CleanHTML(txtresult)
-                    htmldoc = ReturnNodes(htmldoc, "//a")
-                    txtatom = GetAttrValue(htmldoc, "a", "href", "/atom/")
+                    txtatom = "/atom/u/"
+                    txtatom += Replace(txtresult, "id: ", "")
+
+                    'htmldoc = CleanHTML(txtresult)
+                    'htmldoc = ReturnNodes(htmldoc, "//a")
+                    'txtatom = GetAttrValue(htmldoc, "a", "href", "/atom/")
 
                     If txtatom = "" Then GoTo abort
 
                     Dim url As URL
                     url = ExtractUrl(urlAtom.Text)
-                    txtatom = url.Scheme & "://" & url.Host & txtatom
+
+                    If InStr(txtatom, url.Scheme) = 0 Then
+                        txtatom = url.Scheme & "://" & url.Host & txtatom
+                    End If
 
                     urlAtom.Text = txtatom
 
@@ -849,37 +869,40 @@ oops:
 
             Case "MediaMiner"
 
-                host = "http://www.mediaminer.org/"
-                temp = ""
+                    host = "http://www.mediaminer.org/"
+                    temp = ""
 
-                Dim author As String = HttpUtility.UrlEncode(urlAtom.Text)
+                    Dim author As String = HttpUtility.UrlEncode(urlAtom.Text)
 
-                If InStr(urlAtom.Text, host) = 0 Then
-                    urlAtom.Text = host
-                    urlAtom.Text += "fanfic/src.php?srcht=srcan&srch="
-                    urlAtom.Text += author
-                    urlAtom.Text += "&show=Show%2FSearch&sort=dateD&gnr=&type=&rate=AT&lang=english"
-                End If
+                    If InStr(urlAtom.Text, host) = 0 Then
+                        urlAtom.Text = host
+                        urlAtom.Text += "fanfic/src.php?srcht=srcan&srch="
+                        urlAtom.Text += author
+                        urlAtom.Text += "&show=Show%2FSearch&sort=dateD&gnr=&type=&rate=AT&lang=english"
+                    End If
 
-                If InStr(urlAtom.Text, "rss") = 0 Then
+                    If InStr(urlAtom.Text, "rss") = 0 Then
 
-                    txtresult = DownloadPage(urlAtom.Text)
+                        txtresult = DownloadPage(urlAtom.Text)
 
-                    If txtresult = "" Then GoTo abort
+                        If txtresult = "" Then GoTo abort
 
-                    htmldoc = CleanHTML(txtresult)
-                    htmldoc = ReturnNodes(htmldoc, "//a")
-                    txtatom = GetAttrValue(htmldoc, "a", "href", "/rss/")
+                        htmldoc = CleanHTML(txtresult)
+                        htmldoc = ReturnNodes(htmldoc, "//a")
+                        txtatom = GetAttrValue(htmldoc, "a", "href", "/rss/")
 
-                    If InStr(txtatom, "rss") = 0 Then GoTo abort
+                        If InStr(txtatom, "rss") = 0 Then GoTo abort
 
-                    Dim url As URL
-                    url = ExtractUrl(urlAtom.Text)
-                    txtatom = url.Scheme & "://" & url.Host & txtatom
+                        Dim url As URL
+                        url = ExtractUrl(urlAtom.Text)
 
-                    urlAtom.Text = txtatom
+                        If InStr(txtatom, url.Host) = 0 Then
+                            txtatom = url.Scheme & "://" & url.Host & txtatom
+                        End If
 
-                End If
+                        urlAtom.Text = txtatom
+
+                    End If
 
         End Select
 
