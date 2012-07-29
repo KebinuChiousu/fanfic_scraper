@@ -1,7 +1,6 @@
 Imports System
 Imports System.text
 Imports System.net
-'Imports System.IO
 Imports System.Xml
 Imports HtmlAgilityPack
 Imports System.Web.HttpUtility
@@ -426,6 +425,24 @@ Class AFF
 
     Public Overrides Function GetAuthorURL(ByVal link As String) As String
 
+        Dim htmldoc As String
+        Dim doc As HtmlDocument
+        Dim temp As HtmlNodeCollection
+
+        Dim ret As String = ""
+
+        If InStr(link, "profile.php") > 0 Then
+            ret = link
+        Else
+            htmldoc = GrabData(link)
+            htmldoc = GrabHeaderRow(htmldoc)
+            doc = CleanHTML(htmldoc)
+            temp = FindLinksByHref(doc.DocumentNode, "profile.php")
+            ret = temp(0).Attributes("href").Value
+        End If
+
+        Return ret
+
     End Function
 
     Public Overrides Function GetStoryID(ByVal link As String) As String
@@ -444,6 +461,18 @@ Class AFF
     End Function
 
     Public Overrides Function GetStoryURL(ByVal id As String) As String
+
+        Dim temp As String()
+        Dim link As String
+        Dim category As String
+
+        temp = Split(id, ":")
+        category = temp(0)
+        id = temp(1)
+
+        link = "http://" & category & "." & Me.HostName & "/story.php?no=" & id
+
+        Return link
 
     End Function
 

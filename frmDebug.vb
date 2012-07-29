@@ -706,10 +706,18 @@ bypass:
 
         Dim iYesNo As Integer
 
+        Dim link As String
+
         iYesNo = MsgBox("Add New Record?", MsgBoxStyle.YesNo)
 
         If iYesNo = vbYes Then
             Dim dr As DataRow = dt.NewRow
+
+            If myCaller.urlAtom.Text = "" Then
+                link = myCaller.txtUrl.Text
+            Else
+                link = myCaller.urlAtom.Text
+            End If
 
             dr("Title") = myCaller.lblTitle.Text
             dr("Author") = myCaller.lblAuthor.Text
@@ -719,7 +727,7 @@ bypass:
             'dr("Matchup") = "" ' Matchup
             dr("Description") = Trim(myCaller.txtSource.Text)
             dr("Internet") = myCaller.lblAuthor.Text & _
-                             "#" & myCaller.cls.GetAuthorURL(myCaller.urlAtom.Text) & "#"
+                             "#" & myCaller.cls.GetAuthorURL(link) & "#"
             dr("StoryId") = myCaller.cls.GetStoryID(myCaller.txtUrl.Text)
             dr("Complete") = False
             dr("Publish_Date") = CDate( _
