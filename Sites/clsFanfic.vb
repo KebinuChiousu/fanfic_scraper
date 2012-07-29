@@ -1,5 +1,6 @@
 Imports System.Xml
 Imports System.Data
+Imports System.Web.HttpUtility
 
 Public MustInherit Class Fanfic
 
@@ -186,13 +187,60 @@ Public MustInherit Class Fanfic
         Dim ID As String
         Dim Title As String
         Dim Author As String
-        Dim URL As String
+        Dim AuthorURL As String
+        Dim StoryURL As String
         Dim Category As String
         Dim ChapterCount As String
         Dim PublishDate As String
         Dim UpdateDate As String
         Dim Summary As String
     End Structure
+
+    Protected Function GenerateAtomFeed(ByVal fic As Fanfic.Story()) As String
+
+        Dim html As String = ""
+        Dim node_idx As Integer
+
+        html = "<feed>"
+
+        For node_idx = 0 To UBound(fic)
+
+            html += "<entry>"
+            html += "<author>"
+            html += "<name>"
+            html += fic(node_idx).Author
+            html += "</name>"
+            html += "<uri>"
+            html += fic(node_idx).AuthorURL
+            html += "</uri>"
+            html += "</author>"
+            html += "<published>"
+            html += fic(node_idx).PublishDate
+            html += "</published>"
+            html += "<updated>"
+            html += fic(node_idx).UpdateDate
+            html += "</updated>"
+            html += "<title>"
+            html += fic(node_idx).Title
+            html += "</title>"
+            html += "<link rel=""alternate"" href=""" & fic(node_idx).StoryURL & """ />"
+            html += "<id>"
+            html += fic(node_idx).ID
+            html += ":"
+            html += fic(node_idx).ChapterCount
+            html += "</id>"
+            html += "<summary type=""html"">"
+            html += HtmlEncode(fic(node_idx).Summary)
+            html += "</summary>"
+            html += "</entry>"
+
+        Next
+
+        html += "</feed>"
+
+        Return html
+
+    End Function
 
 #End Region
 

@@ -238,7 +238,8 @@ Class AFF
             temp = FindLinksByHref(doc.DocumentNode, "story.php")
 
             fic(node_idx).Author = author
-            fic(node_idx).URL = temp(0).Attributes("href").Value
+            fic(node_idx).AuthorURL = author_url
+            fic(node_idx).StoryURL = temp(0).Attributes("href").Value
             fic(node_idx).Title = temp(0).InnerText
 
             html = Replace(html, temp(0).OuterHtml, "")
@@ -257,13 +258,13 @@ Class AFF
             fic(node_idx).PublishDate = Trim(Replace(summary(0), "Posted : ", ""))
             fic(node_idx).UpdateDate = Trim(Replace(summary(1), "Edited : ", ""))
 
-            url = ExtractUrl(fic(node_idx).URL)
+            url = ExtractUrl(fic(node_idx).StoryURL)
 
             fic(node_idx).Category = Split(url.Host, ".")(0)
 
-            fic(node_idx).ID = Me.GetStoryID(fic(node_idx).URL)
+            fic(node_idx).ID = Me.GetStoryID(fic(node_idx).StoryURL)
 
-            html = Me.GrabData(fic(node_idx).URL)
+            html = Me.GrabData(fic(node_idx).StoryURL)
             doc = CleanHTML(html)
 
             temp = FindNodesByAttribute(doc.DocumentNode, "select", "name", "chapnav")
@@ -282,42 +283,7 @@ Class AFF
             xmldoc = Nothing
         Else
 
-            html = "<feed>"
-
-            For node_idx = 0 To UBound(fic)
-
-                html += "<entry>"
-                html += "<author>"
-                html += "<name>"
-                html += fic(node_idx).Author
-                html += "</name>"
-                html += "<uri>"
-                html += author_url
-                html += "</uri>"
-                html += "</author>"
-                html += "<published>"
-                html += fic(node_idx).PublishDate
-                html += "</published>"
-                html += "<updated>"
-                html += fic(node_idx).UpdateDate
-                html += "</updated>"
-                html += "<title>"
-                html += fic(node_idx).Title
-                html += "</title>"
-                html += "<link rel=""alternate"" href=""" & fic(node_idx).URL & """ />"
-                html += "<id>"
-                html += fic(node_idx).ID
-                html += ":"
-                html += fic(node_idx).ChapterCount
-                html += "</id>"
-                html += "<summary type=""html"">"
-                html += HtmlEncode(fic(node_idx).Summary)
-                html += "</summary>"
-                html += "</entry>"
-
-            Next
-
-            html += "</feed>"
+            html = GenerateAtomFeed(fic)
 
             doc = CleanHTML(html)
 
@@ -347,10 +313,10 @@ Class AFF
         fic.Author = dsRSS.Tables("author"). _
                           Rows(idx).Item(0)
         ' Story Location
-        fic.URL = dsRSS.Tables("link"). _
+        fic.StoryURL = dsRSS.Tables("link"). _
                           Rows(idx).Item(1)
 
-        fic.ID = Me.GetStoryID(fic.URL)
+        fic.ID = Me.GetStoryID(fic.StoryURL)
 
         fic.PublishDate = CDate(dsRSS.Tables("entry").Rows(idx).Item("published"))
 

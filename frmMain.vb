@@ -611,7 +611,7 @@ Public Class HtmlGrabber
         lblAuthor.Text = fic.Author
 
         ' Story Location
-        txtUrl.Text = fic.URL
+        txtUrl.Text = fic.StoryURL
 
         'Story ID
         lblStoryID.Text = fic.ID
@@ -858,7 +858,7 @@ oops:
             cmbStory.Items.Add(fic.Title)
 
             ' Story Location
-            lstStory.Items.Add(fic.URL)
+            lstStory.Items.Add(fic.StoryURL)
 
         Next
 

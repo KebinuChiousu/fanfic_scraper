@@ -319,14 +319,14 @@ Class FFNet
         fic.Author = dsRSS.Tables("author"). _
                           Rows(idx).Item(0)
         ' Story Location
-        fic.URL = dsRSS.Tables("link"). _
+        fic.StoryURL = dsRSS.Tables("link"). _
                           Rows(idx).Item(1)
 
         'Process Summary
         txtResult = dsRSS.Tables("summary"). _
                     Rows(idx).Item(1) & vbCrLf
 
-        fic.ID = Me.GetStoryID(fic.URL)
+        fic.ID = Me.GetStoryID(fic.StoryURL)
 
         txtResult = Replace(txtResult, "<hr>", "<br>")
         txtResult = Replace(txtResult, "<hr size=1>", "<br>")
