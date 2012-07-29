@@ -32,7 +32,6 @@ Module FileManipulation
 
 Retry:
         Try
-            Dim sResult As String
             Dim oHttp As HttpWebRequest = System.Net.HttpWebRequest.Create(URL)
             Dim objResponse As HttpWebResponse
 

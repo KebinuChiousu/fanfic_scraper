@@ -187,7 +187,7 @@ Class AFF
 
         Dim nodes As HtmlNodeCollection
 
-        html = DownloadPage(url, "adultfanfiction_net_cookie.txt")
+        html = DownloadPage(url, "adultfanfiction_net.cookie")
         doc = CleanHTML(html)
 
         Try
