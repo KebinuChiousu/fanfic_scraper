@@ -5,8 +5,7 @@ Public MustInherit Class Fanfic
 
     Public MustOverride _
     Function ProcessChapters( _
-                              ByVal URL As String, _
-                              ByVal list As ListBox, _
+                              ByVal link As String, _
                               ByVal index As Integer _
                             ) As String
 

@@ -10,11 +10,162 @@ Imports System.Web.HttpUtility
 Class AFF
     Inherits Fanfic
 
-#Region "RSS"
+#Region "Downloading HTML"
 
     Private AgeCheck As Boolean = True
     Private FullName As String
     Private DOB As String
+
+    Public Overrides Function GrabData(ByVal url As String) As String
+
+        Dim html As String
+        Dim title As String = ""
+        Dim doc As HtmlDocument
+        Dim link As URL
+
+        Dim rest As Boolean
+
+        Dim target As String = ""
+        Dim postData As String = ""
+
+
+        Dim nodes As HtmlNodeCollection
+
+        html = DownloadPage(url, "adultfanfiction_net.cookie")
+        doc = CleanHTML(html)
+
+        Try
+            title = doc.DocumentNode.SelectSingleNode("//title").InnerText
+        Catch
+            title = ""
+        End Try
+
+        html = doc.DocumentNode.OuterHtml
+
+        rest = CheckAge(url, title)
+
+        If Not Me.AgeCheck Then
+            html = "<AgeCheck value='False' />"
+        Else
+            If Not rest Then
+
+                nodes = FindNodesByAttribute(doc.DocumentNode, "form", "action", "check.php")
+
+                If nodes.Count > 0 Then
+
+                    link = ExtractUrl(url)
+                    target = link.Scheme & "://" & link.Host & "/check.php"
+
+                    postData = "cmbmonth=" & CDate(Me.DOB).Month
+                    postData += "&"
+                    postData += "cmbday=" & CDate(Me.DOB).Day
+                    postData += "&"
+                    postData += "cmbyear=" & CDate(Me.DOB).Year
+                    postData += "&"
+                    postData += "cmbname=" & URLEncode(Me.FullName)
+
+                    DownloadCookies(target, postData)
+
+
+                End If
+
+            End If
+
+        End If
+
+        Return html
+
+    End Function
+
+    Function CheckAge(ByVal url As String, ByVal title As String) As Boolean
+
+        Dim ok As Boolean = True
+
+        Dim ret As MsgBoxResult
+        Dim msg As String
+
+        Dim dob As String = ""
+        Dim tsDOB As TimeSpan
+
+        Dim name As String = ""
+
+        Dim link As URL
+        link = ExtractUrl(url)
+
+        msg = url
+        msg += vbCrLf
+        msg += vbCrLf
+        msg += "Warning: This site requires age verification using e-signing"
+        msg += vbCrLf
+        msg += vbCrLf
+        msg += "I hereby affirm, under the penalties of perjury pursuant to "
+        msg += vbCrLf
+        msg += "Title 28 U.S.C. secion 1746, that I was born on [Date of Birth]"
+        msg += vbCrLf
+        msg += vbCrLf
+        msg += "Signed [YOUR NAME]"
+        msg += vbCrLf
+        msg += vbCrLf
+        msg += "Note: This information is provided in an effort to comply with "
+        msg += vbCrLf
+        msg += "the Child Online Protection Act (COPA) and related state law. "
+        msg += vbCrLf
+        msg += "Providing a false declaration under the penalties of perjury is "
+        msg += "a criminal offense. This document constitutes an un-sworn "
+        msg += "declaration under federal law. "
+        msg += vbCrLf
+        msg += vbCrLf
+        msg += "The information provided here will only be provided to a third party "
+        msg += vbCrLf
+        msg += "when legally required (i.e. when/if a subpoena is served to us). "
+        msg += vbCrLf
+        msg += "Your information will not be given out except in the case mentioned above."
+        msg += vbCrLf
+        msg += vbCrLf
+        msg += "Do you wish to proceed?"
+
+        If InStr(title, "Birthdate Verification Page") > 0 Then
+
+            ret = MsgBox(msg, MsgBoxStyle.YesNo)
+
+            If ret = MsgBoxResult.Yes Then
+                Me.AgeCheck = True
+                ok = False
+            Else
+                Me.AgeCheck = False
+                ok = False
+            End If
+
+            If Me.AgeCheck Then
+
+                dob = InputBox("Enter the day you were born (mm/dd/yyyy)")
+                If IsDate(dob) Then
+                    tsDOB = Date.Today.Subtract(CDate(dob))
+                    If tsDOB.Days > (365 * 18) Then
+                        name = InputBox("Enter First and Last Name")
+                    Else
+                        Me.AgeCheck = False
+                    End If
+                End If
+
+                Me.FullName = name
+                Me.DOB = dob
+
+
+            End If
+
+        Else
+            Me.AgeCheck = True
+            ok = True
+        End If
+
+        Return ok
+
+    End Function
+
+#End Region
+
+#Region "RSS"
 
     Public Overrides Function GrabFeed(ByRef rss As String) As System.Xml.XmlDocument
 
@@ -183,153 +334,6 @@ Class AFF
 
     End Function
 
-    Public Overrides Function GrabData(ByVal url As String) As String
-
-        Dim html As String
-        Dim title As String = ""
-        Dim doc As HtmlDocument
-        Dim link As URL
-
-        Dim rest As Boolean
-
-        Dim target As String = ""
-        Dim postData As String = ""
-
-
-        Dim nodes As HtmlNodeCollection
-
-        html = DownloadPage(url, "adultfanfiction_net.cookie")
-        doc = CleanHTML(html)
-
-        Try
-            title = doc.DocumentNode.SelectSingleNode("//title").InnerText
-        Catch
-            title = ""
-        End Try
-
-        html = doc.DocumentNode.OuterHtml
-
-        rest = CheckAge(url, title)
-
-        If Not Me.AgeCheck Then
-            html = "<AgeCheck value='False' />"
-        Else
-            If Not rest Then
-
-                nodes = FindNodesByAttribute(doc.DocumentNode, "form", "action", "check.php")
-
-                If nodes.Count > 0 Then
-
-                    link = ExtractUrl(url)
-                    target = link.Scheme & "://" & link.Host & "/check.php"
-
-                    postData = "cmbmonth=" & CDate(Me.DOB).Month
-                    postData += "&"
-                    postData += "cmbday=" & CDate(Me.DOB).Day
-                    postData += "&"
-                    postData += "cmbyear=" & CDate(Me.DOB).Year
-                    postData += "&"
-                    postData += "cmbname=" & URLEncode(Me.FullName)
-
-                    DownloadCookies(target, postData)
-
-
-                End If
-
-            End If
-
-        End If
-
-        Return html
-
-    End Function
-
-    Function CheckAge(ByVal url As String, ByVal title As String) As Boolean
-
-        Dim ok As Boolean = True
-
-        Dim ret As MsgBoxResult
-        Dim msg As String
-
-        Dim dob As String = ""
-        Dim tsDOB As TimeSpan
-
-        Dim name As String = ""
-
-        Dim link As URL
-        link = ExtractUrl(url)
-
-        msg = url
-        msg += vbCrLf
-        msg += vbCrLf
-        msg += "Warning: This site requires age verification using e-signing"
-        msg += vbCrLf
-        msg += vbCrLf
-        msg += "I hereby affirm, under the penalties of perjury pursuant to "
-        msg += vbCrLf
-        msg += "Title 28 U.S.C. secion 1746, that I was born on [Date of Birth]"
-        msg += vbCrLf
-        msg += vbCrLf
-        msg += "Signed [YOUR NAME]"
-        msg += vbCrLf
-        msg += vbCrLf
-        msg += "Note: This information is provided in an effort to comply with "
-        msg += vbCrLf
-        msg += "the Child Online Protection Act (COPA) and related state law. "
-        msg += vbCrLf
-        msg += "Providing a false declaration under the penalties of perjury is "
-        msg += "a criminal offense. This document constitutes an un-sworn "
-        msg += "declaration under federal law. "
-        msg += vbCrLf
-        msg += vbCrLf
-        msg += "The information provided here will only be provided to a third party "
-        msg += vbCrLf
-        msg += "when legally required (i.e. when/if a subpoena is served to us). "
-        msg += vbCrLf
-        msg += "Your information will not be given out except in the case mentioned above."
-        msg += vbCrLf
-        msg += vbCrLf
-        msg += "Do you wish to proceed?"
-
-        If InStr(title, "Birthdate Verification Page") > 0 Then
-
-            ret = MsgBox(msg, MsgBoxStyle.YesNo)
-
-            If ret = MsgBoxResult.Yes Then
-                Me.AgeCheck = True
-                ok = False
-            Else
-                Me.AgeCheck = False
-                ok = False
-            End If
-
-            If Me.AgeCheck Then
-
-                dob = InputBox("Enter the day you were born (mm/dd/yyyy)")
-                If IsDate(dob) Then
-                    tsDOB = Date.Today.Subtract(CDate(dob))
-                    If tsDOB.Days > (365 * 18) Then
-                        name = InputBox("Enter First and Last Name")
-                    Else
-                        Me.AgeCheck = False
-                    End If
-                End If
-
-                Me.FullName = name
-                Me.DOB = dob
-
-
-            End If
-
-        Else
-            Me.AgeCheck = True
-            ok = True
-        End If
-
-        Return ok
-
-    End Function
-
     Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As Fanfic.Story
 
         Dim fic As New Fanfic.Story
@@ -366,7 +370,59 @@ Class AFF
 
 #End Region
 
-#Region "Retrieve Navigation Info"
+#Region "Chapter Navigation"
+
+    Public Overrides Sub GetChapters(ByVal lst As System.Windows.Forms.ListBox, ByVal htmlDoc As String)
+
+        Dim doc As HtmlDocument
+        Dim temp As HtmlNodeCollection
+
+        Dim idx As Integer
+
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "select", "name", "chapnav")
+        htmlDoc = temp(0).InnerHtml
+        doc = CleanHTML(htmlDoc)
+
+        temp = doc.DocumentNode.SelectNodes("//option")
+
+
+        If Not IsNothing(temp) Then
+            For idx = 0 To temp.Count - 1
+                lst.Items.Add(temp(idx).Attributes("value").Value)
+            Next
+        Else
+            lst.Items.Add("Chapter 1")
+        End If
+
+    End Sub
+
+    Public Overrides Function ProcessChapters( _
+                                               ByVal link As String, _
+                                               ByVal index As Integer _
+                                             ) As String
+
+        Dim hl As URL
+        Dim host As String
+
+        hl = ExtractUrl(link)
+        host = hl.Host
+
+
+        link = hl.Scheme & "://" & hl.Host & hl.URI
+        link += "?"
+        link += hl.Query(0).Name & "=" & hl.Query(0).Value
+        link += "&"
+        link += "chapter=" & (index + 1)
+
+        Dim htmldoc As String
+
+        htmldoc = GrabData(link)
+
+        Return htmldoc
+
+    End Function
 
     Public Overrides Function GetAuthorURL(ByVal link As String) As String
 
@@ -381,7 +437,7 @@ Class AFF
 
         ret = Split(url.Host, ".")(0)
         ret += ":"
-        ret += Split(url.Query, "=")(1)
+        ret += url.Query(0).Value
 
         Return ret
 
@@ -395,15 +451,166 @@ Class AFF
 
 #Region "HTML Processing"
 
+    Private Function GrabPageTable(ByVal htmldoc As String) As String
+
+        Dim ret As String = ""
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
+
+        doc = CleanHTML(htmldoc)
+
+        temp = doc.DocumentNode.SelectNodes("//table")
+
+        htmldoc = "<table>"
+        htmldoc += temp(6).InnerHtml
+        htmldoc += "</table>"
+
+        ret = htmldoc
+
+        temp = Nothing
+        doc = Nothing
+
+        Return ret
+
+    End Function
+
+    Private Function GrabHeaderRow(ByVal htmldoc As String) As String
+
+        Dim ret As String
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
+
+        htmldoc = GrabPageTable(htmldoc)
+
+        doc = CleanHTML(htmldoc)
+        temp = doc.DocumentNode.SelectNodes("//tr")
+
+        htmldoc = "<table>"
+        htmldoc += "<tr>"
+        htmldoc += temp(0).InnerHtml
+        htmldoc += "</tr>"
+        htmldoc += "</table>"
+
+        ret = htmldoc
+
+        temp = Nothing
+        doc = Nothing
+
+        Return ret
+
+    End Function
+
     Public Overrides Function GrabAuthor(ByVal htmlDoc As String) As String
+
+        Dim ret As String
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
+
+        htmlDoc = GrabHeaderRow(htmlDoc)
+
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindLinksByHref(doc.DocumentNode, "profile.php")
+
+        ret = temp(0).InnerText
+
+        temp = Nothing
+        doc = Nothing
+
+        Return ret
 
     End Function
 
     Public Overrides Function GrabBody(ByVal htmldoc As String) As String
 
+        Dim ret As String = ""
+
+        Dim doc As HtmlDocument
+        Dim temp As HtmlNodeCollection
+
+        htmldoc = GrabPageTable(htmldoc)
+        doc = CleanHTML(htmldoc)
+
+        temp = doc.DocumentNode.SelectNodes("//tr")
+
+
+
+        htmldoc = "<html>"
+        htmldoc += "<body>"
+        htmldoc += "<div>"
+        htmldoc += temp(3).ChildNodes(1).InnerHtml
+        htmldoc += "</div>"
+        htmldoc += "</body>"
+        htmldoc += "</html>"
+
+        doc = Nothing
+        temp = Nothing
+
+        ret = htmldoc
+
+        Return ret
+
     End Function
 
     Public Overrides Function GrabDate(ByVal htmlDoc As String, ByVal title As String) As String
+
+        Dim ret As String = ""
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
+
+        Dim category As String
+        Dim summary As String()
+        Dim link As String
+        Dim link2 As String
+        Dim hl As URL
+
+
+        htmlDoc = GrabHeaderRow(htmlDoc)
+
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindLinksByHref(doc.DocumentNode, "profile.php")
+
+        link = temp(0).Attributes("href").Value
+        link += "&view=story&zone="
+
+        temp = FindLinksByHref(doc.DocumentNode, "main.php")
+
+        link += LCase(temp(0).InnerText)
+
+        category = LCase(temp(0).InnerText)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "option", "value", "story.php")
+
+        hl = ExtractUrl(link)
+        link2 = hl.Scheme & "://" & category & "." & Split(hl.Host, ".")(1) & "." & Split(hl.Host, ".")(2) & "/"
+        link2 += HtmlDecode(temp(0).Attributes("value").Value)
+        hl = ExtractUrl(link2)
+
+        link2 = hl.Scheme & "://" & hl.Host & hl.URI & "?"
+        link2 += hl.Query(0).Name & "=" & hl.Query(0).Value
+
+        htmlDoc = DownloadPage(link)
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindLinksByHref(doc.DocumentNode, link2)
+
+        htmlDoc = temp(0).ParentNode.InnerHtml
+
+        summary = Split(htmlDoc, "<br />")
+        summary = Split(summary(2), "-:-")
+
+        Select Case title
+            Case "Published: "
+                ret = Trim(Replace(summary(0), "Posted :", ""))
+            Case "Updated: "
+                ret = Trim(Replace(summary(1), "Edited :", ""))
+        End Select
+        
+        temp = Nothing
+        doc = Nothing
+
+        Return ret
 
     End Function
 
@@ -413,17 +620,24 @@ Class AFF
 
     Public Overrides Function GrabTitle(ByVal htmlDoc As String) As String
 
+        Dim ret As String
+        Dim doc As HtmlDocument
+
+        doc = CleanHTML(htmlDoc)
+
+        ret = doc.DocumentNode.SelectSingleNode("//title").InnerText
+
+        ret = Trim(Replace(ret, "Story:", ""))
+
+        doc = Nothing
+
+        Return ret
+
     End Function
 
 #End Region
 
-#Region "Chapter Navigation"
 
-    Public Overrides Function ProcessChapters(ByVal URL As String, ByVal list As System.Windows.Forms.ListBox, ByVal index As Integer) As String
-
-    End Function
-
-#End Region
 
 #Region "Properties"
 

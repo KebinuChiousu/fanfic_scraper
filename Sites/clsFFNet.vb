@@ -276,8 +276,7 @@ Class FFNet
 
     Public Overrides _
     Function ProcessChapters( _
-                              ByVal URL As String, _
-                              ByVal list As ListBox, _
+                              ByVal link As String, _
                               ByVal index As Integer _
                             ) As String
 
@@ -286,14 +285,14 @@ Class FFNet
         Dim params() As String
         host = "http://www.fanfiction.net/s/"
 
-        temp = Replace(URL, host, "")
+        temp = Replace(link, host, "")
         params = Split(temp, "/")
 
-        URL = host & params(0) & "/"
+        link = host & params(0) & "/"
 
         Dim htmldoc As String
 
-        htmldoc = GrabData(URL & (index + 1) & "/")
+        htmldoc = GrabData(link & (index + 1) & "/")
 
         ProcessChapters = htmldoc
 

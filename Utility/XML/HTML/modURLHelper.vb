@@ -5,7 +5,12 @@ Structure URL
     Dim Host As String
     Dim Port As Long
     Dim URI As String
-    Dim Query As String
+    Dim Query As QueryString()
+End Structure
+
+Structure QueryString
+    Dim Name As String
+    Dim Value As String
 End Structure
 
 Module URLHelper
@@ -53,12 +58,36 @@ Module URLHelper
 
         If intPos1 > 0 Then
             retURL.URI = Mid(strUrl, 1, intPos1 - 1)
-            retURL.Query = Mid(strUrl, intPos1 + 1)
+            retURL.Query = SplitParms(Mid(strUrl, intPos1 + 1))
         Else
             retURL.URI = strUrl
         End If
 
         ExtractUrl = retURL
+    End Function
+
+    Function SplitParms(ByVal Query As String) As QueryString()
+
+        Dim idx As Integer
+        Dim parms As String()
+        Dim value As String()
+        Dim ret As QueryString()
+
+        parms = Split(Query, "&")
+
+        ReDim ret(UBound(parms))
+
+        For idx = 0 To UBound(parms)
+
+            value = Split(parms(idx), "=")
+
+            ret(idx).Name = value(0)
+            ret(idx).Value = value(1)
+
+        Next
+
+        Return ret
+
     End Function
 
     ' url encodes a string
@@ -67,10 +96,10 @@ Module URLHelper
         Dim X As Integer
         Dim curChar As Long
         Dim newStr As String
-        intLen = Len(str)
+        intLen = Len(Str)
         newStr = ""
         For X = 1 To intLen
-            curChar = Asc(Mid$(str, X, 1))
+            curChar = Asc(Mid$(Str, X, 1))
 
             If (curChar < 48 Or curChar > 57) And _
                 (curChar < 65 Or curChar > 90) And _

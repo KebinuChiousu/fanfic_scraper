@@ -650,9 +650,7 @@ Public Class HtmlGrabber
                 htmldoc = cls.GrabData(txtUrl.Text)
                 txtResult = htmldoc
 
-                If InStr(LCase(txtResult), "story not found") = 0 Then
-
-                    'lblTitle.Text = CleanHTML(cls.GrabTitle(htmldoc)).InnerText
+                If InStr(LCase(txtResult), cls.ErrorMessage) = 0 Then
 
                     If txtResult = "" Then
 oops:
@@ -667,7 +665,6 @@ oops:
 
                     htmldoc = cls.ProcessChapters( _
                                                    txtUrl.Text, _
-                                                   ListChapters, _
                                                    0 _
                                                  )
 
@@ -708,7 +705,6 @@ oops:
 
                     htmldoc = cls.ProcessChapters( _
                                                    txtUrl.Text, _
-                                                   ListChapters, _
                                                    i _
                                                  )
 
