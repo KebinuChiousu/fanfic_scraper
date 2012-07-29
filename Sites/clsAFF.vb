@@ -37,6 +37,8 @@ Class AFF
 
         Dim xmldoc As XmlDocument = Nothing
 
+        author_url = rss
+
         If InStr(rss, "zone=") = 0 Then
             If InStr(rss, "view=story") = 0 Then
 
@@ -45,8 +47,6 @@ Class AFF
 
                 nodes = FindLinksByHref(doc.DocumentNode, "view=story")
                 link = nodes(0).Attributes("href").Value
-
-                author_url = rss
 
             Else
                 link = rss
