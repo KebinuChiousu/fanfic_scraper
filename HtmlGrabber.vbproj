@@ -227,6 +227,7 @@
     </Compile>
     <Compile Include="Sites\clsAFF.vb" />
     <Compile Include="Sites\clsFanfic.vb" />
+    <Compile Include="Sites\clsYFF.vb" />
     <Compile Include="Utility\XML\HTML\clsCookie.vb" />
     <Compile Include="Utility\XML\HTML\modHTML.vb" />
     <Compile Include="Utility\XML\modRSS.vb" />
