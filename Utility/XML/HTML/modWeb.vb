@@ -11,8 +11,8 @@ Module FileManipulation
     Public blnConnected As Boolean
 
 
-    Public UserAgent As String = "FeedDemon/1.6 (http://www.bradsoft.com/; Microsoft Windows XP)"
-    'Public UserAgent As String = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"
+    'Public UserAgent As String = "FeedDemon/1.6 (http://www.bradsoft.com/; Microsoft Windows XP)"
+    Public UserAgent As String = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"
 
     Public Sub WriteFile(ByVal file As String, ByVal data As String)
         Dim path As String = file

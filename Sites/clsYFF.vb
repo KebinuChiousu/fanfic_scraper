@@ -16,11 +16,21 @@ Class YFF
         Dim html As String
         Dim doc As HtmlDocument
 
+        Dim temp As HtmlNodeCollection
+
 
         'html = DownloadPage(url, "yourfanfiction_com.cookie")
         html = DownloadPage(url)
         doc = CleanHTML(html)
         html = doc.DocumentNode.OuterHtml
+
+        If InStr(html, "Age Consent Required") > 0 Then
+            temp = FindLinksByHref(doc.DocumentNode, "viewstory.php")
+            url = "http://www." & Me.HostName & "/" & HtmlDecode(temp(0).Attributes("href").Value)
+            html = DownloadPage(url)
+            doc = CleanHTML(html)
+            html = doc.DocumentNode.OuterHtml
+        End If
 
         doc = Nothing
 
@@ -41,11 +51,9 @@ Class YFF
         Dim temp As HtmlNodeCollection
 
         Dim link As String
-        Dim url As URL
 
         Dim node_idx As Integer
 
-        Dim author As String
         Dim author_url As String
 
         Dim summary() As String
@@ -197,9 +205,55 @@ Class YFF
 
     Public Overrides Sub GetChapters(ByVal lst As System.Windows.Forms.ListBox, ByVal htmlDoc As String)
 
+        Dim doc As HtmlDocument
+        Dim temp As HtmlNodeCollection
+
+        Dim idx As Integer
+
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "select", "name", "chapter")
+        htmlDoc = temp(0).InnerHtml
+        doc = CleanHTML(htmlDoc)
+
+        temp = doc.DocumentNode.SelectNodes("//option")
+
+        If Not IsNothing(temp) Then
+            For idx = 0 To temp.Count - 1
+                lst.Items.Add(temp(idx).Attributes("value").Value)
+            Next
+        Else
+            lst.Items.Add("Chapter 1")
+        End If
+
+
     End Sub
 
     Public Overrides Function ProcessChapters(ByVal link As String, ByVal index As Integer) As String
+
+        Dim hl As URL
+        Dim host As String
+        Dim idx As Integer
+
+        hl = ExtractUrl(link)
+        host = hl.Host
+
+
+        link = hl.Scheme & "://" & hl.Host & hl.URI
+        link += "?"
+
+        For idx = 0 To UBound(hl.Query)
+            link += hl.Query(idx).Name & "=" & hl.Query(idx).Value
+            link += "&"
+        Next
+
+        link += "chapter=" & (index + 1)
+
+        Dim htmldoc As String
+
+        htmldoc = GrabData(link)
+
+        Return htmldoc
 
     End Function
 
@@ -232,6 +286,19 @@ Class YFF
 
     Public Overrides Function GrabAuthor(ByVal htmlDoc As String) As String
 
+        Dim ret As String
+        Dim doc As HtmlDocument
+
+        doc = CleanHTML(htmlDoc)
+
+        ret = doc.DocumentNode.SelectSingleNode("//title").InnerText
+
+        ret = Mid(ret, InStr(ret, "by") + 2)
+
+        doc = Nothing
+
+        Return ret
+
     End Function
 
     Public Overrides Function GrabBody(ByVal htmldoc As String) As String
@@ -239,6 +306,27 @@ Class YFF
     End Function
 
     Public Overrides Function GrabDate(ByVal htmlDoc As String, ByVal title As String) As String
+
+        Dim ret As String = ""
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
+
+        Dim category As String
+        Dim summary As String()
+        Dim author_link As String
+        Dim story_link As String
+
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindLinksByHref(doc.DocumentNode, "viewstory.php")
+        story_link = HtmlDecode(temp(0).Attributes("href").Value)
+
+        temp = FindLinksByHref(doc.DocumentNode, "viewuser.php")
+        author_link = "http://www." & Me.HostName & "/" & HtmlDecode(temp(0).Attributes("href").Value)
+
+        htmlDoc = Me.GrabData(author_link)
+        doc = CleanHTML(htmlDoc)
+
 
     End Function
 
@@ -248,6 +336,19 @@ Class YFF
 
     Public Overrides Function GrabTitle(ByVal htmlDoc As String) As String
 
+        Dim ret As String
+        Dim doc As HtmlDocument
+
+        doc = CleanHTML(htmlDoc)
+
+        ret = doc.DocumentNode.SelectSingleNode("//title").InnerText
+
+        ret = Mid(ret, 1, InStr(ret, "by") - 2)
+
+        doc = Nothing
+
+        Return ret
+
     End Function
 
 #End Region
@@ -256,7 +357,8 @@ Class YFF
 
     Public Overrides ReadOnly Property HostName() As String
         Get
-            Return "yourfanfiction.com"
+            'Return "yourfanfiction.com"
+            Return ""
         End Get
     End Property
 
