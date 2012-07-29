@@ -10,6 +10,10 @@ Module FileManipulation
     Public txtResponse As String
     Public blnConnected As Boolean
 
+
+    Public UserAgent As String = "FeedDemon/1.6 (http://www.bradsoft.com/; Microsoft Windows XP)"
+    'Public UserAgent As String = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"
+
     Public Sub WriteFile(ByVal file As String, ByVal data As String)
         Dim path As String = file
         Dim fs As FileStream
@@ -41,45 +45,60 @@ Retry:
 
             Dim encoding As New System.Text.UTF8Encoding
             Dim data() As Byte
-            Dim postStream As System.IO.Stream
+            Dim postStream As System.IO.Stream = Nothing
+
+            Dim hl As URL
 
 
-            oHttp.UserAgent = "Mozilla/5.0 " & _
-                              "(Windows NT 6.1; WOW64) " & _
-                              "AppleWebKit/536.11 (KHTML, like Gecko) " & _
-                              "Chrome/20.0.1132.47 " & _
-                              "Safari/536.11"
+            'oHttp.UserAgent = "Mozilla/5.0 " & _
+            '                  "(Windows NT 6.1; WOW64) " & _
+            '                  "AppleWebKit/536.11 (KHTML, like Gecko) " & _
+            '                  "Chrome/20.0.1132.47 " & _
+            '                  "Safari/536.11"
 
-            oHttp.Method = "POST"
+            oHttp.UserAgent = UserAgent
+
+            If postData = "" Then
+                oHttp.Method = "GET"
+            Else
+                oHttp.Method = "POST"
+            End If
+
             oHttp.Timeout = (180 * 1000) '3 Minutes
             oHttp.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
 
             data = encoding.GetBytes(postData)
 
-
             cc = New CookieContainer
 
             oHttp.CookieContainer = cc
-            oHttp.ContentType = "application/x-www-form-urlencoded"
-            oHttp.ContentLength = data.Length
 
+            If postData <> "" Then
+                oHttp.ContentType = "application/x-www-form-urlencoded"
+                oHttp.ContentLength = data.Length
+                postStream = oHttp.GetRequestStream
+                postStream.Write(data, 0, data.Length)
+            End If
 
-            postStream = oHttp.GetRequestStream
-            postStream.Write(data, 0, data.Length)
 
             objResponse = oHttp.GetResponse
 
-            c = cc.GetCookies(New Uri("http://members.adultfanfiction.net"))(0)
+            hl = ExtractUrl(URL)
+
+
+
+            c = cc.GetCookies(New Uri("http://" & hl.Host))(0)
             c.Expires = Date.Now.AddYears(1)
 
-            fi = New FileInfo(Application.StartupPath & "\\" & Replace(Mid(c.Domain, 2), ".", "_") & "_cookie.txt")
+            fi = New FileInfo(Application.StartupPath & "\\" & Replace(Mid(c.Domain, 2), ".", "_") & ".cookie")
 
             clsCookie.WriteCookiesToDisk(fi.FullName, cc)
 
             fi = Nothing
 
-            postStream.Close()
-
+            If postData <> "" Then
+                postStream.Close()
+            End If
 
         Catch ex As System.Exception
             Select Case ex.Message
@@ -122,11 +141,13 @@ Retry:
 
             Dim cc As CookieContainer
 
-            oHttp.UserAgent = "Mozilla/5.0 " & _
-                              "(Windows NT 6.1; WOW64) " & _
-                              "AppleWebKit/536.11 (KHTML, like Gecko) " & _
-                              "Chrome/20.0.1132.47 " & _
-                              "Safari/536.11"
+            'oHttp.UserAgent = "Mozilla/5.0 " & _
+            '                  "(Windows NT 6.1; WOW64) " & _
+            '                  "AppleWebKit/536.11 (KHTML, like Gecko) " & _
+            '                  "Chrome/20.0.1132.47 " & _
+            '                  "Safari/536.11"
+
+            oHttp.UserAgent = UserAgent
 
             oHttp.Method = "GET"
             oHttp.Timeout = (180 * 1000) '3 Minutes
@@ -135,6 +156,12 @@ Retry:
             If Cookie <> "" Then
                 If File.Exists(Cookie) Then
 
+                    cc = clsCookie.ReadCookiesFromDisk(Cookie)
+                    oHttp.CookieContainer = cc
+
+                Else
+
+                    DownloadCookies(URL, "")
                     cc = clsCookie.ReadCookiesFromDisk(Cookie)
                     oHttp.CookieContainer = cc
 

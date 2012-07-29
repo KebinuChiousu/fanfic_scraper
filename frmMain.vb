@@ -256,7 +256,7 @@ Public Class HtmlGrabber
         '
         'cmbType
         '
-        Me.cmbType.Items.AddRange(New Object() {"FFNet", "Adult FanFiction"})
+        Me.cmbType.Items.AddRange(New Object() {"FFNet", "Adult FanFiction", "Your FanFiction"})
         Me.cmbType.Location = New System.Drawing.Point(367, 7)
         Me.cmbType.Name = "cmbType"
         Me.cmbType.Size = New System.Drawing.Size(126, 21)
@@ -389,6 +389,10 @@ Public Class HtmlGrabber
                 Me.Text = "AdultFanfiction.net - Story Downloader"
                 lblAtom.Text = "Valid Author URL"
                 host = "adultfanfiction.net"
+            Case "Your FanFiction"
+                Me.Text = "YourFanFiction.com - Story Downloader"
+                lblAtom.Text = "Valid Author URL"
+                host = "yourfanfiction.com"
             Case Else
                 clsname = ""
         End Select
@@ -406,6 +410,8 @@ Public Class HtmlGrabber
                 cls = New FFNet
             Case "adultfanfiction.net"
                 cls = New AFF
+            Case "yourfanfiction.com"
+                cls = New YFF
             Case Else
                 cls = Nothing
         End Select
