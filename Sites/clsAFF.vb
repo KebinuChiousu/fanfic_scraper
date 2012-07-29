@@ -533,15 +533,7 @@ Class AFF
 
         temp = doc.DocumentNode.SelectNodes("//tr")
 
-
-
-        htmldoc = "<html>"
-        htmldoc += "<body>"
-        htmldoc += "<div>"
-        htmldoc += temp(3).ChildNodes(1).InnerHtml
-        htmldoc += "</div>"
-        htmldoc += "</body>"
-        htmldoc += "</html>"
+        htmldoc = temp(3).ChildNodes(1).InnerHtml
 
         doc = Nothing
         temp = Nothing
@@ -615,6 +607,26 @@ Class AFF
     End Function
 
     Public Overrides Function GrabSeries(ByVal htmlDoc As String) As String
+
+        Dim ret As String
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
+
+        Dim category As String
+
+        htmlDoc = GrabHeaderRow(htmlDoc)
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindLinksByHref(doc.DocumentNode, "main.php")
+
+        category = temp(0).InnerText
+
+        ret = category
+
+        temp = Nothing
+        doc = Nothing
+
+        Return ret
 
     End Function
 
