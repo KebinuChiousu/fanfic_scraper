@@ -19,7 +19,7 @@ Class AFF
     Public Overrides Function GrabFeed(ByRef rss As String) As System.Xml.XmlDocument
 
         Dim html As String
-        Dim doc As HtmlDocument
+        Dim doc As HtmlDocument = Nothing
 
         Dim nodes As HtmlNodeCollection
         Dim temp As HtmlNodeCollection
@@ -37,19 +37,30 @@ Class AFF
 
         Dim xmldoc As XmlDocument = Nothing
 
-        html = DownloadPage(rss)
-        doc = CleanHTML(html)
+        If InStr(rss, "zone=") = 0 Then
+            If InStr(rss, "view=story") = 0 Then
 
-        nodes = FindLinksByHref(doc.DocumentNode, "view=story")
-        link = nodes(0).Attributes("href").Value
+                html = DownloadPage(rss)
+                doc = CleanHTML(html)
 
-        author_url = rss
+                nodes = FindLinksByHref(doc.DocumentNode, "view=story")
+                link = nodes(0).Attributes("href").Value
 
-        html = DownloadPage(link)
-        doc = CleanHTML(html)
+                author_url = rss
 
-        nodes = FindLinksByHref(doc.DocumentNode, "zone=")
-        link = nodes(0).Attributes("href").Value
+            Else
+                link = rss
+            End If
+
+            html = DownloadPage(link)
+            doc = CleanHTML(html)
+
+            nodes = FindLinksByHref(doc.DocumentNode, "zone=")
+            link = nodes(0).Attributes("href").Value
+
+        Else
+            link = rss
+        End If
 
         html = DownloadPage(link)
         doc = CleanHTML(html)
