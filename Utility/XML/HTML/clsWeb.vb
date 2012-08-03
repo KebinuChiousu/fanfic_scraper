@@ -4,17 +4,17 @@ Imports System.IO.Compression
 Imports System.Text
 Imports System.Net
 
-Module FileManipulation
+Class clsWeb
 
-    Public wsk As New Collection
-    Public txtResponse As String
+    Private wsk As New Collection
+    Private txtResponse As String
     Public blnConnected As Boolean
 
+    'Public UserAgent As String = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"
+    Private UserAgent As String = "Chrome/20.0.1132.47"
+    Private Accept As String = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 
-    'Public UserAgent As String = "FeedDemon/1.6 (http://www.bradsoft.com/; Microsoft Windows XP)"
-    Public UserAgent As String = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"
-
-    Public Sub WriteFile(ByVal file As String, ByVal data As String)
+    Private Sub WriteFile(ByVal file As String, ByVal data As String)
         Dim path As String = file
         Dim fs As FileStream
 
@@ -30,7 +30,7 @@ Module FileManipulation
         End If
     End Sub
 
-    Function DownloadCookies(ByVal URL As String, ByVal postData As String) As Boolean
+    Public Function DownloadCookies(ByVal URL As String, ByVal postData As String) As Boolean
 
         Dim ret As Boolean = True
 
@@ -66,6 +66,7 @@ Retry:
 
             oHttp.Timeout = (180 * 1000) '3 Minutes
             oHttp.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
+            oHttp.Accept = Accept
 
             data = encoding.GetBytes(postData)
 
@@ -131,7 +132,7 @@ Retry:
 
     End Function
 
-    Function DownloadPage(ByVal URL As String, Optional ByVal Cookie As String = "") As String
+    Public Function DownloadPage(ByVal URL As String, Optional ByVal Cookie As String = "") As String
 
 Retry:
         Try
@@ -152,6 +153,7 @@ Retry:
             oHttp.Method = "GET"
             oHttp.Timeout = (180 * 1000) '3 Minutes
             oHttp.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
+            oHttp.Accept = Accept
 
             If Cookie <> "" Then
                 If File.Exists(Cookie) Then
@@ -207,4 +209,4 @@ Retry:
 
     End Function
 
-End Module
+End Class

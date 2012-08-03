@@ -11,6 +11,8 @@ Class YFF
 
 #Region "Downloading HTML"
 
+    Private Browser As New clsWeb
+
     Public Overrides Function GrabData(ByVal url As String) As String
 
         Dim html As String
@@ -20,14 +22,14 @@ Class YFF
 
 
         'html = DownloadPage(url, "yourfanfiction_com.cookie")
-        html = DownloadPage(url)
+        html = Browser.DownloadPage(url)
         doc = CleanHTML(html)
         html = doc.DocumentNode.OuterHtml
 
         If InStr(html, "Age Consent Required") > 0 Then
             temp = FindLinksByHref(doc.DocumentNode, "viewstory.php")
             url = "http://www." & Me.HostName & "/" & HtmlDecode(temp(0).Attributes("href").Value)
-            html = DownloadPage(url)
+            html = Browser.DownloadPage(url)
             doc = CleanHTML(html)
             html = doc.DocumentNode.OuterHtml
         End If
@@ -357,8 +359,8 @@ Class YFF
 
     Public Overrides ReadOnly Property HostName() As String
         Get
-            'Return "yourfanfiction.com"
-            Return ""
+            Return "yourfanfiction.com"
+            'Return ""
         End Get
     End Property
 
@@ -376,4 +378,8 @@ Class YFF
 
 #End Region
 
+
+    Public Sub New()
+        Browser = New clsWeb
+    End Sub
 End Class

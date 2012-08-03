@@ -11,6 +11,7 @@ Class AFF
 
 #Region "Downloading HTML"
 
+    Private Browser As clsWeb
     Private AgeCheck As Boolean = True
     Private FullName As String
     Private DOB As String
@@ -30,7 +31,7 @@ Class AFF
 
         Dim nodes As HtmlNodeCollection
 
-        html = DownloadPage(url, "adultfanfiction_net.cookie")
+        html = Browser.DownloadPage(url, "adultfanfiction_net.cookie")
         doc = CleanHTML(html)
 
         Try
@@ -63,7 +64,7 @@ Class AFF
                     postData += "&"
                     postData += "cmbname=" & URLEncode(Me.FullName)
 
-                    DownloadCookies(target, postData)
+                    Browser.DownloadCookies(target, postData)
 
 
                 End If
@@ -192,7 +193,7 @@ Class AFF
         If InStr(rss, "zone=") = 0 Then
             If InStr(rss, "view=story") = 0 Then
 
-                html = DownloadPage(rss)
+                html = Me.GrabData(rss)
                 doc = CleanHTML(html)
 
                 nodes = FindLinksByHref(doc.DocumentNode, "view=story")
@@ -202,7 +203,7 @@ Class AFF
                 link = rss
             End If
 
-            html = DownloadPage(link)
+            html = Me.GrabData(link)
             doc = CleanHTML(html)
 
             nodes = FindLinksByHref(doc.DocumentNode, "zone=")
@@ -212,7 +213,7 @@ Class AFF
             link = rss
         End If
 
-        html = DownloadPage(link)
+        html = Me.GrabData(link)
         doc = CleanHTML(html)
 
         nodes = FindNodesByAttribute(doc.DocumentNode, "div", "id", "contentdata")
@@ -577,7 +578,7 @@ Class AFF
         link2 = hl.Scheme & "://" & hl.Host & hl.URI & "?"
         link2 += hl.Query(0).Name & "=" & hl.Query(0).Value
 
-        htmlDoc = DownloadPage(link)
+        htmlDoc = Me.GrabData(link)
         doc = CleanHTML(htmlDoc)
 
         temp = FindLinksByHref(doc.DocumentNode, link2)
@@ -667,5 +668,11 @@ Class AFF
     End Property
 
 #End Region
+
+    Public Sub New()
+
+        Browser = New clsWeb
+
+    End Sub
 
 End Class

@@ -243,7 +243,7 @@
     <Compile Include="Data\INIFileReader.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utility\XML\HTML\modWeb.vb">
+    <Compile Include="Utility\XML\HTML\clsWeb.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\modFormManagement.vb">

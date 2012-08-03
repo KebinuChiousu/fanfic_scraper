@@ -7,6 +7,8 @@ Imports System.Xml
 Class FFNet
     Inherits Fanfic
 
+    Private Browser As clsWeb
+
 #Region "Retrieval Functions"
 
     Public Overrides _
@@ -22,7 +24,7 @@ Class FFNet
 
         Dim title As String
 
-        Dim value As String = GetFirstNodeValue(xmlDoc, "//title")
+        Dim value As String = GetFirstNodeValue(xmldoc, "//title")
 
         value = Replace(value, " - FanFiction.Net", "")
 
@@ -221,7 +223,7 @@ Class FFNet
 
         If (InStr(rss, "atom") = 0) Then
 
-            txtresult = DownloadPage(rss)
+            txtresult = Browser.DownloadPage(rss)
 
             txtresult = Mid(txtresult, InStr(txtresult, "id: "))
             txtresult = Mid(txtresult, 1, InStr(txtresult, "<") - 1)
@@ -433,4 +435,9 @@ Class FFNet
 
 #End Region
 
+    Public Sub New()
+
+        Browser = New clsWeb
+
+    End Sub
 End Class

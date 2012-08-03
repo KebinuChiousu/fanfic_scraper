@@ -163,13 +163,16 @@ Public MustInherit Class Fanfic
 
     Public Overridable Function GrabData(ByVal url As String) As String
 
+        Dim Browser As New clsWeb
         Dim html As String
 
-        html = DownloadPage(url)
+        html = Browser.DownloadPage(url)
 
         CleanHTML(html)
 
         Return html
+
+        Browser = Nothing
 
     End Function
 

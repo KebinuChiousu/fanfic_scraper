@@ -6,10 +6,12 @@ Module modXML
 
     Function DownloadXML(ByVal URL As String) As XmlDocument
 
+        Dim Browser As New clsWeb
+
         Dim xml As String
         Dim xmldoc As New XmlDocument
 
-        xml = DownloadPage(URL)
+        xml = Browser.DownloadPage(URL)
 
         Try
             xmldoc.LoadXml(xml)
@@ -21,6 +23,7 @@ Module modXML
 
         xmldoc = Nothing
         xml = Nothing
+        Browser = Nothing
 
     End Function
 
