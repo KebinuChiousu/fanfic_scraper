@@ -263,6 +263,16 @@ Class YFF
 
     Public Overrides Function GetAuthorURL(ByVal link As String) As String
 
+        Dim ret As String
+
+        If InStr(link, "viewuser.php") > 0 Then
+            ret = link
+        Else
+            ret = ""
+        End If
+
+        Return ret
+
     End Function
 
     Public Overrides Function GetStoryID(ByVal link As String) As String
@@ -281,6 +291,12 @@ Class YFF
     End Function
 
     Public Overrides Function GetStoryURL(ByVal id As String) As String
+
+        Dim ret As String = ""
+
+        ret = "http://www." & Me.HostName & "/viewstory.php?sid=" & id
+
+        Return ret
 
     End Function
 
@@ -307,6 +323,20 @@ Class YFF
 
     Public Overrides Function GrabBody(ByVal htmldoc As String) As String
 
+        Dim doc As HtmlDocument
+        Dim temp As HtmlNodeCollection
+
+        doc = CleanHTML(htmldoc)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "div", "id", "story", False)
+
+        htmldoc = temp(0).OuterHtml
+
+        doc = Nothing
+        temp = Nothing
+
+        Return htmldoc
+
     End Function
 
     Public Overrides Function GrabDate(ByVal htmlDoc As String, ByVal title As String) As String
@@ -315,7 +345,6 @@ Class YFF
         Dim temp As HtmlNodeCollection
         Dim doc As HtmlDocument
 
-        Dim category As String
         Dim summary As String()
         Dim author_link As String
         Dim story_link As String
@@ -331,10 +360,73 @@ Class YFF
         htmlDoc = Me.GrabData(author_link)
         doc = CleanHTML(htmlDoc)
 
+        temp = FindLinksByHref(doc.DocumentNode, story_link)
+
+        htmlDoc = temp(0).ParentNode.ParentNode.OuterHtml
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "div", "class", "tail")
+
+        htmlDoc = temp(0).InnerText
+        htmlDoc = Replace(htmlDoc, "[Report This] ", "")
+        htmlDoc = Replace(htmlDoc, "Published: ", "")
+
+        summary = Split(htmlDoc, " Updated: ")
+
+        Select Case title
+            Case "Published: "
+                ret = summary(0)
+            Case "Updated: "
+                ret = summary(1)
+        End Select
+
+        Return ret
+
+        temp = Nothing
+        doc = Nothing
 
     End Function
 
     Public Overrides Function GrabSeries(ByVal htmlDoc As String) As String
+
+        Dim ret As String = ""
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
+
+        Dim summary As String()
+        Dim author_link As String
+        Dim story_link As String
+
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindLinksByHref(doc.DocumentNode, "viewstory.php")
+        story_link = HtmlDecode(temp(0).Attributes("href").Value)
+
+        temp = FindLinksByHref(doc.DocumentNode, "viewuser.php")
+        author_link = "http://www." & Me.HostName & "/" & HtmlDecode(temp(0).Attributes("href").Value)
+
+        htmlDoc = Me.GrabData(author_link)
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindLinksByHref(doc.DocumentNode, story_link)
+
+        htmlDoc = temp(0).ParentNode.ParentNode.OuterHtml
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "div", "class", "content")
+
+        summary = Split(temp(0).InnerHtml, "<br />")
+
+        doc = CleanHTML(summary(1))
+        summary(1) = HtmlDecode(doc.DocumentNode.InnerText)
+        summary(1) = Trim(Replace(summary(1), "Categories: ", ""))
+
+        ret = summary(1)
+
+        temp = Nothing
+        doc = Nothing
+
+        Return ret
 
     End Function
 
