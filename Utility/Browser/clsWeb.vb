@@ -11,7 +11,7 @@ Class clsWeb
     Public blnConnected As Boolean
 
     'Public UserAgent As String = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"
-    Private UserAgent As String = "Chrome/20.0.1132.47"
+    Private UserAgent As String = "Chrome/21.0.1180.60"
     Private Accept As String = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 
     Private Sub WriteFile(ByVal file As String, ByVal data As String)
@@ -134,11 +134,13 @@ Retry:
 
     Public Function DownloadPage(ByVal URL As String, Optional ByVal Cookie As String = "") As String
 
+        Dim objResponse As HttpWebResponse
+
 Retry:
         Try
             Dim sResult As String
             Dim oHttp As HttpWebRequest = System.Net.HttpWebRequest.Create(URL)
-            Dim objResponse As HttpWebResponse
+
 
             Dim cc As CookieContainer
 
@@ -172,6 +174,8 @@ Retry:
 
             objResponse = oHttp.GetResponse
 
+ErrorDetail:
+
             Dim sr As StreamReader
             sr = New StreamReader( _
                                    objResponse.GetResponseStream(), _
@@ -185,7 +189,7 @@ Retry:
 
             Return sResult
 
-        Catch ex As System.Exception
+        Catch ex As System.Net.WebException
             Select Case ex.Message
                 Case "The remote server returned an error: (404) Not Found."
                     Return ""
@@ -203,6 +207,10 @@ Retry:
                     If InStr(ex.Message, "500") Then GoTo retry
                     If InStr(ex.Message, "503") Then GoTo retry
                     If InStr(ex.Message, "502") Then GoTo retry
+                    If InStr(ex.Message, "403") Then
+                        objResponse = ex.Response
+                        GoTo errordetail
+                    End If
                     Throw New System.Exception(ex.Message, ex)
             End Select
         End Try

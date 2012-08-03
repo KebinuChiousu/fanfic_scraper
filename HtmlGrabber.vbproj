@@ -228,9 +228,9 @@
     <Compile Include="Sites\clsAFF.vb" />
     <Compile Include="Sites\clsFanfic.vb" />
     <Compile Include="Sites\clsYFF.vb" />
-    <Compile Include="Utility\XML\HTML\clsCookie.vb" />
-    <Compile Include="Utility\XML\HTML\modHTML.vb" />
-    <Compile Include="Utility\XML\modRSS.vb" />
+    <Compile Include="Utility\Browser\clsCookie.vb" />
+    <Compile Include="Utility\Browser\HTML\modHTML.vb" />
+    <Compile Include="Utility\Browser\XML\modRSS.vb" />
     <Compile Include="Sites\clsFFNet.vb">
       <SubType>Code</SubType>
     </Compile>
@@ -243,7 +243,7 @@
     <Compile Include="Data\INIFileReader.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utility\XML\HTML\clsWeb.vb">
+    <Compile Include="Utility\Browser\clsWeb.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\modFormManagement.vb">
@@ -252,13 +252,13 @@
     <None Include="Data\ModOleDB.vb.old">
       <SubType>Code</SubType>
     </None>
-    <Compile Include="Utility\XML\HTML\modURLHelper.vb">
+    <Compile Include="Utility\Browser\HTML\modURLHelper.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\modUtility.vb" />
-    <Compile Include="Utility\XML\modStripTags.vb" />
-    <Compile Include="Utility\XML\modXML.vb" />
-    <Compile Include="Utility\XML\modXMLUtilty.vb" />
+    <Compile Include="Utility\Browser\XML\modStripTags.vb" />
+    <Compile Include="Utility\Browser\XML\modXML.vb" />
+    <Compile Include="Utility\Browser\XML\modXMLUtilty.vb" />
     <EmbeddedResource Include="Data\XMLtoINI.xslt" />
     <EmbeddedResource Include="frmDebug.resx">
       <DependentUpon>frmDebug.vb</DependentUpon>

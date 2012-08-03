@@ -18,6 +18,8 @@ Class YFF
         Dim html As String
         Dim doc As HtmlDocument
 
+        Dim check As String = "<div style='text-align: center; margin: 1em;' class='errortext'>Age Consent Required"
+
         Dim temp As HtmlNodeCollection
 
 
@@ -26,7 +28,7 @@ Class YFF
         doc = CleanHTML(html)
         html = doc.DocumentNode.OuterHtml
 
-        If InStr(html, "Age Consent Required") > 0 Then
+        If InStr(html, check) > 0 Then
             temp = FindLinksByHref(doc.DocumentNode, "viewstory.php")
             url = "http://www." & Me.HostName & "/" & HtmlDecode(temp(0).Attributes("href").Value)
             html = Browser.DownloadPage(url)
