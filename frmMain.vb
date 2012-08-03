@@ -227,7 +227,7 @@ Public Class HtmlGrabber
         '
         Me.lblAtom.Location = New System.Drawing.Point(426, 318)
         Me.lblAtom.Name = "lblAtom"
-        Me.lblAtom.Size = New System.Drawing.Size(147, 13)
+        Me.lblAtom.Size = New System.Drawing.Size(260, 18)
         Me.lblAtom.TabIndex = 19
         Me.lblAtom.Text = "Atom Feed or Author Name"
         '
@@ -256,7 +256,7 @@ Public Class HtmlGrabber
         '
         'cmbType
         '
-        Me.cmbType.Items.AddRange(New Object() {"FFNet", "Adult FanFiction", "Your FanFiction"})
+        Me.cmbType.Items.AddRange(New Object() {"FFNet", "Adult FanFiction", "Your FanFiction", "FicWad"})
         Me.cmbType.Location = New System.Drawing.Point(367, 7)
         Me.cmbType.Name = "cmbType"
         Me.cmbType.Size = New System.Drawing.Size(126, 21)
@@ -393,6 +393,10 @@ Public Class HtmlGrabber
                 Me.Text = "YourFanFiction.com - Story Downloader"
                 lblAtom.Text = "Valid Author URL"
                 host = "yourfanfiction.com"
+            Case "FicWad"
+                Me.Text = "FicWad - Story Downloader"
+                lblAtom.Text = "Valid Author URL or Atom Feed"
+                host = "ficwad.com"
             Case Else
                 clsname = ""
         End Select
@@ -412,6 +416,8 @@ Public Class HtmlGrabber
                 cls = New AFF
             Case "yourfanfiction.com"
                 cls = New YFF
+            Case "ficwad.com"
+                cls = New FicWad
             Case Else
                 cls = Nothing
         End Select

@@ -30,7 +30,7 @@ Class clsWeb
         End If
     End Sub
 
-    Public Function DownloadCookies(ByVal URL As String, ByVal postData As String) As Boolean
+    Public Function DownloadCookies(ByVal URL As String, ByVal postData As String, ByVal cookie As String) As Boolean
 
         Dim ret As Boolean = True
 
@@ -91,7 +91,7 @@ Retry:
             c = cc.GetCookies(New Uri("http://" & hl.Host))(0)
             c.Expires = Date.Now.AddYears(1)
 
-            fi = New FileInfo(Application.StartupPath & "\\" & Replace(Mid(c.Domain, 2), ".", "_") & ".cookie")
+            fi = New FileInfo(Application.StartupPath & "\\" & cookie)
 
             clsCookie.WriteCookiesToDisk(fi.FullName, cc)
 
@@ -165,7 +165,7 @@ Retry:
 
                 Else
 
-                    DownloadCookies(URL, "")
+                    DownloadCookies(URL, "", Cookie)
                     cc = clsCookie.ReadCookiesFromDisk(Cookie)
                     oHttp.CookieContainer = cc
 

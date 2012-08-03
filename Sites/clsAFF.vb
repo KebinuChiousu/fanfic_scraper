@@ -27,11 +27,12 @@ Class AFF
 
         Dim target As String = ""
         Dim postData As String = ""
+        Dim cookie_name As String = "adultfanfiction_net.cookie"
 
 
         Dim nodes As HtmlNodeCollection
 
-        html = Browser.DownloadPage(url, "adultfanfiction_net.cookie")
+        html = Browser.DownloadPage(url, cookie_name)
         doc = CleanHTML(html)
 
         Try
@@ -64,7 +65,7 @@ Class AFF
                     postData += "&"
                     postData += "cmbname=" & URLEncode(Me.FullName)
 
-                    Browser.DownloadCookies(target, postData)
+                    Browser.DownloadCookies(target, postData, cookie_name)
 
 
                 End If

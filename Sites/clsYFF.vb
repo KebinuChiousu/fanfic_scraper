@@ -472,7 +472,6 @@ Class YFF
 
 #End Region
 
-
     Public Sub New()
         Browser = New clsWeb
     End Sub

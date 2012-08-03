@@ -147,4 +147,20 @@ Module modUtility
         FormatLineEndings = strRet
     End Function
 
+    Function LastPos(ByVal source As String, ByVal search As String) As Integer
+
+        Dim idx As Integer = 1
+        Dim last_idx As Integer = 0
+
+        Do Until idx = 0
+            idx = InStr(last_idx + 1, source, search)
+            If idx > 0 Then
+                last_idx = idx
+            End If
+        Loop
+
+        Return last_idx
+
+    End Function
+
 End Module
