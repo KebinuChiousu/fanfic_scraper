@@ -167,25 +167,24 @@ Class FFNet
     End Function
 
     Public Overrides _
-    Sub GetChapters( _
-                     ByVal lst As ListBox, _
-                     ByVal htmlDoc As String _
-                   )
+    Function GetChapters( _
+                          ByVal htmlDoc As String _
+                        ) As String()
 
         Dim data() As String
-        Dim count As Integer
 
         data = GetOptionValues(htmlDoc, "Chapter Navigation")
 
-        If Not IsNothing(data) Then
-            For count = 0 To UBound(data)
-                lst.Items.Add(data(count))
-            Next
-        Else
-            lst.Items.Add("Chapter 1")
+        If IsNothing(data) Then
+            ReDim data(0)
+            data(0) = "Chapter 1"
         End If
 
-    End Sub
+        Me.Chapters = data
+
+        Return data
+
+    End Function
 
 #End Region
 
@@ -300,7 +299,7 @@ Class FFNet
 
     End Function
 
-   
+
 
     Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As Fanfic.Story
 

@@ -23,8 +23,6 @@ Class FicWad
 
         Dim check As String = "<li class=""blocked"">"
 
-        Dim temp As HtmlNodeCollection
-
         html = Browser.DownloadPage(url, Me.cookie_name)
         doc = CleanHTML(html)
         html = doc.DocumentNode.InnerHtml
@@ -252,31 +250,53 @@ Class FicWad
 
 #Region "Chapter Navigation"
 
-    Public Overrides Sub GetChapters(ByVal lst As System.Windows.Forms.ListBox, ByVal htmlDoc As String)
+    Public Overrides Function GetChapters(ByVal htmlDoc As String) As String()
+
+        Dim ret() As String
 
         Dim doc As HtmlDocument
+        Dim node As HtmlNodeCollection
         Dim temp As HtmlNodeCollection
+        Dim link As String
 
         Dim idx As Integer
 
         doc = CleanHTML(htmlDoc)
+        htmlDoc = doc.DocumentNode.InnerHtml
 
-        'temp = FindNodesByAttribute(doc.DocumentNode, "select", "name", "chapter")
-        'htmlDoc = temp(0).InnerHtml
-        'doc = CleanHTML(htmlDoc)
+        temp = FindNodesByAttribute(doc.DocumentNode, "ul", "id", "storylist")
+        htmlDoc = temp(0).OuterHtml
 
-        'temp = doc.DocumentNode.SelectNodes("//option")
+        doc = CleanHTML(htmlDoc)
+        htmlDoc = doc.DocumentNode.InnerHtml
 
-        If Not IsNothing(temp) Then
-            For idx = 0 To temp.Count - 1
-                lst.Items.Add(temp(idx).Attributes("value").Value)
+        node = doc.DocumentNode.SelectNodes("//li")
+
+        If Not IsNothing(node) Then
+            ReDim ret(node.Count - 1)
+            For idx = 0 To node.Count - 1
+
+                htmlDoc = node(0).InnerHtml
+                doc = CleanHTML(htmlDoc)
+
+                temp = FindLinksByHref(doc.DocumentNode, "/story/")
+
+                link = temp(0).Attributes("href").Value
+                link = Split(link, "/")(2)
+                link = GetStoryURL(link)
+
+                ret(idx) = link
             Next
         Else
-            lst.Items.Add("Chapter 1")
+            ReDim ret(0)
+            ret(0) = "Chapter 1"
         End If
 
+        Me.Chapters = ret
 
-    End Sub
+        Return ret
+
+    End Function
 
     Public Overrides Function ProcessChapters(ByVal link As String, ByVal index As Integer) As String
 
@@ -302,7 +322,7 @@ Class FicWad
 
         htmldoc = GrabData(link)
 
-        'Return htmldoc
+        Return htmldoc
 
     End Function
 
@@ -469,7 +489,7 @@ Class FicWad
 
     Public Overrides ReadOnly Property ErrorMessage() As String
         Get
-            Return ""
+            Return "Unknown author"
         End Get
     End Property
 

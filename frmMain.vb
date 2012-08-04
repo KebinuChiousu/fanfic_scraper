@@ -650,6 +650,8 @@ Public Class HtmlGrabber
     Sub DownloadData()
 
         Dim htmldoc As String
+        Dim chapters() As String
+        Dim idx As Integer
 
         Select Case btnURL.Text
 
@@ -673,7 +675,12 @@ oops:
                     End If
 
                     ListChapters.Items.Clear()
-                    cls.GetChapters(Me.ListChapters, htmldoc)
+                    chapters = cls.GetChapters(htmldoc)
+
+                    For idx = 0 To UBound(chapters)
+                        ListChapters.Items.Add(chapters(idx))
+                    Next
+
 
                     htmldoc = cls.ProcessChapters( _
                                                    txtUrl.Text, _

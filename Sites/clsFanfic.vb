@@ -63,25 +63,24 @@ Public MustInherit Class Fanfic
 #Region "Chapter Extraction"
 
     Public Overridable _
-    Sub GetChapters( _
-                     ByVal lst As ListBox, _
-                     ByVal htmlDoc As String _
-                   )
+    Function GetChapters( _
+                          ByVal htmlDoc As String _
+                        ) As String()
 
         Dim data() As String
-        Dim count As Integer
 
         data = GetOptionValues(htmlDoc)
 
-        If Not IsNothing(data) Then
-            For count = 0 To UBound(data)
-                lst.Items.Add(data(count))
-            Next
-        Else
-            lst.Items.Add("Chapter 1")
+        If IsNothing(data) Then
+            ReDim data(0)
+            data(0) = "Chapter 1"
         End If
 
-    End Sub
+        Me.Chapters = data
+
+        Return data
+
+    End Function
 
     Protected _
     Function GetOptionValues( _
@@ -198,6 +197,8 @@ Public MustInherit Class Fanfic
         Dim UpdateDate As String
         Dim Summary As String
     End Structure
+
+    Protected Chapters() As String
 
     Protected Function GenerateAtomFeed(ByVal fic As Fanfic.Story()) As String
 

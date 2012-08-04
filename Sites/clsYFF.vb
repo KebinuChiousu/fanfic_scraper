@@ -207,7 +207,9 @@ Class YFF
 
 #Region "Chapter Navigation"
 
-    Public Overrides Sub GetChapters(ByVal lst As System.Windows.Forms.ListBox, ByVal htmlDoc As String)
+    Public Overrides Function GetChapters(ByVal htmlDoc As String) As String()
+
+        Dim ret() As String
 
         Dim doc As HtmlDocument
         Dim temp As HtmlNodeCollection
@@ -223,17 +225,25 @@ Class YFF
         temp = doc.DocumentNode.SelectNodes("//option")
 
         If Not IsNothing(temp) Then
+            ReDim ret(temp.Count - 1)
             For idx = 0 To temp.Count - 1
-                lst.Items.Add(temp(idx).Attributes("value").Value)
+                ret(idx) = temp(idx).Attributes("value").Value
             Next
         Else
-            lst.Items.Add("Chapter 1")
+            ReDim ret(0)
+            ret(0) = "Chapter 1"
         End If
 
+        Me.Chapters = ret
 
-    End Sub
+        Return ret
 
-    Public Overrides Function ProcessChapters(ByVal link As String, ByVal index As Integer) As String
+    End Function
+
+    Public Overrides Function ProcessChapters( _
+                                               ByVal link As String, _
+                                               ByVal index As Integer _
+                                             ) As String
 
         Dim hl As URL
         Dim host As String
