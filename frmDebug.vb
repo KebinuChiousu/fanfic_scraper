@@ -199,7 +199,7 @@ Public Class Debug
         Me.Controls.Add(Me.grdDB)
         Me.Controls.Add(Me.grdRSS)
         Me.Name = "Debug"
-        Me.Text = "frmDebug"
+        Me.Text = "Download Automation"
         CType(Me.grdRSS, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.grdDB, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

@@ -2,6 +2,8 @@ Imports System.Reflection
 Imports System.Reflection.Assembly
 Imports System.Diagnostics
 Imports System.IO
+Imports System.Text
+Imports System.Text.Encoding
 
 Module modUtility
 
@@ -160,6 +162,23 @@ Module modUtility
         Loop
 
         Return last_idx
+
+    End Function
+
+    Function ConvertToAscii(ByVal str As String) As String
+
+        Dim ecp1252 As Encoding = Encoding.GetEncoding(1252)
+
+        Dim ascii As ASCIIEncoding = New ASCIIEncoding
+        Dim bytearray As Byte()
+        Dim asciiarray As Byte()
+        Dim ret As String
+
+        bytearray = Encoding.UTF8.GetBytes(str)
+        asciiarray = Encoding.Convert(Encoding.UTF8, Encoding.ASCII, bytearray)
+        ret = ascii.GetString(asciiarray)
+
+        Return ret
 
     End Function
 

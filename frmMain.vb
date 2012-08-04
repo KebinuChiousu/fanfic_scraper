@@ -409,6 +409,14 @@ Public Class HtmlGrabber
 
     Sub LoadSiteByHost(ByVal host As String)
 
+        If Not IsNothing(cls) Then
+            If host = cls.HostName Then
+                Exit Sub
+            Else
+                cls = Nothing
+            End If
+        End If
+
         Select Case host
             Case "fanfiction.net"
                 cls = New FFNet
@@ -441,8 +449,6 @@ Public Class HtmlGrabber
         If UBound(Split(host, ".")) = 2 Then
             host = Mid(host, InStr(host, ".") + 1)
         End If
-
-        cls = Nothing
 
         LoadSiteByHost(host)
 

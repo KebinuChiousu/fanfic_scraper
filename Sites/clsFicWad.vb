@@ -1,5 +1,6 @@
 Imports System
 Imports System.Text
+Imports System.Text.Encoding
 Imports System.Net
 Imports System.Xml
 Imports HtmlAgilityPack
@@ -123,6 +124,7 @@ Class FicWad
 
         Dim xmldoc As XmlDocument = Nothing
 
+        If InStr(rss, "author") = 0 Then Return Nothing
 
         If InStr(rss, "nc17") = 0 Then
             If InStr(rss, "feed") = 0 Then
@@ -276,7 +278,7 @@ Class FicWad
             ReDim ret(node.Count - 1)
             For idx = 0 To node.Count - 1
 
-                htmlDoc = node(0).InnerHtml
+                htmlDoc = node(idx).InnerHtml
                 doc = CleanHTML(htmlDoc)
 
                 temp = FindLinksByHref(doc.DocumentNode, "/story/")
@@ -300,25 +302,11 @@ Class FicWad
 
     Public Overrides Function ProcessChapters(ByVal link As String, ByVal index As Integer) As String
 
-        Dim hl As URL
-        Dim host As String
-        Dim idx As Integer
-
-        hl = ExtractUrl(link)
-        host = hl.Host
-
-
-        link = hl.Scheme & "://" & hl.Host & hl.URI
-        link += "?"
-
-        For idx = 0 To UBound(hl.Query)
-            link += hl.Query(idx).Name & "=" & hl.Query(idx).Value
-            link += "&"
-        Next
-
-        link += "chapter=" & (index + 1)
-
         Dim htmldoc As String
+
+        If UBound(Me.Chapters) > 1 Then
+            link = Me.Chapters(index)
+        End If
 
         htmldoc = GrabData(link)
 
@@ -330,13 +318,13 @@ Class FicWad
 
         Dim ret As String
 
-        If InStr(link, "viewuser.php") > 0 Then
+        If InStr(link, "/author") > 0 Then
             ret = link
         Else
             ret = ""
         End If
 
-        'Return ret
+        Return ret
 
     End Function
 
@@ -377,16 +365,22 @@ Class FicWad
 
         Dim ret As String
         Dim doc As HtmlDocument
+        Dim temp As HtmlNodeCollection
 
         doc = CleanHTML(htmlDoc)
+        htmlDoc = doc.DocumentNode.InnerHtml
 
-        ret = doc.DocumentNode.SelectSingleNode("//title").InnerText
+        htmlDoc = GrabStoryDiv(htmlDoc)
+        doc = CleanHTML(htmlDoc)
 
+        temp = FindLinksByHref(doc.DocumentNode, "/author")
 
+        ret = temp(0).InnerText
 
+        temp = Nothing
         doc = Nothing
 
-        'Return ret
+        Return ret
 
     End Function
 
@@ -395,13 +389,19 @@ Class FicWad
         Dim doc As HtmlDocument
         Dim temp As HtmlNodeCollection
 
+        htmldoc = GrabStoryDiv(htmldoc)
         doc = CleanHTML(htmldoc)
 
+        temp = FindNodesByAttribute(doc.DocumentNode, "div", "id", "storytext")
+
+        htmldoc = "<div>"
+        htmldoc = temp(0).InnerHtml
+        htmldoc += "</div>"
 
         doc = Nothing
         temp = Nothing
 
-        'Return htmldoc
+        Return htmldoc
 
     End Function
 
@@ -412,23 +412,40 @@ Class FicWad
         Dim doc As HtmlDocument
 
         Dim summary As String()
-        Dim author_link As String
-        Dim story_link As String
 
         doc = CleanHTML(htmlDoc)
+        htmlDoc = doc.DocumentNode.InnerHtml
+
+        htmlDoc = GrabStoryDiv(htmlDoc)
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "p", "class", "meta")
+        ret = temp(0).InnerHtml
+        ret = HtmlDecode(ret)
+        ret = HtmlDecode(ret)
+        ret = Replace(ret, vbLf, "")
+        ret = Replace(ret, vbTab, " ")
+
+        summary = Split(ret, " - ")
 
 
         Select Case title
             Case "Published: "
-                ret = summary(0)
+                ret = summary(5)
             Case "Updated: "
-                ret = summary(1)
+                ret = summary(6)
         End Select
 
-        'Return ret
+        ret = ConvertToAscii(ret)
+        ret = Replace(ret, "?", " ")
+        ret = Replace(ret, title, "")
+        ret = RTrim(ret)
+        ret = LTrim(ret)
 
         temp = Nothing
         doc = Nothing
+
+        Return ret
 
     End Function
 
@@ -439,17 +456,56 @@ Class FicWad
         Dim doc As HtmlDocument
 
         Dim summary As String()
-        Dim author_link As String
-        Dim story_link As String
+       
+        htmlDoc = GrabStoryDiv(htmlDoc)
+        doc = CleanHTML(htmlDoc)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "p", "class", "meta")
+        ret = temp(0).InnerHtml
+        ret = HtmlDecode(ret)
+        ret = HtmlDecode(ret)
+        ret = Replace(ret, vbLf, "")
+        ret = Replace(ret, vbTab, " ")
+
+        summary = Split(ret, " - ")
+
+        htmlDoc = "<div>"
+        htmlDoc += summary(0)
+        htmlDoc += "</div>"
 
         doc = CleanHTML(htmlDoc)
 
+        temp = FindLinksByHref(doc.DocumentNode, "/category")
 
+        ret = temp(0).InnerText
 
         temp = Nothing
         doc = Nothing
 
-        'Return ret
+        Return ret
+
+    End Function
+
+    Private Function GrabStoryDiv(ByVal htmldoc As String) As String
+
+        Dim ret As String = ""
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
+
+        doc = CleanHTML(htmldoc)
+
+        temp = FindNodesByAttribute(doc.DocumentNode, "div", "id", "story")
+
+        htmldoc = "<div>"
+        htmldoc += temp(0).InnerHtml
+        htmldoc += "</div>"
+
+        ret = htmldoc
+
+        temp = Nothing
+        doc = Nothing
+
+        Return ret
 
     End Function
 
@@ -457,16 +513,22 @@ Class FicWad
 
         Dim ret As String
         Dim doc As HtmlDocument
+        Dim temp As HtmlNodeCollection
 
+        htmlDoc = GrabStoryDiv(htmlDoc)
         doc = CleanHTML(htmlDoc)
 
-        ret = doc.DocumentNode.SelectSingleNode("//title").InnerText
+        htmlDoc = doc.DocumentNode.SelectSingleNode("//h3").OuterHtml
+        doc = CleanHTML(htmlDoc)
 
-        'ret = Mid(ret, 1, InStr(ret, "by") - 2)
+        temp = FindLinksByHref(doc.DocumentNode, "/story")
 
+        ret = temp(0).InnerText
+
+        temp = Nothing
         doc = Nothing
 
-        'Return ret
+        Return ret
 
     End Function
 
