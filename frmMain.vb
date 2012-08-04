@@ -229,7 +229,7 @@ Public Class HtmlGrabber
         Me.lblAtom.Name = "lblAtom"
         Me.lblAtom.Size = New System.Drawing.Size(260, 18)
         Me.lblAtom.TabIndex = 19
-        Me.lblAtom.Text = "Atom Feed or Author Name"
+        Me.lblAtom.Text = "Atom Feed or Author URL"
         '
         'cmbStory
         '
@@ -383,7 +383,7 @@ Public Class HtmlGrabber
         Select Case clsname
             Case "FFNet"
                 Me.Text = "Fanfiction.net - Story Downloader"
-                lblAtom.Text = "Atom Feed or Author Name"
+                lblAtom.Text = "Atom Feed or Author URL"
                 host = "fanfiction.net"
             Case "Adult FanFiction"
                 Me.Text = "AdultFanfiction.net - Story Downloader"
@@ -449,6 +449,8 @@ Public Class HtmlGrabber
         If UBound(Split(host, ".")) = 2 Then
             host = Mid(host, InStr(host, ".") + 1)
         End If
+
+
 
         LoadSiteByHost(host)
 
