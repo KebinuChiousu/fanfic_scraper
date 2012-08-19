@@ -26,14 +26,14 @@ Class FFNet
 
         Dim value As String = GetFirstNodeValue(xmldoc, "//title")
 
-        value = Replace(value, " - FanFiction.Net", "")
+        value = Replace(value, "| FanFiction", "")
 
         ch = InStr(value, "Chapter")
 
         If ch > 0 Then
             title = Trim(Mid(value, 1, ch - 1))
             value = Replace(value, title, "")
-            ch = InStr(value, ", a")
+            ch = LastPos(value, ",")
             value = title & "<br><br>" & Mid(value, 1, ch - 1)
             'value = title
 
@@ -55,11 +55,10 @@ Class FFNet
         xmldoc.LoadXml(htmlDoc)
 
         Dim value As String = GetFirstNodeValue(xmldoc, "//title")
-        value = Replace(value, "FanFiction.Net", "")
+        value = Replace(value, "| FanFiction", "")
 
         If value <> "" Then
-            value = Replace(value, " - ", "")
-            value = Trim(Mid(value, InStr(value, ", a") + 1))
+            value = Trim(Mid(value, LastPos(value, ",") + 1))
         End If
 
         xmldoc = Nothing
