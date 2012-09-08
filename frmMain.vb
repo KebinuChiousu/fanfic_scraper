@@ -699,6 +699,7 @@ oops:
                     lblAuthor.Text = cls.GrabAuthor(htmldoc)
                     lblPublish.Text = cls.GrabDate(htmldoc, "Published: ")
                     lblUpdate.Text = cls.GrabDate(htmldoc, "Updated: ")
+                    If lblUpdate.Text = "" Then lblUpdate.Text = lblPublish.Text
 
                     btnURL.Text = "Process Chapters"
                     lblChapterCount.Text = ListChapters.Items.Count
@@ -781,6 +782,8 @@ oops:
 
         lblPublish.Text = cls.GrabDate(htmlDoc, "Published: ")
         lblUpdate.Text = cls.GrabDate(htmlDoc, "Updated: ")
+
+        If lblUpdate.Text = "" Then lblUpdate.Text = lblPublish.Text
 
         txtResult = htmlDoc
 

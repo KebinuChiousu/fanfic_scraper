@@ -73,6 +73,8 @@ Class FFNet
                        ByVal title As String _
                      ) As String
 
+        Dim ret As String = ""
+
         Dim xmldoc As New XmlDocument
 
         xmldoc.LoadXml(htmlDoc)
@@ -95,11 +97,19 @@ Class FFNet
 
         Dim sstart As Integer
 
-        sstart = InStr(temp, title) + Len(title)
 
-        GrabDate = Mid(temp, sstart, 8)
+        sstart = InStr(temp, title)
+
+        If sstart > 0 Then
+            sstart += Len(title)
+            ret = Mid(temp, sstart, 8)
+        Else
+            ret = ""
+        End If
 
         xmldoc = Nothing
+
+        Return ret
 
     End Function
 
