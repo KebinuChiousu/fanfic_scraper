@@ -228,6 +228,7 @@
     <Compile Include="Sites\clsAFF.vb" />
     <Compile Include="Sites\Base\clsFanfic.vb" />
     <Compile Include="Sites\clsFicWad.vb" />
+    <Compile Include="Sites\clsMM.vb" />
     <Compile Include="Sites\clsYFF.vb" />
     <Compile Include="Utility\Browser\clsCookie.vb" />
     <Compile Include="Utility\Browser\HTML\modHTML.vb" />

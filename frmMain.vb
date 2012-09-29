@@ -397,6 +397,10 @@ Public Class HtmlGrabber
                 Me.Text = "FicWad - Story Downloader"
                 lblAtom.Text = "Valid Author URL or Atom Feed"
                 host = "ficwad.com"
+            Case "MediaMiner"
+                Me.Text = "MediaMiner - Story Downloader"
+                lblAtom.Text = "Valid Author URL"
+                host = "mediaminer.org"
             Case Else
                 clsname = ""
         End Select
@@ -426,6 +430,8 @@ Public Class HtmlGrabber
                 cls = New YFF
             Case "ficwad.com"
                 cls = New FicWad
+            Case "mediaminer.org"
+                cls = New MM
             Case Else
                 cls = Nothing
         End Select

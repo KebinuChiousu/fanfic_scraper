@@ -231,6 +231,8 @@ Public MustInherit Class Fanfic
             html += "<id>"
             html += fic(node_idx).ID
             html += ":"
+            html += fic(node_idx).Category
+            html += ":"
             html += fic(node_idx).ChapterCount
             html += "</id>"
             html += "<summary type=""html"">"
