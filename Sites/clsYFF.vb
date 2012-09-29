@@ -60,6 +60,8 @@ Class YFF
 
         Dim author_url As String
 
+        Dim idx As Integer
+
         Dim summary() As String
         Dim fic() As Fanfic.Story
 
@@ -123,13 +125,20 @@ Class YFF
 
             fic(node_idx).Category = summary(1)
 
-            doc = CleanHTML(summary(7))
-            summary(7) = HtmlDecode(doc.DocumentNode.InnerText)
-            summary(7) = Replace(summary(7), "Table of Contents", "")
-            summary(7) = Replace(summary(7), "Chapters:", "")
-            summary(7) = CInt(summary(7))
+            Select Case UBound(summary)
+                Case 8
+                    idx = 7
+                Case 9
+                    idx = 8
+            End Select
 
-            fic(node_idx).ChapterCount = summary(7)
+            doc = CleanHTML(summary(idx))
+            summary(idx) = HtmlDecode(doc.DocumentNode.InnerText)
+            summary(idx) = Replace(summary(idx), "Table of Contents", "")
+            summary(idx) = Replace(summary(idx), "Chapters:", "")
+            summary(idx) = CInt(summary(idx))
+
+            fic(node_idx).ChapterCount = summary(idx)
 
             fic(node_idx).ID = Me.GetStoryID(fic(node_idx).StoryURL)
 
@@ -192,7 +201,7 @@ Class YFF
 
         temp = Split(dsRSS.Tables("entry").Rows(idx).Item("id"), ":")
 
-        fic.ChapterCount = temp(1)
+        fic.ChapterCount = temp(2)
 
         summary = Split(dsRSS.Tables("summary").Rows(idx).Item("summary_Text"), "|")
 
