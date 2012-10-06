@@ -210,23 +210,24 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Access\dsFanFic.Designer.vb">
+    <Compile Include="Data\clsConfig.vb" />
+    <Compile Include="Data\DAL\Access\dsFanFic.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>dsFanFic.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Data\Access\dsFanFic.vb">
+    <Compile Include="Data\DAL\Access\dsFanFic.vb">
       <DependentUpon>dsFanFic.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Data\clsConfig.vb" />
+    <Compile Include="Data\DAL\clsDAL.vb" />
+    <Compile Include="Data\DAL\nHibernate\nHibernateHelper.vb" />
     <Compile Include="Data\Ini\INIFileReader.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\Mapping\CategoryMap.vb" />
-    <Compile Include="Data\Mapping\FanficMap.vb" />
-    <Compile Include="Data\nHibernateHelper.vb" />
-    <Compile Include="Data\Tables\Category.vb" />
-    <Compile Include="Data\Tables\Fanfic.vb" />
+    <Compile Include="Data\DAL\nHibernate\Mapping\CategoryMap.vb" />
+    <Compile Include="Data\DAL\nHibernate\Mapping\FanficMap.vb" />
+    <Compile Include="Data\DAL\nHibernate\Tables\Category.vb" />
+    <Compile Include="Data\DAL\nHibernate\Tables\Fanfic.vb" />
     <Compile Include="frmHtml.Designer.vb">
       <DependentUpon>frmHtml.vb</DependentUpon>
     </Compile>
@@ -271,15 +272,15 @@
     <Compile Include="Utility\modFormManagement.vb">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="Data\Access\dsFanFic.xsc">
+    <None Include="Data\DAL\Access\dsFanFic.xsc">
       <DependentUpon>dsFanFic.xsd</DependentUpon>
     </None>
-    <None Include="Data\Access\dsFanFic.xsd">
+    <None Include="Data\DAL\Access\dsFanFic.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>dsFanFic.Designer.vb</LastGenOutput>
     </None>
-    <None Include="Data\Access\dsFanFic.xss">
+    <None Include="Data\DAL\Access\dsFanFic.xss">
       <DependentUpon>dsFanFic.xsd</DependentUpon>
     </None>
     <Compile Include="Utility\Browser\HTML\modURLHelper.vb">
@@ -321,10 +322,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\Access" />
+    <Folder Include="Data\DAL\Access" />
+    <Folder Include="Data\DAL\nHibernate\Database" />
     <Folder Include="Data\Ini" />
-    <Folder Include="Data\Mapping" />
-    <Folder Include="Data\Tables" />
+    <Folder Include="Data\DAL\nHibernate\Mapping" />
+    <Folder Include="Data\DAL" />
+    <Folder Include="Data\DAL\nHibernate" />
+    <Folder Include="Data\DAL\nHibernate\Tables" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
