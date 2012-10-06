@@ -7,7 +7,7 @@ Imports System.Web.HttpUtility
 
 
 Class YFF
-    Inherits Fanfic
+    Inherits clsFanfic
 
 #Region "Downloading HTML"
 
@@ -63,7 +63,7 @@ Class YFF
         Dim idx As Integer
 
         Dim summary() As String
-        Dim fic() As Fanfic.Story
+        Dim fic() As clsFanfic.Story
 
         Dim xmldoc As XmlDocument = Nothing
 
@@ -170,9 +170,9 @@ Class YFF
 
     End Function
 
-    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As Fanfic.Story
+    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As clsFanfic.Story
 
-        Dim fic As New Fanfic.Story
+        Dim fic As New clsFanfic.Story
 
         Dim temp() As String
 

@@ -1,17 +1,23 @@
 Imports System.Configuration
 
 Public Class clsConfig
+	
+	Private Type As DBConnType
+	
+	Sub New()
+		Type = DBConnType.Access
+	End Sub
 
-    Enum DbType
-        Access = 0
+    Private Enum DBConnType
+    	Access = 0
+    	SQLLite = 1
     End Enum
 
-    Function GetConnStr( _
-                         ByVal csName As String, _
-                         Optional ByVal Type As DbType = DbType.Access _
-                       ) As String
-
-
+    Public Function GetConnStr( _
+                                 ByVal csName As String _                                 
+                                 ) As String
+    	
+    	
         Dim conf As System.Configuration.Configuration
         Dim ConnStr As String = ""
 
@@ -38,9 +44,11 @@ Public Class clsConfig
             Return ""
         End If
 
-        Select Case Type
-            Case DbType.Access
-                path = GetAccessString(ConnStr)
+		Select Case Type		
+            Case DBConnType.Access
+            	path = GetAccessString(ConnStr)
+            Case DBConnType.SQLLite
+            	path = GetSQLLiteString(ConnStr)
         End Select
 
         Return path
@@ -49,8 +57,7 @@ Public Class clsConfig
 
     Sub UpdateConnStr( _
                        ByVal csName As String, _
-                       ByVal csValue As String, _
-                       Optional ByVal Type As DbType = DbType.Access _
+                       ByVal csValue As String _                       
                      )
 
         Dim conf As System.Configuration.Configuration
@@ -77,8 +84,10 @@ Public Class clsConfig
         ' Create the connection string name. 
         'Dim csName As String = "ConnStr" + connStrCnt.ToString()
         Select Case Type
-            Case DbType.Access
-                csSettings = SetAccessString(csName, csValue)
+            Case DbconnType.Access
+            	csSettings = SetAccessString(csName, csValue)
+            Case DBConnType.SQLLite 
+            	csSettings = SetSQLLiteString(csName,csValue)
         End Select
 
         csSection.ConnectionStrings.Remove(csName)
@@ -147,6 +156,68 @@ Public Class clsConfig
         Return path
 
     End Function
+
+#End Region
+
+#Region "SQLLite Routines"
+
+	Private Function SetSQLLiteString( _
+                                      ByVal csName As String, _
+                                      ByVal Path As String _
+                                    ) As ConnectionStringSettings
+
+	Dim connstr As String = ""
+		      
+        connstr = "Data Source="
+        connstr += """" & Path & """"
+        connstr += ";"
+        connstr += "Version=3"
+        connstr += ";"
+        connstr += "New=False"
+        connstr += ";"
+        connstr += "Compress=True"
+        connstr += ";"
+        
+        ' Create a connection string element and
+        ' save it to the configuration file.
+        ' Create a connection string element.
+        Dim csSettings As New _
+        ConnectionStringSettings( _
+                                  csName, _
+                                  connstr, _
+                                  "System.Data.SQLite" _
+                                )
+
+        Return csSettings
+
+    End Function
+
+    Private Function GetSQLLiteString(ByVal ConnStr As String) As String
+
+        Dim Conn() As String
+        Dim path As String = ""
+        Dim index As Integer
+
+        Try
+            Conn = Split(ConnStr, ";")
+
+            For index = 0 To UBound(Conn)
+                If InStr(Conn(index), "Data Source") Then
+                    Conn = Split(Conn(index), "=")
+                    path = Conn(1)
+                    path = Replace(path, """", "")
+                    Exit For
+                End If
+            Next
+
+        Catch
+            path = ""
+        End Try
+
+        Return path
+
+    End Function
+
 
 #End Region
 

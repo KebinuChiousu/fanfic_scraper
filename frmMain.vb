@@ -369,7 +369,7 @@ Public Class HtmlGrabber
     Dim txtResult As String
     Dim Title As String
     Dim dsRSS As DataSet
-    Public cls As Fanfic
+    Public cls As clsFanfic
     Public clsname As String
     Dim i As Integer
 
@@ -626,7 +626,7 @@ Public Class HtmlGrabber
 
         btnURL.Text = "Get Chapters"
 
-        Dim fic As Fanfic.Story
+        Dim fic As clsFanfic.Story
 
         fic = cls.GrabStoryInfo(dsRSS, idx)
 
@@ -858,7 +858,7 @@ oops:
         Dim idx As Integer
         'Dim sumcount As Integer
 
-        Dim fic As Fanfic.Story
+        Dim fic As clsFanfic.Story
 
         txtSource.Text = ""
         cmbStory.Items.Clear()

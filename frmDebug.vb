@@ -283,11 +283,23 @@ Public Class Debug
         Catch
         End Try
     End Sub
+    
+    Private Function GetCategories() As DataTable
+    	
+    	Dim dt As DataTable
+    	
+    	Dim taCat As New dsFanFicTableAdapters.CategoryTableAdapter
+
+		dt = taCat.GetData()
+
+		Return dt
+    	
+    End Function
 
     Private Sub UpdateDateBase( _
                                   ByVal sender As System.Object, _
                                   ByVal e As System.EventArgs _
-                                ) Handles btnUpdateDB.Click
+                              ) Handles btnUpdateDB.Click
         Dim dt As DataTable
 
         dt = grdDB.DataSource
@@ -351,6 +363,7 @@ Public Class Debug
         Dim fi As FileInfo
 
         Dim ifr As IniFileReader
+        
         Dim conf As New clsConfig
 
         Dim val As String
@@ -392,9 +405,7 @@ Public Class Debug
 
         Dim dt As DataTable
 
-        Dim taCat As New dsFanFicTableAdapters.CategoryTableAdapter
-
-        dt = taCat.GetData()
+		dt = GetCategories()
 
         cmbChooseDB.DataSource = dt
         cmbChooseDB.ValueMember = "Index"

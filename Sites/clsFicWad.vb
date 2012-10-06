@@ -7,7 +7,7 @@ Imports HtmlAgilityPack
 Imports System.Web.HttpUtility
 
 Class FicWad
-    Inherits Fanfic
+    Inherits clsFanfic
 
 #Region "Downloading HTML"
 
@@ -112,7 +112,7 @@ Class FicWad
         Dim node As HtmlNodeCollection
         Dim node_idx As Integer
 
-        Dim fic As New Fanfic.Story
+        Dim fic As New clsFanfic.Story
 
         Dim story_url As String
 
@@ -210,9 +210,9 @@ Class FicWad
 
     End Function
 
-    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As Fanfic.Story
+    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As clsFanfic.Story
 
-        Dim fic As New Fanfic.Story
+        Dim fic As New clsFanfic.Story
 
         Dim temp() As String
 

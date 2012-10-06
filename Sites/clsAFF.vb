@@ -7,7 +7,7 @@ Imports System.Web.HttpUtility
 
 
 Class AFF
-    Inherits Fanfic
+    Inherits clsFanfic
 
 #Region "Downloading HTML"
 
@@ -185,7 +185,7 @@ Class AFF
         Dim author_url As String
 
         Dim summary() As String
-        Dim fic() As Fanfic.Story
+        Dim fic() As clsFanfic.Story
 
         Dim xmldoc As XmlDocument = Nothing
 
@@ -301,9 +301,9 @@ Class AFF
 
     End Function
 
-    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As Fanfic.Story
+    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As clsFanfic.Story
 
-        Dim fic As New Fanfic.Story
+        Dim fic As New clsFanfic.Story
 
         Dim temp() As String
 

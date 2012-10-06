@@ -7,7 +7,7 @@ Imports HtmlAgilityPack
 Imports System.Web.HttpUtility
 
 Public Class MM
-    Inherits Fanfic
+    Inherits clsFanfic
 
     Private Browser As clsWeb
 
@@ -79,7 +79,7 @@ Public Class MM
         Dim author_url As String
 
         Dim summary() As String
-        Dim fic() As Fanfic.Story
+        Dim fic() As clsFanfic.Story
 
         Dim idx As Integer
 
@@ -219,9 +219,9 @@ Public Class MM
 
     End Function
 
-    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As Fanfic.Story
+    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As clsFanfic.Story
 
-        Dim fic As New Fanfic.Story
+        Dim fic As New clsFanfic.Story
 
         Dim temp() As String
 
@@ -274,7 +274,7 @@ Public Class MM
 
     Public Overrides ReadOnly Property HostName() As String
         Get
-            Return "mediaminer.org"
+        	Return "mediaminer.org"        	
         End Get
     End Property
 

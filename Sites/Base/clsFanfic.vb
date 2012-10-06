@@ -2,7 +2,7 @@ Imports System.Xml
 Imports System.Data
 Imports System.Web.HttpUtility
 
-Public MustInherit Class Fanfic
+Public MustInherit Class clsFanfic
 
     Public MustOverride _
     Function ProcessChapters( _
@@ -183,7 +183,7 @@ Public MustInherit Class Fanfic
 #Region "RSS Routines"
 
     Public MustOverride _
-    Function GrabStoryInfo(ByRef dsRSS As DataSet, ByVal idx As Integer) As Fanfic.Story
+    Function GrabStoryInfo(ByRef dsRSS As DataSet, ByVal idx As Integer) As clsFanfic.Story
 
     Structure Story
         Dim ID As String
@@ -200,7 +200,7 @@ Public MustInherit Class Fanfic
 
     Protected Chapters() As String
 
-    Protected Function GenerateAtomFeed(ByVal fic As Fanfic.Story()) As String
+    Protected Function GenerateAtomFeed(ByVal fic As clsFanfic.Story()) As String
 
         Dim html As String = ""
         Dim node_idx As Integer

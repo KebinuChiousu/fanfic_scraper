@@ -100,8 +100,13 @@ Public Class frmPath
                                  ByVal e As System.EventArgs _
                                 ) Handles btnPath.Click
         Dim dlg As OpenFileDialog = New OpenFileDialog
+        
         dlg.DefaultExt = "mdb"
         dlg.Filter = "Access Database|*.mdb"
+        
+        'dlg.DefaultExt = "db"
+        'dlg.Filter = "SQL Lite Database|*.db"
+        
         dlg.CheckFileExists = True
         dlg.CheckPathExists = True
         dlg.Title = "Select Path to Database."

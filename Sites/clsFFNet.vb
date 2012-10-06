@@ -5,7 +5,7 @@ Imports System.IO
 Imports System.Xml
 
 Class FFNet
-    Inherits Fanfic
+    Inherits clsFanfic
 
     Private Browser As clsWeb
 
@@ -310,9 +310,9 @@ Class FFNet
 
 
 
-    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As Fanfic.Story
+    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As clsFanfic.Story
 
-        Dim fic As New Fanfic.Story
+        Dim fic As New clsFanfic.Story
 
         Dim txtSummary() As String
         Dim txtResult As String

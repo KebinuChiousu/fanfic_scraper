@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -6,8 +7,6 @@
     <ProjectGuid>{52566EF1-8CB6-4A85-9CE3-5435ABA4C783}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ApplicationIcon>
-    </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>HtmlGrabber</AssemblyName>
@@ -29,6 +28,11 @@
     <MyType>WindowsFormsWithCustomSubMain</MyType>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkProfile />
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <RemoveIntegerChecks>False</RemoveIntegerChecks>
+    <OptionInfer>On</OptionInfer>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -36,18 +40,14 @@
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>
-    </DefineConstants>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <DebugType>full</DebugType>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -55,18 +55,14 @@
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>
-    </DefineConstants>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <DebugType>none</DebugType>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'X86|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -76,9 +72,9 @@
     <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>HtmlGrabber.xml</DocumentationFile>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -88,21 +84,20 @@
     <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>HtmlGrabber.xml</DocumentationFile>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
-    <DebugType>full</DebugType>
+    <DebugType>Full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
+    <NoWarn>42016,42017,42018,42019,42032,42110,42107</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x86\Release\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>HtmlGrabber.xml</DocumentationFile>
-    <Optimize>true</Optimize>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <DebugType>
     </DebugType>
     <PlatformTarget>x86</PlatformTarget>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'X86|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -112,9 +107,9 @@
     <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>HtmlGrabber.xml</DocumentationFile>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -124,21 +119,20 @@
     <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>HtmlGrabber.xml</DocumentationFile>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x64\Release\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>HtmlGrabber.xml</DocumentationFile>
-    <Optimize>true</Optimize>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <DebugType>
     </DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'X86|x64' ">
     <DebugSymbols>true</DebugSymbols>
@@ -148,35 +142,55 @@
     <BaseAddress>285212672</BaseAddress>
     <DocumentationFile>HtmlGrabber.xml</DocumentationFile>
     <WarningLevel>1</WarningLevel>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentNHibernate">
+      <HintPath>packages\FluentNHibernate.1.3.0.733\lib\FluentNHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.3.9.1, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\HtmlAgilityPack\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>packages\NHibernate.3.3.1.4000\lib\Net35\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
     <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.SQLite" />
+    <Reference Include="System.Data.SQLite.Linq" />
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Web">
-      <Name>System.Web</Name>
-    </Reference>
-    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="XMLFilter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -196,15 +210,23 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\dsFanFic.Designer.vb">
+    <Compile Include="Data\Access\dsFanFic.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>dsFanFic.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Data\clsConfig.vb" />
-    <Compile Include="Data\dsFanFic.vb">
+    <Compile Include="Data\Access\dsFanFic.vb">
       <DependentUpon>dsFanFic.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Data\clsConfig.vb" />
+    <Compile Include="Data\Ini\INIFileReader.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\Mapping\CategoryMap.vb" />
+    <Compile Include="Data\Mapping\FanficMap.vb" />
+    <Compile Include="Data\nHibernateHelper.vb" />
+    <Compile Include="Data\Tables\Category.vb" />
+    <Compile Include="Data\Tables\Fanfic.vb" />
     <Compile Include="frmHtml.Designer.vb">
       <DependentUpon>frmHtml.vb</DependentUpon>
     </Compile>
@@ -242,17 +264,23 @@
     <Compile Include="frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Data\INIFileReader.vb">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Utility\Browser\clsWeb.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utility\modExtension.vb" />
     <Compile Include="Utility\modFormManagement.vb">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="Data\ModOleDB.vb.old">
-      <SubType>Code</SubType>
+    <None Include="Data\Access\dsFanFic.xsc">
+      <DependentUpon>dsFanFic.xsd</DependentUpon>
+    </None>
+    <None Include="Data\Access\dsFanFic.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsFanFic.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="Data\Access\dsFanFic.xss">
+      <DependentUpon>dsFanFic.xsd</DependentUpon>
     </None>
     <Compile Include="Utility\Browser\HTML\modURLHelper.vb">
       <SubType>Code</SubType>
@@ -261,7 +289,6 @@
     <Compile Include="Utility\Browser\XML\modStripTags.vb" />
     <Compile Include="Utility\Browser\XML\modXML.vb" />
     <Compile Include="Utility\Browser\XML\modXMLUtilty.vb" />
-    <EmbeddedResource Include="Data\XMLtoINI.xslt" />
     <EmbeddedResource Include="frmDebug.resx">
       <DependentUpon>frmDebug.vb</DependentUpon>
       <SubType>Designer</SubType>
@@ -282,25 +309,22 @@
       <SubType>Designer</SubType>
       <DependentUpon>frmStory.vb</DependentUpon>
     </EmbeddedResource>
+    <None Include="Data\Ini\XMLtoINI.xslt" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Data\dsFanFic.xsc">
-      <DependentUpon>dsFanFic.xsd</DependentUpon>
-    </None>
-    <None Include="Data\dsFanFic.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>dsFanFic.Designer.vb</LastGenOutput>
-    </None>
-    <None Include="Data\dsFanFic.xss">
-      <DependentUpon>dsFanFic.xsd</DependentUpon>
-    </None>
     <None Include="My Project\Settings.settings">
       <CustomToolNamespace>My</CustomToolNamespace>
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Access" />
+    <Folder Include="Data\Ini" />
+    <Folder Include="Data\Mapping" />
+    <Folder Include="Data\Tables" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
@@ -308,5 +332,19 @@
     </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <Optimize>true</Optimize>
+    <DefineConstants />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
 </Project>
