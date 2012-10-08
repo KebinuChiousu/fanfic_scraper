@@ -218,15 +218,6 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\DAL\Access\clsAccess.vb" />
-    <Compile Include="Data\DAL\Access\dsFanFic.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>dsFanFic.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Data\DAL\Access\dsFanFic.vb">
-      <DependentUpon>dsFanFic.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Data\DAL\clsDAL.vb" />
     <Compile Include="Data\DAL\nHibernate\Database\clsSQLite.vb" />
     <Compile Include="Data\DAL\nHibernate\nHibernateHelper.vb" />
@@ -281,17 +272,6 @@
     <Compile Include="Utility\modFormManagement.vb">
       <SubType>Code</SubType>
     </Compile>
-    <None Include="Data\DAL\Access\dsFanFic.xsc">
-      <DependentUpon>dsFanFic.xsd</DependentUpon>
-    </None>
-    <None Include="Data\DAL\Access\dsFanFic.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>dsFanFic.Designer.vb</LastGenOutput>
-    </None>
-    <None Include="Data\DAL\Access\dsFanFic.xss">
-      <DependentUpon>dsFanFic.xsd</DependentUpon>
-    </None>
     <Compile Include="Utility\Browser\HTML\modURLHelper.vb">
       <SubType>Code</SubType>
     </Compile>

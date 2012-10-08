@@ -378,8 +378,8 @@ Public Class Debug
         fi = New FileInfo(path)
 
         Select Case fi.Extension
-            Case ".mdb"
-                DAL = New Access
+            'Case ".mdb"
+            '    DAL = New Access
             Case ".db"
                 DAL = New SQLite("FanFic", Init)
         End Select

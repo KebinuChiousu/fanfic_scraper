@@ -102,8 +102,9 @@ Public Class frmPath
                                 ) Handles btnPath.Click
         Dim dlg As OpenFileDialog = New OpenFileDialog
         
-        dlg.DefaultExt = "mdb"
-        dlg.Filter = "Access Database|*.mdb|SQL Lite Database|*.db"
+        dlg.DefaultExt = "db"
+        'dlg.Filter = "Access Database|*.mdb|SQL Lite Database|*.db"
+        dlg.Filter = "SQL Lite Database|*.db"
         
         dlg.CheckFileExists = True
         dlg.CheckPathExists = True
