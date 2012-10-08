@@ -1800,7 +1800,7 @@ Namespace dsFanFicTableAdapters
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Private Sub InitConnection()
             Me._connection = New Global.System.Data.OleDb.OleDbConnection()
-            Me._connection.ConnectionString = Global.HtmlGrabber.My.MySettings.Default.FanFic
+            Me._connection.ConnectionString = Global.HtmlGrabber.MySettings.Default.FanFic
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -2175,7 +2175,7 @@ Namespace dsFanFicTableAdapters
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Private Sub InitConnection()
             Me._connection = New Global.System.Data.OleDb.OleDbConnection()
-            Me._connection.ConnectionString = Global.HtmlGrabber.My.MySettings.Default.FanFic
+            Me._connection.ConnectionString = Global.HtmlGrabber.MySettings.Default.FanFic
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _

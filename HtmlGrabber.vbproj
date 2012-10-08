@@ -252,7 +252,6 @@
     <Compile Include="frmStory.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="My Project\Settings.Designer.vb" />
     <Compile Include="My Project\Settings1.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
