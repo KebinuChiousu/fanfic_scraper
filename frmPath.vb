@@ -6,6 +6,7 @@ Imports System.Text
 Public Class frmPath
     Inherits System.Windows.Forms.Form
 
+    Dim conf As DAL
 
 #Region " Windows Form Designer generated code "
 
@@ -123,6 +124,10 @@ Public Class frmPath
                               ByVal sender As Object, _
                               ByVal e As System.EventArgs _
                             ) Handles MyBase.Load
+
+        'Obtain DAL instance from frmDebug
+        conf = frmDebug.DAL
+
         'Legacy Ini Code
         InitIniFile()
 
@@ -189,11 +194,8 @@ Public Class frmPath
 
 #Region "app.config Manipulation Routines"
 
-    Dim conf As clsConfig
 
     Sub InitConfigFile()
-
-        conf = New clsConfig
 
         txtPath.Text = conf.GetConnStr("FanFic")
 

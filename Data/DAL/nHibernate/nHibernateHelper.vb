@@ -15,7 +15,7 @@ Public Class nHibernateHelper
 	Private Shared readonly Property SessionFactory As ISessionFactory
 		Get 
 			If isnothing(_sessionFactory) Then
-				
+                IntializeSessionFactory()
 			End If
 		End Get
 			

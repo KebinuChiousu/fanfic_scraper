@@ -214,12 +214,13 @@ Public Class Debug
         StoryPage = 1
     End Enum
 
+    Public DAL As DAL
     Public myCaller As HtmlGrabber
     Public Navigate As Process
 
 #Region "Database Routines"
 
-    Public DB As String
+    Private DB As String
 
     Function GetData( _
                       ByVal Category_ID As Integer, _
@@ -227,26 +228,12 @@ Public Class Debug
                     ) As DataTable
 
         Dim dt As DataTable
-        Dim taFF As New dsFanFicTableAdapters.FanficTableAdapter
 
         DB = cmbChooseDB.Text
 
-        Try
-            If ALL Then
-                dt = taFF.GetDataByCat(Category_ID)
-            Else
-                dt = taFF.GetDataByStatus(False, False, Category_ID)
-            End If
+        dt = DAL.GetData(Category_ID, ALL)
 
-        Catch
-            dt = Nothing
-        Finally
-            taFF.Dispose()
-        End Try
-
-        GetData = dt
-
-        dt.Dispose()
+        Return dt
 
     End Function
 
@@ -254,17 +241,19 @@ Public Class Debug
 
         Dim result As Integer = 0
 
-        Dim taFF As New dsFanFicTableAdapters.FanficTableAdapter
-
-        Try
-            result = taFF.Update(dt)
-        Catch
-            result = -1
-        Finally
-            taFF.Dispose()
-        End Try
+        result = DAL.UpdateData(dt)
 
         Return result
+
+    End Function
+
+    Private Function GetCategories() As DataTable
+
+        Dim dt As DataTable
+
+        dt = DAL.GetCategories
+
+        Return dt
 
     End Function
 
@@ -283,18 +272,6 @@ Public Class Debug
         Catch
         End Try
     End Sub
-    
-    Private Function GetCategories() As DataTable
-    	
-    	Dim dt As DataTable
-    	
-    	Dim taCat As New dsFanFicTableAdapters.CategoryTableAdapter
-
-		dt = taCat.GetData()
-
-		Return dt
-    	
-    End Function
 
     Private Sub UpdateDateBase( _
                                   ByVal sender As System.Object, _
@@ -363,8 +340,8 @@ Public Class Debug
         Dim fi As FileInfo
 
         Dim ifr As IniFileReader
-        
-        Dim conf As New clsConfig
+
+        DAL = New Access
 
         Dim val As String
 
@@ -376,13 +353,12 @@ Public Class Debug
             val = ifr.GetIniValue("FanFic", "Path")
 
             If val <> empty Then
-                conf.UpdateConnStr("FanFic", val)
+                DAL.UpdateConnStr("FanFic", val)
             End If
 
         End If
 
         ifr = Nothing
-        conf = Nothing
 
         My.Settings.Reload()
 
@@ -392,7 +368,9 @@ Public Class Debug
                                ByVal sender As System.Object, _
                                ByVal e As System.EventArgs _
                              ) Handles MyBase.Load
-        
+
+
+
         PlaceDebugWindow()
         cmbSearch.SelectedIndex = 0
         InitConfig()

@@ -210,7 +210,7 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Data\clsConfig.vb" />
+    <Compile Include="Data\DAL\Access\clsAccess.vb" />
     <Compile Include="Data\DAL\Access\dsFanFic.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -220,6 +220,7 @@
       <DependentUpon>dsFanFic.xsd</DependentUpon>
     </Compile>
     <Compile Include="Data\DAL\clsDAL.vb" />
+    <Compile Include="Data\DAL\nHibernate\Database\clsSQLite.vb" />
     <Compile Include="Data\DAL\nHibernate\nHibernateHelper.vb" />
     <Compile Include="Data\Ini\INIFileReader.vb">
       <SubType>Code</SubType>
@@ -321,15 +322,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\DAL\Access" />
-    <Folder Include="Data\DAL\nHibernate\Database" />
-    <Folder Include="Data\Ini" />
-    <Folder Include="Data\DAL\nHibernate\Mapping" />
-    <Folder Include="Data\DAL" />
-    <Folder Include="Data\DAL\nHibernate" />
-    <Folder Include="Data\DAL\nHibernate\Tables" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PreBuildEvent>
