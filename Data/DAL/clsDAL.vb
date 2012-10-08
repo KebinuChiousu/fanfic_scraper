@@ -8,8 +8,8 @@
 '
 Public MustInherit Class DAL
 	
-	Public MustOverride Function GetConnectionString(ConnStr)
-	Public MustOverride Function SetConnectionString(ConnStr)
+	Public MustOverride Function GetConnectionString(ConnStr As String) As String
+	Public MustOverride Function SetConnectionString(ConnStr As String) As String
 	
 	
 End Class
