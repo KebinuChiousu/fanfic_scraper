@@ -524,16 +524,23 @@ Public Class Debug
                       ByVal pos As Long _
                     )
 
+        Dim folder As String
+        Dim check As Boolean
+
         frmMain.lblTitle.Text = dt.Rows(pos). _
                                 Item("Title")
 
         frmMain.txtStart.Text = dt.Rows(pos). _
                                 Item("Count") + 1
 
-        frmMain.txtFileMask.Text = dt.Rows(pos). _
-                                   Item("Folder") & "-"
+        folder = dt.Rows(pos). _
+                 Item("Folder")
 
-        If InStr(LCase(frmMain.txtSource.Text), frmMain.cls.ErrorMessage) <> 0 Then
+        frmMain.txtFileMask.Text = folder & "-"
+
+        check = InStr(LCase(frmMain.txtSource.Text), frmMain.cls.ErrorMessage) <> 0
+
+        If check Then
             frmMain.lblChapterCount.Text = _
                  CInt(dt.Rows(pos).Item("Count")) + 1
             frmMain.DownloadData()
@@ -544,6 +551,10 @@ Public Class Debug
             dt.Rows(pos).Item("Publish_Date") = CDate(frmMain.lblPublish.Text)
             UpdateData(dt)
         End If
+
+        'If folder = "RTP2" Then
+        '    System.Diagnostics.Debugger.Break()
+        'End If
 
         If frmMain.lblChapterCount.Text > _
            dt.Rows(pos).Item("Count") _
@@ -566,6 +577,7 @@ Public Class Debug
             UpdateData(dt)
 
         End If
+
     End Sub
 
     Function MoveNext( _
