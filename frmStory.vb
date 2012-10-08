@@ -24,7 +24,7 @@ Public Class Story
 
         Dim link As LinkLabel.Link
 
-        row_idx = myCaller.grdDB.CurrentRowIndex
+        row_idx = myCaller.grdDB.CurrentRow.Index
         dt = myCaller.grdDB.DataSource
 
         Title = dt.Rows(row_idx).Item("Title").ToString

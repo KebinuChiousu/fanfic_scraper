@@ -32,7 +32,6 @@ Public Class Debug
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
     Friend WithEvents grdRSS As System.Windows.Forms.DataGrid
-    Friend WithEvents grdDB As System.Windows.Forms.DataGrid
     Friend WithEvents btnUpdateDB As System.Windows.Forms.Button
     Friend WithEvents btnUpdateStoryID As System.Windows.Forms.Button
     Friend WithEvents cmbSearch As System.Windows.Forms.ComboBox
@@ -44,23 +43,24 @@ Public Class Debug
     Friend WithEvents btnSearch As System.Windows.Forms.Button
     Friend WithEvents cmbChooseDB As System.Windows.Forms.ComboBox
     Friend WithEvents lblStatus As System.Windows.Forms.Label
+    Friend WithEvents grdDB As System.Windows.Forms.DataGridView
     Friend WithEvents btnSave As System.Windows.Forms.Button
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
-        Me.grdRSS = New System.Windows.Forms.DataGrid
-        Me.grdDB = New System.Windows.Forms.DataGrid
-        Me.btnUpdateDB = New System.Windows.Forms.Button
-        Me.btnUpdateStoryID = New System.Windows.Forms.Button
-        Me.cmbSearch = New System.Windows.Forms.ComboBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.btnBatch = New System.Windows.Forms.Button
-        Me.btnOpenDB = New System.Windows.Forms.Button
-        Me.btnPath = New System.Windows.Forms.Button
-        Me.btnSave = New System.Windows.Forms.Button
+        Me.components = New System.ComponentModel.Container()
+        Me.grdRSS = New System.Windows.Forms.DataGrid()
+        Me.btnUpdateDB = New System.Windows.Forms.Button()
+        Me.btnUpdateStoryID = New System.Windows.Forms.Button()
+        Me.cmbSearch = New System.Windows.Forms.ComboBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.btnBatch = New System.Windows.Forms.Button()
+        Me.btnOpenDB = New System.Windows.Forms.Button()
+        Me.btnPath = New System.Windows.Forms.Button()
+        Me.btnSave = New System.Windows.Forms.Button()
         Me.tmrDownload = New System.Windows.Forms.Timer(Me.components)
-        Me.btnSearch = New System.Windows.Forms.Button
-        Me.cmbChooseDB = New System.Windows.Forms.ComboBox
-        Me.lblStatus = New System.Windows.Forms.Label
+        Me.btnSearch = New System.Windows.Forms.Button()
+        Me.cmbChooseDB = New System.Windows.Forms.ComboBox()
+        Me.lblStatus = New System.Windows.Forms.Label()
+        Me.grdDB = New System.Windows.Forms.DataGridView()
         CType(Me.grdRSS, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.grdDB, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -73,15 +73,6 @@ Public Class Debug
         Me.grdRSS.Name = "grdRSS"
         Me.grdRSS.Size = New System.Drawing.Size(712, 127)
         Me.grdRSS.TabIndex = 27
-        '
-        'grdDB
-        '
-        Me.grdDB.DataMember = ""
-        Me.grdDB.HeaderForeColor = System.Drawing.SystemColors.ControlText
-        Me.grdDB.Location = New System.Drawing.Point(7, 140)
-        Me.grdDB.Name = "grdDB"
-        Me.grdDB.Size = New System.Drawing.Size(712, 176)
-        Me.grdDB.TabIndex = 29
         '
         'btnUpdateDB
         '
@@ -138,7 +129,7 @@ Public Class Debug
         '
         Me.btnPath.Location = New System.Drawing.Point(7, 323)
         Me.btnPath.Name = "btnPath"
-        Me.btnPath.Size = New System.Drawing.Size(48, 40)
+        Me.btnPath.Size = New System.Drawing.Size(48, 41)
         Me.btnPath.TabIndex = 39
         Me.btnPath.Text = "Set Paths"
         '
@@ -181,10 +172,19 @@ Public Class Debug
         Me.lblStatus.TabIndex = 43
         Me.lblStatus.Text = "DB:"
         '
+        'grdDB
+        '
+        Me.grdDB.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.grdDB.Location = New System.Drawing.Point(7, 140)
+        Me.grdDB.Name = "grdDB"
+        Me.grdDB.Size = New System.Drawing.Size(712, 172)
+        Me.grdDB.TabIndex = 44
+        '
         'Debug
         '
         Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(726, 376)
+        Me.Controls.Add(Me.grdDB)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.cmbChooseDB)
         Me.Controls.Add(Me.btnSearch)
@@ -196,7 +196,6 @@ Public Class Debug
         Me.Controls.Add(Me.cmbSearch)
         Me.Controls.Add(Me.btnUpdateStoryID)
         Me.Controls.Add(Me.btnUpdateDB)
-        Me.Controls.Add(Me.grdDB)
         Me.Controls.Add(Me.grdRSS)
         Me.Name = "Debug"
         Me.Text = "Download Automation"
@@ -217,6 +216,10 @@ Public Class Debug
     Public DAL As DAL
     Public myCaller As HtmlGrabber
     Public Navigate As Process
+
+    ' Declare a new DataGridTableStyle in the
+    ' declarations area of your form.
+    Dim ts As DataGridTableStyle = New DataGridTableStyle()
 
 #Region "Database Routines"
 
@@ -341,8 +344,6 @@ Public Class Debug
 
         Dim ifr As IniFileReader
 
-        DAL = New Access
-
         Dim val As String
 
         fi = New FileInfo(Application.StartupPath & "\\" & "config.ini")
@@ -353,7 +354,11 @@ Public Class Debug
             val = ifr.GetIniValue("FanFic", "Path")
 
             If val <> empty Then
+
+                ReloadDAL("Fanfic", val, False)
                 DAL.UpdateConnStr("FanFic", val)
+                ReloadDAL("Fanfic", val)
+
             End If
 
         End If
@@ -361,6 +366,23 @@ Public Class Debug
         ifr = Nothing
 
         My.Settings.Reload()
+
+    End Sub
+
+    Public Sub ReloadDAL(csname As String, path As String, Optional ByVal Init As Boolean = True)
+
+        frmDebug.DAL = Nothing
+
+        Dim fi As FileInfo
+
+        fi = New FileInfo(path)
+
+        Select Case fi.Extension
+            Case ".mdb"
+                DAL = New Access
+            Case ".db"
+                DAL = New SQLite("FanFic", Init)
+        End Select
 
     End Sub
 
@@ -379,14 +401,14 @@ Public Class Debug
 
     End Sub
 
-    Private Sub FillCategories()
+    Public Sub FillCategories()
 
         Dim dt As DataTable
 
-		dt = GetCategories()
+        dt = GetCategories()
 
         cmbChooseDB.DataSource = dt
-        cmbChooseDB.ValueMember = "Index"
+        cmbChooseDB.ValueMember = "Id"
         cmbChooseDB.DisplayMember = "Name"
 
     End Sub
@@ -477,13 +499,13 @@ Public Class Debug
         Dim ret As Boolean = False
         Dim link As String
 
-        If dt.Rows(grdDB.CurrentRowIndex). _
+        If dt.Rows(grdDB.CurrentRow.Index). _
            Item("Internet").GetType Is GetType(DBNull) _
         Then
             ret = False
         Else
 
-            link = dt.Rows(grdDB.CurrentRowIndex).Item("Internet")
+            link = dt.Rows(grdDB.CurrentRow.Index).Item("Internet")
             link = Replace(link, "#", "")
 
             ret = myCaller.CheckUrl(link)
@@ -570,22 +592,23 @@ Public Class Debug
 
         dt = grdDB.DataSource
 
-        If initial Then
-            grdDB.CurrentRowIndex = 0
-        End If
-
 bypass:
 
-        pos = grdDB.CurrentRowIndex
+        If initial Then
+            Application.DoEvents()
+            SetCurrentRow(0)
+            pos = 0
+        Else
+            pos = grdDB.CurrentRow.Index
+            pos += 1
+        End If
+
+
 
         If (pos <= (dt.Rows.Count - 1)) Then
             If initial = False Then
-                grdDB.CurrentRowIndex = grdDB.CurrentRowIndex + 1
-                If pos = grdDB.CurrentRowIndex Then
-                    Return -1
-                End If
-                pos = grdDB.CurrentRowIndex
-                If pos = 0 Then Return -1
+                SetCurrentRow(pos)
+                Application.DoEvents()
             End If
         Else
             Return -1
@@ -646,6 +669,8 @@ bypass:
 
         grdDB.DataSource = dt
 
+        Application.DoEvents()
+
         start = MoveNext(True)
 
         tmrDownload.Enabled = True
@@ -671,16 +696,24 @@ bypass:
         btnUpdateStoryID.Enabled = True
 
         grdDB.DataSource = dt
-        grdDB.CurrentRowIndex = 0
+        grdDB.Columns("Id").Visible = False
+        grdDB.Columns("Category_Id").Visible = False
+        SetCurrentRow(0)
 
         If dt.Rows.Count > 0 Then
 
             lblStatus.Text = "(" & _
-                             (grdDB.CurrentRowIndex + 1) & _
+                             (grdDB.CurrentRow.Index + 1) & _
                              " of " & dt.Rows.Count & ")"
         Else
             lblStatus.Text = "(0 of 0)"
         End If
+
+    End Sub
+
+    Sub SetCurrentRow(Index As Integer)
+
+        grdDB.CurrentCell = grdDB.Rows(Index).Cells(1)
 
     End Sub
 
@@ -744,7 +777,7 @@ bypass:
             dt.Rows.Add(dr)
 
             grdDB.DataSource = dt
-            grdDB.CurrentRowIndex = NewRow
+            grdDB.CurrentCell = grdDB.Rows(NewRow).Cells(0)
 
         End If
 
@@ -798,7 +831,7 @@ bypass:
         Dim count As Integer
         Dim start As Integer
 
-        start = grdDB.CurrentRowIndex
+        start = grdDB.CurrentRow.Index
 
         Dim dt As DataTable
         dt = grdDB.DataSource
@@ -811,12 +844,13 @@ bypass:
 
         For count = start To (dt.Rows.Count - 1)
 
-            grdDB.CurrentRowIndex = count
+            SetCurrentRow(count)
+
             Application.DoEvents()
 
-            folder = grdDB.Item(grdDB.CurrentRowIndex, 2).ToString
-            title = grdDB.Item(grdDB.CurrentRowIndex, 0).ToString
-            author = grdDB.Item(grdDB.CurrentRowIndex, 1).ToString
+            folder = grdDB.Item(3, grdDB.CurrentRow.Index).Value
+            title = grdDB.Item(1, grdDB.CurrentRow.Index).Value
+            author = grdDB.Item(2, grdDB.CurrentRow.Index).Value
 
             Select Case cmbSearch.Text
                 Case "Title"
@@ -849,12 +883,12 @@ bypass:
 
             For count = 0 To start
 
-                grdDB.CurrentRowIndex = count
+                SetCurrentRow(count)
                 Application.DoEvents()
 
-                title = grdDB.Item(grdDB.CurrentRowIndex, 0).ToString
-                author = grdDB.Item(grdDB.CurrentRowIndex, 1).ToString
-                folder = grdDB.Item(grdDB.CurrentRowIndex, 2).ToString
+                folder = grdDB.Item(3, grdDB.CurrentRow.Index).Value
+                title = grdDB.Item(1, grdDB.CurrentRow.Index).Value
+                author = grdDB.Item(2, grdDB.CurrentRow.Index).Value
 
                 Select Case cmbSearch.Text
                     Case "Title"
@@ -887,7 +921,7 @@ bypass:
         If result = "" Then
             MsgBox("Story Does Not Exist in Database")
         Else
-            grdDB.CurrentRowIndex = count
+            SetCurrentRow(count)
             MsgBox( _
                     "Folder: " & folder & vbCrLf & _
                     "Author: " & author & vbCrLf & _
@@ -903,15 +937,20 @@ bypass:
                                          ByVal e As System.EventArgs _
                                        ) Handles grdDB.CurrentCellChanged
 
-        Dim grdDB As DataGrid = CType(sender, DataGrid)
+        Dim grdDB As DataGridView = CType(sender, DataGridView)
         Dim dt As DataTable
 
         dt = grdDB.DataSource
 
         If dt.Rows.Count > 0 Then
-            lblStatus.Text = "(" & _
-                             (grdDB.CurrentRowIndex + 1) & _
-                             " of " & dt.Rows.Count & ")"
+
+            If Not IsNothing(grdDB.CurrentRow) Then
+
+                lblStatus.Text = "(" & _
+                                 (grdDB.CurrentRow.Index + 1) & _
+                                 " of " & dt.Rows.Count & ")"
+            End If
+
         Else
             lblStatus.Text = "(0 of 0)"
         End If
@@ -948,13 +987,13 @@ bypass:
         Dim link As String
         Dim StoryID As String
 
-        If dt.Rows(grdDB.CurrentRowIndex). _
+        If dt.Rows(grdDB.CurrentRow.Index). _
            Item("StoryId").GetType Is GetType(DBNull) _
         Then
             link = ""
         Else
 
-            StoryID = dt.Rows(grdDB.CurrentRowIndex). _
+            StoryID = dt.Rows(grdDB.CurrentRow.Index). _
                       Item("StoryID")
 
             If StoryID = "" Then
@@ -973,13 +1012,13 @@ bypass:
                          ByVal dt As DataTable _
                        ) As String
 
-        If dt.Rows(grdDB.CurrentRowIndex). _
+        If dt.Rows(grdDB.CurrentRow.Index). _
            Item("Internet").GetType Is GetType(DBNull) _
         Then
             GetAtom = ""
         Else
             GetAtom = Replace( _
-                               dt.Rows(grdDB.CurrentRowIndex). _
+                               dt.Rows(grdDB.CurrentRow.Index). _
                                Item("Internet") _
                                , _
                                "#", _
@@ -1000,7 +1039,7 @@ bypass:
 
         If Update Then
 
-            dt.Rows(grdDB.CurrentRowIndex). _
+            dt.Rows(grdDB.CurrentRow.Index). _
             Item("StoryID") _
             = _
             frmMain.lblStoryID.Text
@@ -1008,7 +1047,7 @@ bypass:
         Else
 
             frmMain.lblStoryID.Text = _
-            dt.Rows(grdDB.CurrentRowIndex). _
+            dt.Rows(grdDB.CurrentRow.Index). _
             Item("StoryID")
         End If
 

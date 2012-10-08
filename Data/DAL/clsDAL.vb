@@ -9,13 +9,13 @@ Public MustInherit Class DAL
                     ) As DataTable
 
     Public MustOverride _
-    Function UpdateData(ByVal dt As DataTable) As Integer
+    Function UpdateData(ByRef dt As DataTable) As Integer
 
     Public MustOverride _
     Function GetCategories() As DataTable
 
-    Protected MustOverride _
-    Function GetConnectionString(ConnStr As String) As String
+    Public MustOverride _
+    Function GetPath(ConnStr As String) As String
 
     Protected MustOverride _
     Function SetConnectionString( _
@@ -68,20 +68,7 @@ Public MustInherit Class DAL
             ConnStr = ""
         End Try
 
-        If ConnStr = "" Then
-            Return ""
-        End If
-
-        path = Me.GetConnectionString(ConnStr)
-
-        'Select Case Type		
-        '          Case DBConnType.Access
-        '          	path = GetAccessString(ConnStr)
-        '          Case DBConnType.SQLLite
-        '          	path = GetSQLLiteString(ConnStr)
-        '      End Select
-
-        Return path
+        Return ConnStr
 
     End Function
 
@@ -116,11 +103,15 @@ Public MustInherit Class DAL
 
         csSettings = Me.SetConnectionString(csName, csValue)
 
-        csSection.ConnectionStrings.Remove(csName)
+        Try
+            csSection.ConnectionStrings.Remove(csName)
+        Catch
+        End Try
+
         csSection.ConnectionStrings.Add(csSettings)
 
         ' Save the configuration file.
-        conf.Save(ConfigurationSaveMode.Modified)
+        conf.Save(ConfigurationSaveMode.Modified, True)
 
         ConfigurationManager.RefreshSection("connectionStrings")
 

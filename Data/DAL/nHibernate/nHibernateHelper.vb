@@ -9,35 +9,43 @@ Imports FluentNHibernate.Cfg
 Imports FluentNHibernate.Cfg.Db
 
 Public Class nHibernateHelper
-	
-	Private Shared _sessionFactory As ISessionFactory
-	
-	Private Shared readonly Property SessionFactory As ISessionFactory
-		Get 
-			If isnothing(_sessionFactory) Then
+
+    Private _sessionFactory As ISessionFactory
+    Private _connstr As String
+
+    Sub New(connstr As String)
+        _connstr = connstr
+    End Sub
+
+    Public ReadOnly Property SessionFactory As ISessionFactory
+        Get
+            If IsNothing(_sessionFactory) Then
                 IntializeSessionFactory()
-			End If
-		End Get
-			
-		
-	End Property
-	
-	Private Shared Sub IntializeSessionFactory
-		
-		_sessionFactory = Fluently.Configure() _
-			.Database( _
-			           SQLiteConfiguration.Standard _
-			.UsingFile("C:\Users\Kevin\Desktop\Stories\FanfictionDB.db").ShowSql _
-			         ) _
-			.Mappings( Function(x) x.FluentMappings.AddFromAssemblyOf(Of Fanfic)) _
-			.BuildSessionFactory()		
-		
-	End Sub	
-	
-	Public Shared Function OpenSession As ISession
-		
-		Return SessionFactory.OpenSession
-		
-	End Function
-	
+            End If
+
+            Return _sessionFactory
+
+        End Get
+
+    End Property
+
+    Private Sub IntializeSessionFactory()
+
+        _sessionFactory = Fluently.Configure() _
+         .Database( _
+                    SQLiteConfiguration.Standard _
+                    .ConnectionString(_connstr) _
+                  ) _
+         .Mappings(Function(x) x.FluentMappings.AddFromAssemblyOf(Of Fanfic)()) _
+         .BuildSessionFactory()
+
+    End Sub
+
+    Public Function OpenSession() As ISession
+
+        Return SessionFactory.OpenSession
+
+    End Function
+
+    
 End Class

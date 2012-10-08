@@ -103,10 +103,7 @@ Public Class frmPath
         Dim dlg As OpenFileDialog = New OpenFileDialog
         
         dlg.DefaultExt = "mdb"
-        dlg.Filter = "Access Database|*.mdb"
-        
-        'dlg.DefaultExt = "db"
-        'dlg.Filter = "SQL Lite Database|*.db"
+        dlg.Filter = "Access Database|*.mdb|SQL Lite Database|*.db"
         
         dlg.CheckFileExists = True
         dlg.CheckPathExists = True
@@ -141,6 +138,9 @@ Public Class frmPath
                                  ByVal e As System.EventArgs _
                                ) Handles btnUpdate.Click
 
+
+        frmDebug.ReloadDAL("Fanfic", txtPath.Text, False)
+
         'App.Config Code
         UpdateConfigFile()
 
@@ -148,6 +148,10 @@ Public Class frmPath
         UpdateIniFile()
 
         My.Settings.Reload()
+
+        frmDebug.ReloadDAL("Fanfic", txtPath.Text)
+
+        frmDebug.FillCategories()
 
         Me.Dispose()
 
@@ -197,7 +201,7 @@ Public Class frmPath
 
     Sub InitConfigFile()
 
-        txtPath.Text = conf.GetConnStr("FanFic")
+        txtPath.Text = conf.GetPath("FanFic")
 
     End Sub
 

@@ -401,6 +401,9 @@ Public Class IniFileReader
             End If
             Return False
         End If
+
+        Return True
+
     End Function
 
     Private Function CreateSection(ByVal sectionName As String) As Boolean

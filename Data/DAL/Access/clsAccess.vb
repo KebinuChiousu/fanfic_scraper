@@ -42,7 +42,7 @@ Public Class Access
     End Function
 
     Public Overrides _
-    Function UpdateData(dt As System.Data.DataTable) As Integer
+    Function UpdateData(ByRef dt As System.Data.DataTable) As Integer
 
         Dim result As Integer = 0
 
@@ -60,8 +60,8 @@ Public Class Access
 
     End Function
 
-    Protected Overrides _
-    Function GetConnectionString(ConnStr As String) As String
+    Public Overrides _
+    Function GetPath(ConnStr As String) As String
 
         Dim Conn() As String
         Dim path As String = ""
