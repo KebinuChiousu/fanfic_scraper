@@ -22,6 +22,16 @@ Class YFF
 
         Dim temp As HtmlNodeCollection
 
+        Dim link As URL
+        Dim chapter As String
+
+        link = ExtractUrl(url)
+        If UBound(link.Query) > 0 Then
+            chapter = "&" & link.Query(1).Name & "=" & link.Query(1).Value
+        Else
+            chapter = ""
+        End If
+
 
         'html = DownloadPage(url, "yourfanfiction_com.cookie")
         html = Browser.DownloadPage(url)
@@ -30,7 +40,7 @@ Class YFF
 
         If InStr(html, check) > 0 Then
             temp = FindLinksByHref(doc.DocumentNode, "viewstory.php")
-            url = "http://www." & Me.HostName & "/" & HtmlDecode(temp(0).Attributes("href").Value)
+            url = "http://www." & Me.HostName & "/" & HtmlDecode(temp(0).Attributes("href").Value) & chapter
             html = Browser.DownloadPage(url)
             doc = CleanHTML(html)
             html = doc.DocumentNode.OuterHtml
