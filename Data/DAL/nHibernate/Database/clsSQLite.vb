@@ -132,14 +132,29 @@ Public Class SQLite
                     fic.StoryID = dt.Rows(i).Item("StoryID").ToString
                     fic.Abandoned = dt.Rows(i).Item("Abandoned")
                     fic.Complete = dt.Rows(i).Item("Complete")
-                    fic.Publish_Date = dt.Rows(i).Item("Publish_Date")
-                    fic.Update_Date = dt.Rows(i).Item("Update_Date")
-                    fic.Last_Checked = dt.Rows(i).Item("Last_Checked")
+
+                    If Not IsNothing(dt.Rows(i).Item("Publish_Date")) Then
+                        fic.Publish_Date = dt.Rows(i).Item("Publish_Date")
+                    End If
+
+                    If IsDate(dt.Rows(i).Item("Update_Date")) Then
+                        fic.Update_Date = dt.Rows(i).Item("Update_Date")
+                    Else
+                        If Not IsNothing(fic.Publish_Date) Then
+                            fic.Update_Date = fic.Publish_Date
+                        End If
+                    End If
+
+                    If Not IsNothing(dt.Rows(i).Item("Last_Checked")) Then
+                        fic.Last_Checked = dt.Rows(i).Item("Last_Checked")
+                    End If
+
                     fic.Category_Id = dt.Rows(i).Item("Category_Id")
 
                     s.SaveOrUpdate(fic)
 
                     fic = Nothing
+
 
                 Next
 
@@ -147,6 +162,8 @@ Public Class SQLite
 
             End Using
         End Using
+
+
 
 
         ret = dt.Rows.Count
