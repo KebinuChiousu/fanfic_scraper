@@ -109,6 +109,8 @@ Public Class SQLite
         Dim fic As Fanfic
         Dim ret As Integer
 
+        Dim temp As String
+
         dt = dt.GetChanges()
 
         Using s As ISession = orm.OpenSession
@@ -119,7 +121,11 @@ Public Class SQLite
 
                     fic = New Fanfic
 
-                    fic.Id = dt.Rows(i).Item("Id")
+                    temp = dt.Rows(i).Item("Id").ToString
+
+                    If temp = "" Then temp = 0
+
+                    fic.Id = temp
                     fic.Title = dt.Rows(i).Item("Title")
                     fic.Author = dt.Rows(i).Item("Author")
                     fic.Folder = dt.Rows(i).Item("Folder")
@@ -130,8 +136,18 @@ Public Class SQLite
                     fic.Description = dt.Rows(i).Item("Description").ToString
                     fic.Internet = dt.Rows(i).Item("Internet").ToString
                     fic.StoryID = dt.Rows(i).Item("StoryID").ToString
-                    fic.Abandoned = dt.Rows(i).Item("Abandoned")
-                    fic.Complete = dt.Rows(i).Item("Complete")
+
+                    temp = dt.Rows(i).Item("Abandoned").ToString
+
+                    If temp = "" Then temp = False
+
+                    fic.Abandoned = temp
+
+                    temp = dt.Rows(i).Item("Complete").ToString
+
+                    If temp = "" Then temp = False
+
+                    fic.Complete = temp
 
                     If IsDate(dt.Rows(i).Item("Publish_Date")) Then
                         fic.Publish_Date = dt.Rows(i).Item("Publish_Date")

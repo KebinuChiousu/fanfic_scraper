@@ -284,6 +284,18 @@ Public Class Debug
 
         dt = grdDB.DataSource
 
+        Dim cat_id As String
+
+
+        cat_id = dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Category_Id").ToString
+
+        If cat_id = "" Or cat_id = "0" Then
+            cat_id = cmbChooseDB.SelectedValue
+            dt.Rows(grdDB.CurrentRow.Index). _
+            Item("Category_Id") = cat_id
+        End If
+
         If Not IsNothing(dt.GetChanges) Then
             UpdateData(dt)
         End If
@@ -1113,6 +1125,9 @@ bypass:
 
         dt.Rows(grdDB.CurrentRow.Index). _
         Item("Last_Checked") = dte
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Category_Id") = CInt(cmbChooseDB.SelectedValue)
 
     End Sub
 
