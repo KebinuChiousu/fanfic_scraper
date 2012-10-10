@@ -454,7 +454,13 @@ Public Class Debug
             Return ret
         End If
 
-        publish_date = CDate(dt.Rows(pos).Item("Publish_Date").ToString)
+
+        If dt.Rows(pos).Item("Publish_Date").ToString = "" Then
+            ret = False
+            Return ret
+        Else
+            publish_date = CDate(dt.Rows(pos).Item("Publish_Date").ToString)
+        End If
 
         If dt.Rows(pos).Item("Update_Date").ToString = "" Then
             update_date = publish_date
@@ -618,22 +624,27 @@ bypass:
 
         abort = False
 
-
-        If Not isValid(dt, pos) Then
+        If GetStoryID() = "" Then
             abort = True
         Else
-            If Not isStale(dt, pos) Then
-
-                Select Case Navigate
-                    Case Process.AuthorPage
-                        url = GetAtom(dt)
-                    Case Process.StoryPage
-                        url = GetStory(dt)
-                End Select
-            Else
+            If Not isValid(dt, pos) Then
                 abort = True
+            Else
+                If Not isStale(dt, pos) Then
+
+                    Select Case Navigate
+                        Case Process.AuthorPage
+                            url = GetAtom(dt)
+                        Case Process.StoryPage
+                            url = GetStory(dt)
+                    End Select
+                Else
+                    abort = True
+                End If
             End If
         End If
+
+
 
         If abort Then
             initial = False
@@ -643,7 +654,7 @@ bypass:
                 Case Process.AuthorPage
                     UpdateAtom(url)
                 Case Process.StoryPage
-                    StoryID()
+
                     UpdateURL(url)
                     Application.DoEvents()
                     ProcessStory(dt, pos)
@@ -1037,16 +1048,22 @@ bypass:
 
 #Region "Utility Routines"
 
-    Private Sub StoryID()
+    Private Function GetStoryID() As String
+
+        Dim ret As String
 
         Dim dt As DataTable
         dt = grdDB.DataSource
 
-        frmMain.lblStoryID.Text = _
+        ret = _
         dt.Rows(grdDB.CurrentRow.Index). _
-        Item("StoryID")
+        Item("StoryID").ToString
 
-    End Sub
+        frmMain.lblStoryID.Text = ret
+
+        Return ret
+
+    End Function
 
     Private Sub UpdateRecord()
 

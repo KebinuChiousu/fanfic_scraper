@@ -133,7 +133,7 @@ Public Class SQLite
                     fic.Abandoned = dt.Rows(i).Item("Abandoned")
                     fic.Complete = dt.Rows(i).Item("Complete")
 
-                    If Not IsNothing(dt.Rows(i).Item("Publish_Date")) Then
+                    If IsDate(dt.Rows(i).Item("Publish_Date")) Then
                         fic.Publish_Date = dt.Rows(i).Item("Publish_Date")
                     End If
 
