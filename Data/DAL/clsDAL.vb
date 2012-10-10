@@ -2,21 +2,52 @@
 
 Public MustInherit Class DAL
 
+    ''' <summary>
+    ''' Obatains Story Metadata
+    ''' </summary>
+    ''' <param name="Category_ID">Category Id of Metadata to Retrieve</param>
+    ''' <param name="ALL">If set to true obtains all Stories regardless of Status.</param>
+    ''' <returns>Returns DataTable of Story MetaData</returns>
+    ''' <remarks></remarks>
     Public MustOverride _
     Function GetData( _
                       ByVal Category_ID As Integer, _
                       Optional ByVal ALL As Boolean = False _
                     ) As DataTable
 
+    ''' <summary>
+    ''' Update Database based on Metadata from DataTable
+    ''' </summary>
+    ''' <param name="dt">DataTable of Story MetaData</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public MustOverride _
     Function UpdateData(ByRef dt As DataTable) As Integer
 
+    ''' <summary>
+    ''' Retrieves Category Name and ID of Story Data
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public MustOverride _
     Function GetCategories() As DataTable
 
+    ''' <summary>
+    ''' Obtain Path to Database from ConnectionString
+    ''' </summary>
+    ''' <param name="ConnStr">Database Connection String</param>
+    ''' <returns>Path to Database</returns>
+    ''' <remarks></remarks>
     Public MustOverride _
     Function GetPath(ConnStr As String) As String
 
+    ''' <summary>
+    ''' Build Connection String
+    ''' </summary>
+    ''' <param name="csName">Name of Connection String Key</param>
+    ''' <param name="csValue">Path to Database</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Protected MustOverride _
     Function SetConnectionString( _
                                   csName As String, _
@@ -25,6 +56,12 @@ Public MustInherit Class DAL
 
 #Region ".NET Configuration Management"
 
+    ''' <summary>
+    ''' Retrieve full Connection String Key Path from XML File
+    ''' </summary>
+    ''' <param name="csName">Connection String Key Name</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Private Function GetConnStrName(ByVal csName As String) As String
 
         Dim ns As String = My.Application.GetType.Namespace
@@ -41,6 +78,12 @@ Public MustInherit Class DAL
 
     End Function
 
+    ''' <summary>
+    ''' Retrieve Connection String Name from App.Config
+    ''' </summary>
+    ''' <param name="csName">Name of Connection String Key</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function GetConnStr( _
                                  ByVal csName As String _
                                  ) As String
@@ -72,6 +115,12 @@ Public MustInherit Class DAL
 
     End Function
 
+    ''' <summary>
+    ''' Update Connection String in App.Config
+    ''' </summary>
+    ''' <param name="csName">Name of Connection String Key</param>
+    ''' <param name="csValue">Connection String</param>
+    ''' <remarks></remarks>
     Sub UpdateConnStr( _
                        ByVal csName As String, _
                        ByVal csValue As String _

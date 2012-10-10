@@ -13,21 +13,32 @@ Public Class SQLite
 
     Private orm As nHibernateHelper
 
-   
-
+    ''' <summary>
+    ''' Initilizes SQLite Database connection settings
+    ''' </summary>
+    ''' <param name="ConnectionStringName">Name of ConnectionString Key in app.config</param>
+    ''' <param name="Init">If set to true initialize nHibernate.</param>
+    ''' <remarks></remarks>
     Public Sub New(ConnectionStringName As String, Optional ByVal Init As Boolean = True)
 
         Dim connstr As String
 
         If Init Then
 
+            'Read Connection String from App Config XML File
             connstr = GetConnStr(ConnectionStringName)
 
+            'Create an instance of the nHibernate Helper class using the connstr obtained from the config file.
             orm = New nHibernateHelper(connstr)
         End If
 
     End Sub
 
+    ''' <summary>
+    ''' Obtain List of Fanfiction Categories from SQLlite Database
+    ''' </summary>
+    ''' <returns>DataTable of ID and Names of Categories</returns>
+    ''' <remarks></remarks>
     Public Overrides _
     Function GetCategories() As System.Data.DataTable
 
@@ -46,6 +57,13 @@ Public Class SQLite
 
     End Function
 
+    ''' <summary>
+    ''' Obtains DataTable of Metadata from SQLite Database
+    ''' </summary>
+    ''' <param name="Category_ID">ID number of Fiction Category.</param>
+    ''' <param name="ALL">If set to true obtains all Stories regardless of Status.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Overrides _
     Function GetData(Category_ID As Integer, Optional ALL As Boolean = False) As System.Data.DataTable
 
@@ -79,6 +97,12 @@ Public Class SQLite
 
     End Function
 
+    ''' <summary>
+    ''' Updates Fanfiction Metadata using the provided DataTable as Input
+    ''' </summary>
+    ''' <param name="dt">DataTable containing fanfiction metadata.</param>
+    ''' <returns>Number of rows affected.</returns>
+    ''' <remarks></remarks>
     Public Overrides _
     Function UpdateData(ByRef dt As System.Data.DataTable) As Integer
 
@@ -134,6 +158,12 @@ Public Class SQLite
 
     End Function
 
+    ''' <summary>
+    ''' Extracts path to SQLite Database from Connection String
+    ''' </summary>
+    ''' <param name="ConnStr">SQLite Connection String</param>
+    ''' <returns>Path to SQLite Database</returns>
+    ''' <remarks></remarks>
     Public Overrides _
     Function GetPath(ConnStr As String) As String
 
@@ -161,6 +191,13 @@ Public Class SQLite
 
     End Function
 
+    ''' <summary>
+    ''' Generates Connection String Settings from Key String and Path to SQLite Database
+    ''' </summary>
+    ''' <param name="csName">Name of Connection String Key</param>
+    ''' <param name="Path">Path to SQLite Database</param>
+    ''' <returns>ConnectionStringSettings for app.config file</returns>
+    ''' <remarks></remarks>
     Protected Overrides _
     Function SetConnectionString( _
                                   csName As String, _
