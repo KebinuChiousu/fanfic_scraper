@@ -33,7 +33,7 @@ Public Class Debug
     'Do not modify it using the code editor.
     Friend WithEvents grdRSS As System.Windows.Forms.DataGrid
     Friend WithEvents btnUpdateDB As System.Windows.Forms.Button
-    Friend WithEvents btnUpdateStoryID As System.Windows.Forms.Button
+    Friend WithEvents btnUpdateRecord As System.Windows.Forms.Button
     Friend WithEvents cmbSearch As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents btnBatch As System.Windows.Forms.Button
@@ -49,7 +49,7 @@ Public Class Debug
         Me.components = New System.ComponentModel.Container()
         Me.grdRSS = New System.Windows.Forms.DataGrid()
         Me.btnUpdateDB = New System.Windows.Forms.Button()
-        Me.btnUpdateStoryID = New System.Windows.Forms.Button()
+        Me.btnUpdateRecord = New System.Windows.Forms.Button()
         Me.cmbSearch = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnBatch = New System.Windows.Forms.Button()
@@ -83,14 +83,14 @@ Public Class Debug
         Me.btnUpdateDB.TabIndex = 31
         Me.btnUpdateDB.Text = "Update Database"
         '
-        'btnUpdateStoryID
+        'btnUpdateRecord
         '
-        Me.btnUpdateStoryID.Enabled = False
-        Me.btnUpdateStoryID.Location = New System.Drawing.Point(619, 344)
-        Me.btnUpdateStoryID.Name = "btnUpdateStoryID"
-        Me.btnUpdateStoryID.Size = New System.Drawing.Size(100, 21)
-        Me.btnUpdateStoryID.TabIndex = 32
-        Me.btnUpdateStoryID.Text = "Update StoryID"
+        Me.btnUpdateRecord.Enabled = False
+        Me.btnUpdateRecord.Location = New System.Drawing.Point(619, 344)
+        Me.btnUpdateRecord.Name = "btnUpdateRecord"
+        Me.btnUpdateRecord.Size = New System.Drawing.Size(100, 21)
+        Me.btnUpdateRecord.TabIndex = 32
+        Me.btnUpdateRecord.Text = "Update Record"
         '
         'cmbSearch
         '
@@ -194,7 +194,7 @@ Public Class Debug
         Me.Controls.Add(Me.btnBatch)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.cmbSearch)
-        Me.Controls.Add(Me.btnUpdateStoryID)
+        Me.Controls.Add(Me.btnUpdateRecord)
         Me.Controls.Add(Me.btnUpdateDB)
         Me.Controls.Add(Me.grdRSS)
         Me.Name = "Debug"
@@ -284,7 +284,9 @@ Public Class Debug
 
         dt = grdDB.DataSource
 
-        UpdateData(dt)
+        If Not IsNothing(dt.GetChanges) Then
+            UpdateData(dt)
+        End If
 
     End Sub
 
@@ -294,11 +296,11 @@ Public Class Debug
 
 
 
-    Private Sub SetStoryID( _
+    Private Sub UpdateRec( _
                             ByVal sender As System.Object, _
                             ByVal e As System.EventArgs _
-                          ) Handles btnUpdateStoryID.Click
-        StoryID(True)
+                          ) Handles btnUpdateRecord.Click
+        UpdateRecord()
     End Sub
 
     Private Sub btnPath_Click( _
@@ -641,7 +643,7 @@ bypass:
                 Case Process.AuthorPage
                     UpdateAtom(url)
                 Case Process.StoryPage
-                    StoryID(False)
+                    StoryID()
                     UpdateURL(url)
                     Application.DoEvents()
                     ProcessStory(dt, pos)
@@ -693,7 +695,7 @@ bypass:
         btnBatch.Enabled = True
 
         btnUpdateDB.Enabled = True
-        btnUpdateStoryID.Enabled = True
+        btnUpdateRecord.Enabled = True
 
         grdDB.DataSource = dt
         grdDB.Columns("Id").Visible = False
@@ -760,8 +762,11 @@ bypass:
             dr("Count") = 0 'Chapter Count
             'dr("Matchup") = "" ' Matchup
             dr("Description") = Trim(myCaller.txtSource.Text)
-            dr("Internet") = myCaller.lblAuthor.Text & _
-                             "#" & myCaller.cls.GetAuthorURL(link) & "#"
+
+            dr("Internet") = _
+            myCaller.lblAuthor.Text & _
+            "#" & myCaller.cls.GetAuthorURL(link) & "#"
+
             dr("StoryId") = myCaller.cls.GetStoryID(myCaller.txtUrl.Text)
             dr("Complete") = False
             dr("Publish_Date") = CDate( _
@@ -1032,24 +1037,65 @@ bypass:
 
 #Region "Utility Routines"
 
-    Private Sub StoryID(Optional ByVal Update As Boolean = True)
+    Private Sub StoryID()
 
         Dim dt As DataTable
         dt = grdDB.DataSource
 
-        If Update Then
+        frmMain.lblStoryID.Text = _
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("StoryID")
 
-            dt.Rows(grdDB.CurrentRow.Index). _
-            Item("StoryID") _
-            = _
-            frmMain.lblStoryID.Text
+    End Sub
 
+    Private Sub UpdateRecord()
+
+        Dim dte As Date
+
+        Dim dt As DataTable
+        dt = grdDB.DataSource
+
+        Dim link As String
+
+        If myCaller.urlAtom.Text = "" Then
+            link = myCaller.txtUrl.Text
         Else
-
-            frmMain.lblStoryID.Text = _
-            dt.Rows(grdDB.CurrentRow.Index). _
-            Item("StoryID")
+            link = myCaller.urlAtom.Text
         End If
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Title") = myCaller.lblTitle.Text
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Author") = myCaller.lblAuthor.Text
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Description") = Trim(myCaller.txtSource.Text)
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Internet") = myCaller.lblAuthor.Text & "#" & myCaller.cls.GetAuthorURL(link) & "#"
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("StoryId") = myCaller.cls.GetStoryID(myCaller.txtUrl.Text)
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Complete") = False
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Abandoned") = False
+
+        dte = CDate( _
+                     Replace( _
+                              frmMain.lblPublish.Text, _
+                              "Published:", _
+                              "" _
+                            ) _
+                   )
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Publish_Date") = dte
+
+        dt.Rows(grdDB.CurrentRow.Index). _
+        Item("Last_Checked") = dte
 
     End Sub
 
