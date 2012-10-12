@@ -204,10 +204,14 @@ Public Class SQLite
 
                             fic.Category_Id = dt.Rows(i).Item("Category_Id")
 
-                            If Not RecordExists(fic.Folder, fic.Category_Id) Or fic.Id <> 0 Then
-                                s.SaveOrUpdate(fic)
+                            If dt.Rows(i).RowState = DataRowState.Added Then
+                                If Not RecordExists(fic.Folder, fic.Category_Id) Then
+                                    s.SaveOrUpdate(fic)
+                                Else
+                                    dt.Rows(i).Delete()
+                                End If
                             Else
-                                dt.Rows(i).Delete()
+                                s.SaveOrUpdate(fic)
                             End If
 
                         Case DataRowState.Deleted
