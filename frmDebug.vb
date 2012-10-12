@@ -800,7 +800,7 @@ bypass:
                                                ) _
                                       )
 
-            dr("Category_Index") = CInt(cmbChooseDB.SelectedValue)
+            dr("Category_Id") = CInt(cmbChooseDB.SelectedValue)
 
             dt.Rows.Add(dr)
 
