@@ -16,6 +16,17 @@ Public MustInherit Class DAL
                     ) As DataTable
 
     ''' <summary>
+    ''' Checks to see if the record already exists in the database.
+    ''' </summary>
+    ''' <param name="folder">Folder Nmae to check for.</param>
+    ''' <param name="category_id">Cateory Id to check for folder</param>
+    ''' <returns>Retuurns true if record exists</returns>
+    ''' <remarks></remarks>
+    Public MustOverride _
+    Function RecordExists(folder As String, category_id As Integer) As Boolean
+
+
+    ''' <summary>
     ''' Update Database based on Metadata from DataTable
     ''' </summary>
     ''' <param name="dt">DataTable of Story MetaData</param>

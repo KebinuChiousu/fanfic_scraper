@@ -92,8 +92,42 @@ Public Class SQLite
 
         dt = fic.ToDataTable
 
+        fic = Nothing
+
         Return dt
 
+
+    End Function
+
+    Public Overrides _
+    Function RecordExists(folder As String, category_id As Integer) As Boolean
+
+        Dim ret As Boolean
+
+        Dim dt As DataTable
+        Dim fic As New List(Of Fanfic)
+
+        Using s As ISession = orm.OpenSession
+
+            s.CreateCriteria(Of Fanfic) _
+                    .Add(Restrictions.Eq("Category_Id", category_id)) _
+                    .Add(Restrictions.Eq("Folder", folder)) _
+                    .List(fic)
+
+        End Using
+
+        dt = fic.ToDataTable
+
+        If dt.Rows.Count > 0 Then
+            ret = True
+        Else
+            ret = False
+        End If
+
+        fic = Nothing
+        dt = Nothing
+
+        Return ret
 
     End Function
 
@@ -121,53 +155,70 @@ Public Class SQLite
 
                     fic = New Fanfic
 
-                    temp = dt.Rows(i).Item("Id").ToString
+                    Select dt.Rows(i).RowState
+                        Case DataRowState.Added, DataRowState.Modified
 
-                    If temp = "" Then temp = 0
+                            temp = dt.Rows(i).Item("Id").ToString
 
-                    fic.Id = temp
-                    fic.Title = dt.Rows(i).Item("Title")
-                    fic.Author = dt.Rows(i).Item("Author")
-                    fic.Folder = dt.Rows(i).Item("Folder")
-                    fic.Chapter = dt.Rows(i).Item("Chapter").ToString
-                    fic.Count = dt.Rows(i).Item("Count")
-                    fic.Matchup = dt.Rows(i).Item("Matchup").ToString
-                    fic.Crossover = dt.Rows(i).Item("Crossover").ToString
-                    fic.Description = dt.Rows(i).Item("Description").ToString
-                    fic.Internet = dt.Rows(i).Item("Internet").ToString
-                    fic.StoryID = dt.Rows(i).Item("StoryID").ToString
+                            If temp = "" Then temp = 0
 
-                    temp = dt.Rows(i).Item("Abandoned").ToString
+                            fic.Id = temp
+                            fic.Title = dt.Rows(i).Item("Title")
+                            fic.Author = dt.Rows(i).Item("Author")
+                            fic.Folder = dt.Rows(i).Item("Folder")
+                            fic.Chapter = dt.Rows(i).Item("Chapter").ToString
+                            fic.Count = dt.Rows(i).Item("Count")
+                            fic.Matchup = dt.Rows(i).Item("Matchup").ToString
+                            fic.Crossover = dt.Rows(i).Item("Crossover").ToString
+                            fic.Description = dt.Rows(i).Item("Description").ToString
+                            fic.Internet = dt.Rows(i).Item("Internet").ToString
+                            fic.StoryID = dt.Rows(i).Item("StoryID").ToString
 
-                    If temp = "" Then temp = False
+                            temp = dt.Rows(i).Item("Abandoned").ToString
 
-                    fic.Abandoned = temp
+                            If temp = "" Then temp = False
 
-                    temp = dt.Rows(i).Item("Complete").ToString
+                            fic.Abandoned = temp
 
-                    If temp = "" Then temp = False
+                            temp = dt.Rows(i).Item("Complete").ToString
 
-                    fic.Complete = temp
+                            If temp = "" Then temp = False
 
-                    If IsDate(dt.Rows(i).Item("Publish_Date")) Then
-                        fic.Publish_Date = dt.Rows(i).Item("Publish_Date")
-                    End If
+                            fic.Complete = temp
 
-                    If IsDate(dt.Rows(i).Item("Update_Date")) Then
-                        fic.Update_Date = dt.Rows(i).Item("Update_Date")
-                    Else
-                        If Not IsNothing(fic.Publish_Date) Then
-                            fic.Update_Date = fic.Publish_Date
-                        End If
-                    End If
+                            If IsDate(dt.Rows(i).Item("Publish_Date")) Then
+                                fic.Publish_Date = dt.Rows(i).Item("Publish_Date")
+                            End If
 
-                    If IsDate(dt.Rows(i).Item("Last_Checked")) Then
-                        fic.Last_Checked = dt.Rows(i).Item("Last_Checked")
-                    End If
+                            If IsDate(dt.Rows(i).Item("Update_Date")) Then
+                                fic.Update_Date = dt.Rows(i).Item("Update_Date")
+                            Else
+                                If Not IsNothing(fic.Publish_Date) Then
+                                    fic.Update_Date = fic.Publish_Date
+                                End If
+                            End If
 
-                    fic.Category_Id = dt.Rows(i).Item("Category_Id")
+                            If IsDate(dt.Rows(i).Item("Last_Checked")) Then
+                                fic.Last_Checked = dt.Rows(i).Item("Last_Checked")
+                            End If
 
-                    s.SaveOrUpdate(fic)
+                            fic.Category_Id = dt.Rows(i).Item("Category_Id")
+
+                            If Not RecordExists(fic.Folder, fic.Category_Id) Then
+                                s.SaveOrUpdate(fic)
+                            Else
+                                dt.Rows(i).Delete()
+                            End If
+
+                        Case DataRowState.Deleted
+
+                            temp = dt.Rows(i).Item("Id", DataRowVersion.Original).ToString
+
+                            fic.Id = temp
+
+                            s.Delete(fic)
+
+                    End Select
 
                     fic = Nothing
 
@@ -178,9 +229,6 @@ Public Class SQLite
 
             End Using
         End Using
-
-
-
 
         ret = dt.Rows.Count
         dt.AcceptChanges()

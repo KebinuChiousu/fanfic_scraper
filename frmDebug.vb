@@ -289,20 +289,24 @@ Public Class Debug
 
         Dim cat_id As String
 
+        Try
+            cat_id = dt.Rows(grdDB.CurrentRow.Index). _
+            Item("Category_Id").ToString
 
-        cat_id = dt.Rows(grdDB.CurrentRow.Index). _
-        Item("Category_Id").ToString
-
-        If cat_id = "" Or cat_id = "0" Then
-            cat_id = cmbChooseDB.SelectedValue
-            dt.Rows(grdDB.CurrentRow.Index). _
-            Item("Category_Id") = cat_id
-        End If
+            If cat_id = "" Or cat_id = "0" Then
+                cat_id = cmbChooseDB.SelectedValue
+                dt.Rows(grdDB.CurrentRow.Index). _
+                Item("Category_Id") = cat_id
+            End If
+        Catch
+        End Try
 
         If Not IsNothing(dt.GetChanges) Then
             ret = UpdateData(dt)
             If ret > 0 Then
                 MsgBox("Database updated sucessfully!")
+            Else
+                MsgBox("No changes detected...")
             End If
         End If
 
@@ -772,48 +776,59 @@ bypass:
         Dim iYesNo As Integer
 
         Dim link As String
+        Dim folder As String
+        Dim cat_id As Integer
 
         iYesNo = MsgBox("Add New Record?", MsgBoxStyle.YesNo)
+        cat_id = CInt(cmbChooseDB.SelectedValue)
 
         If iYesNo = vbYes Then
-            Dim dr As DataRow = dt.NewRow
 
-            If myCaller.urlAtom.Text = "" Then
-                link = myCaller.txtUrl.Text
+            folder = InputBox("Enter File Name")
+
+            If Not Me.DAL.RecordExists(folder, cat_id) Then
+
+                Dim dr As DataRow = dt.NewRow
+
+                If myCaller.urlAtom.Text = "" Then
+                    link = myCaller.txtUrl.Text
+                Else
+                    link = myCaller.urlAtom.Text
+                End If
+
+                dr("Title") = myCaller.lblTitle.Text
+                dr("Author") = myCaller.lblAuthor.Text
+                dr("Folder") = folder 'Folder Name
+                'dr("Chapter") = "" 'Current Chapter
+                dr("Count") = 0 'Chapter Count
+                'dr("Matchup") = "" ' Matchup
+                dr("Description") = Trim(myCaller.txtSource.Text)
+
+                dr("Internet") = _
+                myCaller.lblAuthor.Text & _
+                "#" & myCaller.cls.GetAuthorURL(link) & "#"
+
+                dr("StoryId") = myCaller.cls.GetStoryID(myCaller.txtUrl.Text)
+                dr("Complete") = False
+                dr("Publish_Date") = CDate( _
+                                            Replace( _
+                                                     frmMain.lblPublish.Text, _
+                                                     "Published:", _
+                                                     "" _
+                                                   ) _
+                                          )
+
+                dr("Category_Id") = cat_id
+
+                dt.Rows.Add(dr)
+
+                grdDB.DataSource = dt
+
+                SetCurrentRow(NewRow)
+
             Else
-                link = myCaller.urlAtom.Text
+                MsgBox("Record already exists!", vbExclamation)
             End If
-
-            dr("Title") = myCaller.lblTitle.Text
-            dr("Author") = myCaller.lblAuthor.Text
-            dr("Folder") = InputBox("Enter File Name") 'Folder Name
-            'dr("Chapter") = "" 'Current Chapter
-            dr("Count") = 0 'Chapter Count
-            'dr("Matchup") = "" ' Matchup
-            dr("Description") = Trim(myCaller.txtSource.Text)
-
-            dr("Internet") = _
-            myCaller.lblAuthor.Text & _
-            "#" & myCaller.cls.GetAuthorURL(link) & "#"
-
-            dr("StoryId") = myCaller.cls.GetStoryID(myCaller.txtUrl.Text)
-            dr("Complete") = False
-            dr("Publish_Date") = CDate( _
-                                        Replace( _
-                                                 frmMain.lblPublish.Text, _
-                                                 "Published:", _
-                                                 "" _
-                                               ) _
-                                      )
-
-            dr("Category_Id") = CInt(cmbChooseDB.SelectedValue)
-
-            dt.Rows.Add(dr)
-
-            grdDB.DataSource = dt
-
-            SetCurrentRow(NewRow)
-
         End If
 
         dt = Nothing
