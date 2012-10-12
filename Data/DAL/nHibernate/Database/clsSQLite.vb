@@ -161,7 +161,7 @@ Public Class SQLite
                         End If
                     End If
 
-                    If Not IsNothing(dt.Rows(i).Item("Last_Checked")) Then
+                    If IsDate(dt.Rows(i).Item("Last_Checked")) Then
                         fic.Last_Checked = dt.Rows(i).Item("Last_Checked")
                     End If
 

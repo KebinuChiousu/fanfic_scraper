@@ -280,6 +280,9 @@ Public Class Debug
                                   ByVal sender As System.Object, _
                                   ByVal e As System.EventArgs _
                               ) Handles btnUpdateDB.Click
+
+        Dim ret As Integer
+
         Dim dt As DataTable
 
         dt = grdDB.DataSource
@@ -297,7 +300,10 @@ Public Class Debug
         End If
 
         If Not IsNothing(dt.GetChanges) Then
-            UpdateData(dt)
+            ret = UpdateData(dt)
+            If ret > 0 Then
+                MsgBox("Database updated sucessfully!")
+            End If
         End If
 
     End Sub
