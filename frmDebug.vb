@@ -805,7 +805,8 @@ bypass:
             dt.Rows.Add(dr)
 
             grdDB.DataSource = dt
-            grdDB.CurrentCell = grdDB.Rows(NewRow).Cells(0)
+
+            SetCurrentRow(NewRow)
 
         End If
 
