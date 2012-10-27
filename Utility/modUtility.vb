@@ -182,4 +182,18 @@ Module modUtility
 
     End Function
 
+    Public Function CleanString(ByVal s As String) As String
+        Dim st As String = s
+        For i As Integer = 0 To 7
+            st = st.Replace(Chr(i), "")
+        Next
+        For i As Integer = 11 To 12
+            st = st.Replace(Chr(i), "")
+        Next
+        For i As Integer = 14 To 31
+            st = st.Replace(Chr(i), "")
+        Next
+        Return st
+    End Function
+
 End Module

@@ -22,6 +22,8 @@ Module modStripTags
 
         Dim xmldoc As New XmlDocument
 
+        xml = CleanString(xml)
+
         xmldoc.LoadXml(xml)
 
         StripChildTags( _
