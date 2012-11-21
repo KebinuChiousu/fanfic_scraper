@@ -71,33 +71,33 @@ Public Class HtmlGrabber
 
 
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.btnURL = New System.Windows.Forms.Button
-        Me.txtUrl = New System.Windows.Forms.TextBox
-        Me.txtSource = New System.Windows.Forms.TextBox
-        Me.ListChapters = New System.Windows.Forms.ListBox
-        Me.lblPublish = New System.Windows.Forms.Label
-        Me.lblUpdate = New System.Windows.Forms.Label
-        Me.txtFileMask = New System.Windows.Forms.TextBox
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.lblChapterCount = New System.Windows.Forms.Label
-        Me.lblProgress = New System.Windows.Forms.Label
-        Me.lblStart = New System.Windows.Forms.Label
-        Me.txtStart = New System.Windows.Forms.TextBox
-        Me.btnRSS = New System.Windows.Forms.Button
-        Me.urlAtom = New System.Windows.Forms.TextBox
-        Me.lblAtom = New System.Windows.Forms.Label
-        Me.cmbStory = New System.Windows.Forms.ComboBox
-        Me.lblStory = New System.Windows.Forms.Label
-        Me.lstStory = New System.Windows.Forms.ListBox
-        Me.cmbType = New System.Windows.Forms.ComboBox
-        Me.Label6 = New System.Windows.Forms.Label
-        Me.lblAnime = New System.Windows.Forms.Label
-        Me.btnDebug = New System.Windows.Forms.Button
-        Me.lblTitle = New System.Windows.Forms.TextBox
-        Me.lblAuthor = New System.Windows.Forms.TextBox
-        Me.lblStoryID = New System.Windows.Forms.TextBox
-        Me.btnHtml = New System.Windows.Forms.Button
+        Me.btnURL = New System.Windows.Forms.Button()
+        Me.txtUrl = New System.Windows.Forms.TextBox()
+        Me.txtSource = New System.Windows.Forms.TextBox()
+        Me.ListChapters = New System.Windows.Forms.ListBox()
+        Me.lblPublish = New System.Windows.Forms.Label()
+        Me.lblUpdate = New System.Windows.Forms.Label()
+        Me.txtFileMask = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblChapterCount = New System.Windows.Forms.Label()
+        Me.lblProgress = New System.Windows.Forms.Label()
+        Me.lblStart = New System.Windows.Forms.Label()
+        Me.txtStart = New System.Windows.Forms.TextBox()
+        Me.btnRSS = New System.Windows.Forms.Button()
+        Me.urlAtom = New System.Windows.Forms.TextBox()
+        Me.lblAtom = New System.Windows.Forms.Label()
+        Me.cmbStory = New System.Windows.Forms.ComboBox()
+        Me.lblStory = New System.Windows.Forms.Label()
+        Me.lstStory = New System.Windows.Forms.ListBox()
+        Me.cmbType = New System.Windows.Forms.ComboBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.lblAnime = New System.Windows.Forms.Label()
+        Me.btnDebug = New System.Windows.Forms.Button()
+        Me.lblTitle = New System.Windows.Forms.TextBox()
+        Me.lblAuthor = New System.Windows.Forms.TextBox()
+        Me.lblStoryID = New System.Windows.Forms.TextBox()
+        Me.btnHtml = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'btnURL
@@ -256,7 +256,7 @@ Public Class HtmlGrabber
         '
         'cmbType
         '
-        Me.cmbType.Items.AddRange(New Object() {"FFNet", "Adult FanFiction", "Your FanFiction", "FicWad"})
+        Me.cmbType.Items.AddRange(New Object() {"FFNet", "Adult FanFiction", "FicWad", "MediaMiner"})
         Me.cmbType.Location = New System.Drawing.Point(367, 7)
         Me.cmbType.Name = "cmbType"
         Me.cmbType.Size = New System.Drawing.Size(126, 21)
@@ -389,10 +389,10 @@ Public Class HtmlGrabber
                 Me.Text = "AdultFanfiction.net - Story Downloader"
                 lblAtom.Text = "Valid Author URL"
                 host = "adultfanfiction.net"
-            Case "Your FanFiction"
-                Me.Text = "YourFanFiction.com - Story Downloader"
-                lblAtom.Text = "Valid Author URL"
-                host = "yourfanfiction.com"
+                'Case "Your FanFiction"
+                '    Me.Text = "YourFanFiction.com - Story Downloader"
+                '    lblAtom.Text = "Valid Author URL"
+                '    host = "yourfanfiction.com"
             Case "FicWad"
                 Me.Text = "FicWad - Story Downloader"
                 lblAtom.Text = "Valid Author URL or Atom Feed"
@@ -426,8 +426,8 @@ Public Class HtmlGrabber
                 cls = New FFNet
             Case "adultfanfiction.net"
                 cls = New AFF
-            Case "yourfanfiction.com"
-                cls = New YFF
+                'Case "yourfanfiction.com"
+                '    cls = New YFF
             Case "ficwad.com"
                 cls = New FicWad
             Case "mediaminer.org"
