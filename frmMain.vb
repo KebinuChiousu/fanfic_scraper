@@ -450,7 +450,12 @@ Public Class HtmlGrabber
         Dim url As URL
         url = ExtractUrl(link)
 
-        host = url.Host
+        If url.Scheme = Nothing Then
+            LoadSiteByName(cmbType.Text)
+            host = cls.HostName
+        Else
+            host = url.Host
+        End If
 
         If UBound(Split(host, ".")) = 2 Then
             host = Mid(host, InStr(host, ".") + 1)
@@ -872,6 +877,8 @@ oops:
         xmldoc = cls.GrabFeed(link)
 
         If IsNothing(xmldoc) Then GoTo abort
+
+        urlAtom.Text = link
 
         btnURL.Text = "Get Chapters"
         ListChapters.Items.Clear()
