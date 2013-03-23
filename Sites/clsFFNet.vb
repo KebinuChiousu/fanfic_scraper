@@ -360,25 +360,31 @@ Class FFNet
 
         fic.Category = category
 
-        If InStr(txtSummary(4), "Pairing") <> 0 Then
-            index = 5
-        Else
-            index = 4
-        End If
+        ' If InStr(txtSummary(4), "Pairing") <> 0 Then
+        index = 5
+        'Else
+        'index = 4
+        'End If
 
 
         'Chapter Count
         fic.ChapterCount = txtSummary(index)
 
         'Last Updated
-        fic.UpdateDate = txtSummary(index + 3)
+        fic.UpdateDate = dsRSS.Tables("entry"). _
+                         Rows(idx).Item("updated")
+        fic.UpdateDate = "Updated: " & CDate(fic.UpdateDate).ToShortDateString
+
+
 
         'Published
-        fic.PublishDate = txtSummary(index + 4)
+        fic.PublishDate = dsRSS.Tables("entry"). _
+                          Rows(idx).Item("published")
+        fic.PublishDate = "Published: " & CDate(fic.PublishDate).ToShortDateString
 
         'Summary
 
-        fic.Summary = txtSummary(index + 6)
+        fic.Summary = txtSummary(index + 3)
 
         Return fic
 
