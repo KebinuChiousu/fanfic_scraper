@@ -384,7 +384,7 @@ Class FFNet
 
         'Summary
 
-        fic.Summary = txtSummary(index + 3)
+        fic.Summary = txtSummary(UBound(txtSummary))
 
         Return fic
 
