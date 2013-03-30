@@ -360,11 +360,11 @@ Class FFNet
 
         fic.Category = category
 
-        ' If InStr(txtSummary(4), "Pairing") <> 0 Then
-        index = 5
-        'Else
-        'index = 4
-        'End If
+        If InStr(txtSummary(5), "Words") = 0 Then
+            index = 5
+        Else
+            index = 4
+        End If
 
 
         'Chapter Count
