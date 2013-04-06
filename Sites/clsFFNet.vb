@@ -233,25 +233,31 @@ Class FFNet
 
             txtresult = Browser.DownloadPage(rss)
 
-            txtresult = Mid(txtresult, InStr(txtresult, "id: "))
-            txtresult = Mid(txtresult, 1, InStr(txtresult, "<") - 1)
-            If InStr(txtresult, ",") > 0 Then
-                txtresult = Mid(txtresult, 1, InStr(txtresult, ",") - 1)
-            End If
+            Try
 
-            txtatom = "/atom/u/"
-            txtatom += Replace(txtresult, "id: ", "")
+                txtresult = Mid(txtresult, InStr(txtresult, "id: "))
+                txtresult = Mid(txtresult, 1, InStr(txtresult, "<") - 1)
+                If InStr(txtresult, ",") > 0 Then
+                    txtresult = Mid(txtresult, 1, InStr(txtresult, ",") - 1)
+                End If
 
-            If txtatom = "" Then rss = ""
+                txtatom = "/atom/u/"
+                txtatom += Replace(txtresult, "id: ", "")
 
-            Dim url As URL
-            url = ExtractUrl(rss)
+                If txtatom = "" Then rss = ""
 
-            If InStr(txtatom, url.Scheme) = 0 Then
-                txtatom = url.Scheme & "://" & url.Host & txtatom
-            End If
+                Dim url As URL
+                url = ExtractUrl(rss)
 
-            rss = txtatom
+                If InStr(txtatom, url.Scheme) = 0 Then
+                    txtatom = url.Scheme & "://" & url.Host & txtatom
+                End If
+
+                rss = txtatom
+
+            Catch
+                rss = ""
+            End Try
 
         End If
 
