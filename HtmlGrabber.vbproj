@@ -228,6 +228,12 @@
     <Compile Include="Data\DAL\nHibernate\Mapping\FanficMap.vb" />
     <Compile Include="Data\DAL\nHibernate\Tables\Category.vb" />
     <Compile Include="Data\DAL\nHibernate\Tables\Fanfic.vb" />
+    <Compile Include="frmCategory.Designer.vb">
+      <DependentUpon>frmCategory.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmCategory.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmHtml.Designer.vb">
       <DependentUpon>frmHtml.vb</DependentUpon>
     </Compile>
@@ -278,6 +284,9 @@
     <Compile Include="Utility\Browser\XML\modStripTags.vb" />
     <Compile Include="Utility\Browser\XML\modXML.vb" />
     <Compile Include="Utility\Browser\XML\modXMLUtilty.vb" />
+    <EmbeddedResource Include="frmCategory.resx">
+      <DependentUpon>frmCategory.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmDebug.resx">
       <DependentUpon>frmDebug.vb</DependentUpon>
       <SubType>Designer</SubType>

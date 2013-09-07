@@ -15,6 +15,17 @@ Public MustInherit Class DAL
                       Optional ByVal ALL As Boolean = False _
                     ) As DataTable
 
+
+
+    ''' <summary>
+    ''' Checks to see if the record already exists in the database.
+    ''' </summary>
+    ''' <param name="category_id">Cateory Id to check for folder</param>
+    ''' <returns>Retuurns true if record exists</returns>
+    ''' <remarks></remarks>
+    Public MustOverride _
+    Function RecordExists(category_id As Integer) As Boolean
+
     ''' <summary>
     ''' Checks to see if the record already exists in the database.
     ''' </summary>
@@ -25,6 +36,23 @@ Public MustInherit Class DAL
     Public MustOverride _
     Function RecordExists(folder As String, category_id As Integer) As Boolean
 
+    ''' <summary>
+    ''' Checks to see if the record already exists in the database.
+    ''' </summary>
+    ''' <param name="category">Category Name to check for.</param>
+    ''' <returns>Returns true if record exists</returns>
+    ''' <remarks></remarks>
+    Public MustOverride _
+    Function CategoryExists(category As String) As Boolean
+
+    ''' <summary>
+    ''' Update Categories in Database based on Metadata from DataTable
+    ''' </summary>
+    ''' <param name="dt">DataTable of Category MetaData</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public MustOverride _
+    Function UpdateCategories(ByRef dt As DataTable) As Integer
 
     ''' <summary>
     ''' Update Database based on Metadata from DataTable

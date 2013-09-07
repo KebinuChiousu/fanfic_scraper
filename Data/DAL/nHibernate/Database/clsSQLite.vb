@@ -100,6 +100,68 @@ Public Class SQLite
     End Function
 
     Public Overrides _
+    Function CategoryExists(category As String) As Boolean
+
+        Dim ret As Boolean
+
+        Dim dt As DataTable
+        Dim fic As New List(Of Category)
+
+        Using s As ISession = orm.OpenSession
+
+            s.CreateCriteria(Of Category) _
+                    .Add(Restrictions.Eq("Name", category)) _
+                    .List(fic)
+
+        End Using
+
+        dt = fic.ToDataTable
+
+        If dt.Rows.Count > 0 Then
+            ret = True
+        Else
+            ret = False
+        End If
+
+        fic = Nothing
+        dt = Nothing
+
+        Return ret
+
+    End Function
+
+    Public Overrides _
+    Function RecordExists(category_id As Integer) As Boolean
+
+        Dim ret As Boolean
+
+        Dim dt As DataTable
+        Dim fic As New List(Of Fanfic)
+
+        Using s As ISession = orm.OpenSession
+
+            s.CreateCriteria(Of Fanfic) _
+                    .Add(Restrictions.Eq("Category_Id", category_id)) _
+                    .List(fic)
+
+        End Using
+
+        dt = fic.ToDataTable
+
+        If dt.Rows.Count > 0 Then
+            ret = True
+        Else
+            ret = False
+        End If
+
+        fic = Nothing
+        dt = Nothing
+
+        Return ret
+
+    End Function
+
+    Public Overrides _
     Function RecordExists(folder As String, category_id As Integer) As Boolean
 
         Dim ret As Boolean
@@ -206,6 +268,80 @@ Public Class SQLite
 
                             If dt.Rows(i).RowState = DataRowState.Added Then
                                 If Not RecordExists(fic.Folder, fic.Category_Id) Then
+                                    s.SaveOrUpdate(fic)
+                                Else
+                                    dt.Rows(i).Delete()
+                                End If
+                            Else
+                                s.SaveOrUpdate(fic)
+                            End If
+
+                        Case DataRowState.Deleted
+
+                            temp = dt.Rows(i).Item("Id", DataRowVersion.Original).ToString
+
+                            fic.Id = temp
+
+                            s.Delete(fic)
+
+                    End Select
+
+                    fic = Nothing
+
+
+                Next
+
+                t.Commit()
+
+            End Using
+        End Using
+
+        ret = dt.Rows.Count
+        dt.AcceptChanges()
+
+        fic = Nothing
+
+        Return ret
+
+    End Function
+
+    ''' <summary>
+    ''' Updates Category Metadata using the provided DataTable as Input
+    ''' </summary>
+    ''' <param name="dt">DataTable containing Category metadata.</param>
+    ''' <returns>Number of rows affected.</returns>
+    ''' <remarks></remarks>
+    Public Overrides _
+    Function UpdateCategories(ByRef dt As System.Data.DataTable) As Integer
+
+        Dim fic As Category
+        Dim ret As Integer
+
+        Dim temp As String
+
+        dt = dt.GetChanges()
+
+        Using s As ISession = orm.OpenSession
+
+            Using t As ITransaction = s.BeginTransaction
+
+                For i = 0 To dt.Rows.Count - 1
+
+                    fic = New Category
+
+                    Select Case dt.Rows(i).RowState
+                        Case DataRowState.Added, DataRowState.Modified
+
+                            temp = dt.Rows(i).Item("Id").ToString
+
+                            If temp = "" Then temp = 0
+
+                            fic.Id = temp
+                            fic.Name = dt.Rows(i).Item("Name").ToString
+
+
+                            If dt.Rows(i).RowState = DataRowState.Added Then
+                                If Not CategoryExists(fic.Name) Then
                                     s.SaveOrUpdate(fic)
                                 Else
                                     dt.Rows(i).Delete()
