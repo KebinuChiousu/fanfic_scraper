@@ -331,6 +331,8 @@ Class FFNet
         fic.Title = dsRSS.Tables("entry"). _
                         Rows(idx).Item("title")
 
+        
+
         ' Story Author
         fic.Author = dsRSS.Tables("author"). _
                           Rows(idx).Item(0)
@@ -349,13 +351,6 @@ Class FFNet
 
         txtResult = Replace(txtResult, ", Words", "<br>Words")
         txtResult = Replace(txtResult, ", Reviews", "<br>Reviews")
-        txtResult = Replace(txtResult, "Updated", "<br>Updated")
-
-        If InStr(txtResult, "Updated") = 0 Then
-            txtResult = Replace(txtResult, "Published", "<br><br>Published")
-        Else
-            txtResult = Replace(txtResult, "Published", "<br>Published")
-        End If
 
         txtSummary = Split(txtResult, "<br>")
 
@@ -376,12 +371,15 @@ Class FFNet
         'Chapter Count
         fic.ChapterCount = txtSummary(index)
 
+        fic.PublishDate = dsRSS.Tables("entry"). _
+                          Rows(idx).Item("published")
+
         'Last Updated
         fic.UpdateDate = dsRSS.Tables("entry"). _
-                         Rows(idx).Item("updated")
+                         Rows(idx).Item("id")
+        fic.UpdateDate = Split(fic.UpdateDate, ",")(1)
+        fic.UpdateDate = Split(fic.UpdateDate, ":")(0)
         fic.UpdateDate = "Updated: " & CDate(fic.UpdateDate).ToShortDateString
-
-
 
         'Published
         fic.PublishDate = dsRSS.Tables("entry"). _
