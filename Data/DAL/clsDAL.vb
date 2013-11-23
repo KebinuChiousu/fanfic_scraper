@@ -96,12 +96,12 @@ Public MustInherit Class DAL
 #Region ".NET Configuration Management"
 
     ''' <summary>
-    ''' Retrieve full Connection String Key Path from XML File
+    ''' Retrieve full Conig Name Key Path from XML File
     ''' </summary>
-    ''' <param name="csName">Connection String Key Name</param>
+    ''' <param name="Key">Configuration Key Name</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Private Function GetConnStrName(ByVal csName As String) As String
+    Private Function GetConfigName(ByVal Key As String) As String
 
         Dim ns As String = My.Application.GetType.Namespace
         Dim settings As String = "MySettings"
@@ -111,7 +111,23 @@ Public MustInherit Class DAL
         name += "."
         name += settings
         name += "."
-        name += csName
+        name += Key
+
+        Return name
+
+    End Function
+
+    ''' <summary>
+    ''' Retrieve full Connection String Key Path from XML File
+    ''' </summary>
+    ''' <param name="csName">Connection String Key Name</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function GetConnStrName(ByVal csName As String) As String
+
+        Dim name As String
+
+        name = GetConfigName(csName)
 
         Return name
 
@@ -204,6 +220,77 @@ Public MustInherit Class DAL
         ConfigurationManager.RefreshSection("connectionStrings")
 
     End Sub
+
+#Region "Output Folder Logic"
+
+    Sub SetConfigValue(ByVal KeyName As String, ByVal Value As String)
+
+        Dim conf As System.Configuration.Configuration
+
+        Dim Setting As KeyValueConfigurationElement
+
+        conf = ConfigurationManager. _
+               OpenExeConfiguration( _
+                                     ConfigurationUserLevel.None _
+                                   )
+
+        Dim Section As AppSettingsSection = conf.AppSettings
+
+        ' Get the current AppSettings count.
+        Dim Cnt As Integer = _
+        ConfigurationManager.AppSettings.Count
+
+        KeyName = GetConfigName(KeyName)
+
+        Setting = Section.Settings.Item(KeyName)
+
+        If IsNothing(Setting) Then
+            Section.Settings.Add(KeyName, Value)
+        Else
+            Section.Settings.Item(KeyName).Value = Value
+        End If
+
+        ' Save the configuration file.
+        conf.Save(ConfigurationSaveMode.Modified, True)
+
+        ConfigurationManager.RefreshSection("appSettings")
+
+    End Sub
+
+    ''' <summary>
+    ''' Retrieve Key from App.Config
+    ''' </summary>
+    ''' <param name="KeyName">Name of Key</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function GetConfigValue( _
+                                    ByVal KeyName As String _
+                                  ) As String
+
+
+        Dim conf As System.Configuration.Configuration
+        Dim Value As String = ""
+
+        conf = ConfigurationManager. _
+               OpenExeConfiguration( _
+                                     ConfigurationUserLevel.None _
+                                   )
+
+        Dim Section As AppSettingsSection = conf.AppSettings
+
+        KeyName = GetConfigName(KeyName)
+
+        Try
+            Value = Section.Settings(KeyName).Value
+        Catch
+            Value = ""
+        End Try
+
+        Return Value
+
+    End Function
+
+#End Region
 
 #End Region
 
