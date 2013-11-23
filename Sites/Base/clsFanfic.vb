@@ -4,14 +4,18 @@ Imports System.Web.HttpUtility
 
 Public MustInherit Class clsFanfic
 
+    Protected datasetRSS As DataSet
+    Protected StoryURL As String
+
     Public MustOverride _
     Function ProcessChapters( _
                               ByVal link As String, _
                               ByVal index As Integer _
                             ) As String
 
+
     Public Overridable _
-   Function WriteDate( _
+    Function WriteDate( _
                        ByVal publish As String, _
                        ByVal update As String, _
                        ByVal index As Integer, _
@@ -165,6 +169,8 @@ Public MustInherit Class clsFanfic
         Dim Browser As New clsWeb
         Dim html As String
 
+        Me.StoryURL = url
+
         html = Browser.DownloadPage(url)
 
         CleanHTML(html)
@@ -175,15 +181,35 @@ Public MustInherit Class clsFanfic
 
     End Function
 
-    Public MustOverride _
-    Function GrabFeed(ByRef rss As String) As XmlDocument
+    Protected MustOverride _
+    Function GrabFeedData(ByRef rss As String) As System.Xml.XmlDocument
 
+    Public _
+    Function GrabFeed(ByRef rss As String) As System.Data.DataSet
+
+        Dim xmldoc As XmlDocument
+
+        datasetRSS = Nothing
+        datasetRSS = New DataSet
+
+        xmldoc = GrabFeedData(rss)
+
+        If Not IsNothing(xmldoc) Then
+            ' Read in XML from file
+            datasetRSS.ReadXml(StringToStream(xmldoc.OuterXml))
+        Else
+            datasetRSS = Nothing
+        End If
+
+        Return datasetRSS
+
+    End Function
 #End Region
 
 #Region "RSS Routines"
 
     Public MustOverride _
-    Function GrabStoryInfo(ByRef dsRSS As DataSet, ByVal idx As Integer) As clsFanfic.Story
+    Function GrabStoryInfo(ByVal idx As Integer) As clsFanfic.Story
 
     Structure Story
         Dim ID As String
@@ -197,6 +223,27 @@ Public MustInherit Class clsFanfic
         Dim UpdateDate As String
         Dim Summary As String
     End Structure
+
+    Public _
+    Function GetStoryInfoByID(ByVal StoryID As String) As clsFanfic.Story
+
+        Dim fic As clsFanfic.Story = Nothing
+
+        Dim idx As Integer
+
+        For idx = 0 To datasetRSS.Tables(0).Rows.Count - 1
+
+            fic = GrabStoryInfo(idx)
+
+            If InStr(fic.ID, StoryID) <> 0 Then
+                Exit For
+            End If
+
+        Next
+
+        Return fic
+
+    End Function
 
     Protected Chapters() As String
 
@@ -264,6 +311,12 @@ Public MustInherit Class clsFanfic
 
     Public MustOverride _
     ReadOnly Property Name() As String
+
+    Public ReadOnly Property dsRSS As DataSet
+        Get
+            Return datasetRSS
+        End Get
+    End Property
 
 #End Region
 

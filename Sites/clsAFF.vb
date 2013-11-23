@@ -2,6 +2,7 @@ Imports System
 Imports System.text
 Imports System.net
 Imports System.Xml
+Imports System.Data
 Imports HtmlAgilityPack
 Imports System.Web.HttpUtility
 
@@ -168,7 +169,7 @@ Class AFF
 
 #Region "RSS"
 
-    Public Overrides Function GrabFeed(ByRef rss As String) As System.Xml.XmlDocument
+    Protected Overrides Function GrabFeedData(ByRef rss As String) As System.Xml.XmlDocument
 
         Dim html As String
         Dim doc As HtmlDocument = Nothing
@@ -301,7 +302,9 @@ Class AFF
 
     End Function
 
-    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As clsFanfic.Story
+    Public Overrides Function GrabStoryInfo(ByVal idx As Integer) As clsFanfic.Story
+
+        Dim dsRSS As DataSet = MyBase.datasetRSS
 
         Dim fic As New clsFanfic.Story
 

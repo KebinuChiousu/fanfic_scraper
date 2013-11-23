@@ -635,7 +635,7 @@ Public Class HtmlGrabber
 
         Dim fic As clsFanfic.Story
 
-        fic = cls.GrabStoryInfo(dsRSS, idx)
+        fic = cls.GrabStoryInfo(idx)
 
         ' Story Name
         lblTitle.Text = fic.Title
@@ -702,14 +702,16 @@ oops:
                         ListChapters.Items.Add(chapters(idx))
                     Next
 
-
                     htmldoc = cls.ProcessChapters( _
                                                    txtUrl.Text, _
                                                    0 _
                                                  )
 
+                    lblStoryID.Text = cls.GetStoryID(txtUrl.Text)
+
                     lblTitle.Text = cls.GrabTitle(htmldoc)
                     lblAuthor.Text = cls.GrabAuthor(htmldoc)
+
                     lblPublish.Text = cls.GrabDate(htmldoc, "Published: ")
                     lblUpdate.Text = cls.GrabDate(htmldoc, "Updated: ")
                     If lblUpdate.Text = "" Then lblUpdate.Text = lblPublish.Text
@@ -860,8 +862,6 @@ oops:
     Sub ObtainFeed(ByVal link As String)
         'Download List of stories for Given Author
 
-        Dim xmldoc As XmlDocument
-
         Dim idx As Integer
         'Dim sumcount As Integer
 
@@ -872,21 +872,17 @@ oops:
         lstStory.Items.Clear()
 
         dsRSS = Nothing
-        dsRSS = New DataSet
 
         If link = "" Then GoTo abort
 
-        xmldoc = cls.GrabFeed(link)
+        dsRSS = cls.GrabFeed(link)
 
-        If IsNothing(xmldoc) Then GoTo abort
+        If IsNothing(dsRSS) Then GoTo abort
 
         urlAtom.Text = link
 
         btnURL.Text = "Get Chapters"
         ListChapters.Items.Clear()
-
-        ' Read in XML from file
-        dsRSS.ReadXml(StringToStream(xmldoc.OuterXml))
 
         'Send Information to Debug Console
         Initialize( _
@@ -897,7 +893,7 @@ oops:
 
         For idx = 0 To dsRSS.Tables(0).Rows.Count - 1
 
-            fic = cls.GrabStoryInfo(dsRSS, idx)
+            fic = cls.GrabStoryInfo(idx)
 
             ' Story Title
             cmbStory.Items.Add(fic.Title)
