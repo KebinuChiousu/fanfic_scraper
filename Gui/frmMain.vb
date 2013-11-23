@@ -1,6 +1,5 @@
 Imports System.IO
-Imports System.Web
-Imports System.Text
+
 Imports System.Xml
 
 Imports System.data
@@ -258,7 +257,7 @@ Public Class HtmlGrabber
         '
         'cmbType
         '
-        Me.cmbType.Items.AddRange(New Object() {"FFNet", "Adult FanFiction", "FicWad", "MediaMiner"})
+        Me.cmbType.Items.AddRange(New Object() {"FFNet", "AFF", "FicWad", "MediaMiner"})
         Me.cmbType.Location = New System.Drawing.Point(440, 8)
         Me.cmbType.Name = "cmbType"
         Me.cmbType.Size = New System.Drawing.Size(152, 24)
@@ -368,125 +367,13 @@ Public Class HtmlGrabber
 #End Region
 
     'Declarations used within class
-    Dim txtResult As String
+    Public BL As New clsBL
+    Public clsname As String
+
     Dim Title As String
     Dim dsRSS As DataSet
-    Public cls As clsFanfic
-    Public clsname As String
+
     Dim i As Integer
-
-
-#Region "Site Module Loading"
-
-    Sub LoadSiteByName(ByVal clsname As String, Optional ByVal bypass As Boolean = False)
-
-        Dim host As String = ""
-
-        Select Case clsname
-            Case "FFNet"
-                Me.Text = "Fanfiction.net - Story Downloader"
-                lblAtom.Text = "Atom Feed or Author URL"
-                host = "fanfiction.net"
-            Case "Adult FanFiction"
-                Me.Text = "AdultFanfiction.net - Story Downloader"
-                lblAtom.Text = "Valid Author URL"
-                host = "adultfanfiction.net"
-                'Case "Your FanFiction"
-                '    Me.Text = "YourFanFiction.com - Story Downloader"
-                '    lblAtom.Text = "Valid Author URL"
-                '    host = "yourfanfiction.com"
-            Case "FicWad"
-                Me.Text = "FicWad - Story Downloader"
-                lblAtom.Text = "Valid Author URL or Atom Feed"
-                host = "ficwad.com"
-            Case "MediaMiner"
-                Me.Text = "MediaMiner - Story Downloader"
-                lblAtom.Text = "Valid Author URL"
-                host = "mediaminer.org"
-            Case Else
-                clsname = ""
-        End Select
-
-        If Not bypass Then
-            LoadSiteByHost(host)
-        End If
-
-    End Sub
-
-    Sub LoadSiteByHost(ByVal host As String)
-
-        If Not IsNothing(cls) Then
-            If host = cls.HostName Then
-                Exit Sub
-            Else
-                cls = Nothing
-            End If
-        End If
-
-        Select Case host
-            Case "fanfiction.net"
-                cls = New FFNet
-            Case "adultfanfiction.net"
-                cls = New AFF
-                'Case "yourfanfiction.com"
-                '    cls = New YFF
-            Case "ficwad.com"
-                cls = New FicWad
-            Case "mediaminer.org"
-                cls = New MM
-            Case Else
-                cls = Nothing
-        End Select
-
-    End Sub
-
-#End Region
-
-#Region "Validation Routines"
-
-    Function CheckUrl(ByRef link As String) As Boolean
-
-        Dim host As String
-        Dim ret As Boolean = False
-
-        Dim url As URL
-        url = ExtractUrl(link)
-
-        If url.Scheme = Nothing Then
-            LoadSiteByName(cmbType.Text)
-            host = cls.HostName
-        Else
-            host = url.Host
-        End If
-
-        If UBound(Split(host, ".")) = 2 Then
-            host = Mid(host, InStr(host, ".") + 1)
-        End If
-
-
-
-        LoadSiteByHost(host)
-
-        If IsNothing(cls) Then
-            ret = False
-        Else
-            LoadSiteByName(cls.Name, True)
-
-            If host = cls.HostName Then
-                ret = True
-            Else
-                ret = False
-            End If
-
-        End If
-
-        'link = host
-
-        Return ret
-
-    End Function
-
-#End Region
 
     Sub ResetInfo()
 
@@ -522,7 +409,7 @@ Public Class HtmlGrabber
         Dim link As String
         link = txtUrl.Text
 
-        If CheckUrl(link) Then
+        If CheckURL(link) Then
             DownloadData()
         Else
             MsgBox("Site: " & link & " is currently not supported.", MsgBoxStyle.Information)
@@ -538,7 +425,7 @@ Public Class HtmlGrabber
         Dim link As String
         link = urlAtom.Text
 
-        If CheckUrl(link) Then
+        If CheckURL(link) Then
             ObtainFeed(urlAtom.Text)
         Else
             MsgBox("Site: " & link & " is currently not supported.", MsgBoxStyle.Information)
@@ -635,7 +522,7 @@ Public Class HtmlGrabber
 
         Dim fic As clsFanfic.Story
 
-        fic = cls.GrabStoryInfo(idx)
+        fic = BL.GrabStoryInfo(idx)
 
         ' Story Name
         lblTitle.Text = fic.Title
@@ -670,95 +557,51 @@ Public Class HtmlGrabber
 
     Sub DownloadData()
 
-        Dim htmldoc As String
-        Dim chapters() As String
         Dim idx As Integer
+        Dim ret As Boolean
+        Dim fic As clsFanfic.Story
 
         Select Case btnURL.Text
-
             Case "Get Chapters"
+                ret = BL.GetChapters(txtUrl.Text)
+                If Not ret Then GoTo oops
 
-                'Downloas Information from Source
+                btnURL.Text = "Process Chapters"
 
-                If txtUrl.Text = "" Then GoTo oops
+                fic = BL.FanFic
 
-                htmldoc = cls.GrabData(txtUrl.Text)
-                txtResult = htmldoc
+                lblChapterCount.Text = fic.ChapterCount
 
-                If InStr(LCase(txtResult), cls.ErrorMessage) = 0 Then
+                For idx = 0 To fic.ChapterCount
+                    ListChapters.Items.Add(fic.Chapters(idx))
+                Next
 
-                    If txtResult = "" Then
-oops:
-                        MsgBox("Valid URL Must be Entered", _
-                               MsgBoxStyle.Information)
-                        Exit Sub
+                lblStoryID.Text = fic.ID
+                lblTitle.Text = fic.Title
+                lblAuthor.Text = fic.Author
+                lblPublish.Text = fic.PublishDate
+                lblUpdate.Text = fic.UpdateDate
 
-                    End If
+                lblChapterCount.Text = fic.ChapterCount
+                lblProgress.Text = "< -- Enter Starting Chapter"
+                txtStart.Text = 1
 
-                    ListChapters.Items.Clear()
-                    chapters = cls.GetChapters(htmldoc)
+                txtSource.Text = BL.Result
 
-                    For idx = 0 To UBound(chapters)
-                        ListChapters.Items.Add(chapters(idx))
-                    Next
-
-                    htmldoc = cls.ProcessChapters( _
-                                                   txtUrl.Text, _
-                                                   0 _
-                                                 )
-
-                    lblStoryID.Text = cls.GetStoryID(txtUrl.Text)
-
-                    lblTitle.Text = cls.GrabTitle(htmldoc)
-                    lblAuthor.Text = cls.GrabAuthor(htmldoc)
-
-                    lblPublish.Text = cls.GrabDate(htmldoc, "Published: ")
-                    lblUpdate.Text = cls.GrabDate(htmldoc, "Updated: ")
-                    If lblUpdate.Text = "" Then lblUpdate.Text = lblPublish.Text
-
-                    btnURL.Text = "Process Chapters"
-                    lblChapterCount.Text = ListChapters.Items.Count
-                    lblProgress.Text = "< -- Enter Starting Chapter"
-                    txtStart.Text = 1
-
-                    txtSource.Text = cls.GrabBody(htmldoc)
-
-                    lblStart.Visible = True
-                    txtStart.Visible = True
-
-                Else
-
-                    btnURL.Text = "Process Chapters"
-                    txtSource.Text = txtResult
-                    lblStart.Visible = True
-                    txtStart.Visible = True
-
-                End If
+                lblStart.Visible = True
+                txtStart.Visible = True
 
             Case "Process Chapters"
 
-                'Process Chapters from Source
-
-                For i = (CInt(txtStart.Text) - 1) To (CInt(lblChapterCount.Text) - 1)
-
-                    lblProgress.Text = "Chapter " & _
-                                       (i + 1) & _
-                                       " of " & _
-                                       lblChapterCount.Text
-
-                    htmldoc = cls.ProcessChapters( _
-                                                   txtUrl.Text, _
-                                                   i _
-                                                 )
-
-                    ProcessChapter( _
-                                    htmldoc, _
-                                    txtFileMask.Text, _
-                                    i + 1, _
-                                    CInt(lblChapterCount.Text) _
+                BL.ProcessChapters( _
+                                    txtUrl.Text, _
+                                    CInt(txtStart.Text), _
+                                    CInt(lblChapterCount.Text), _
+                                    txtFileMask.Text _
                                   )
 
-                Next
+                'Make Sure New Information is Downloaded
+                btnURL.Text = "Get Chapters"
 
                 'Clear Information from source
                 ListChapters.Items.Clear()
@@ -769,93 +612,20 @@ oops:
                 txtStart.Visible = False
                 txtSource.Text = ""
 
-                'Make Sure New Information is Downloaded
-                btnURL.Text = "Get Chapters"
-
-
         End Select
+
+        Exit Sub
+
+oops:
+        txtSource.Text = BL.Result
+        MsgBox("Valid URL Must be Entered", MsgBoxStyle.Information)
 
     End Sub
 
-    Public Sub ProcessChapter( _
-                               ByRef htmlDoc As String, _
-                               ByVal FileMask As String, _
-                               ByVal chapter As Integer, _
-                               Optional ByVal ChapterCount As Integer = 0 _
-                             )
+    Sub UpdateProgess(ByVal msg As String)
 
-        Dim title As String
-
-        If ChapterCount = 0 Then
-            ChapterCount = chapter
-        End If
-
-        Dim data As String = ""
-
-        title = cls.GrabTitle(htmlDoc)
-        lblAnime.Text = cls.GrabSeries(htmlDoc)
-
-        lblPublish.Text = cls.GrabDate(htmlDoc, "Published: ")
-        lblUpdate.Text = cls.GrabDate(htmlDoc, "Updated: ")
-
-        If lblUpdate.Text = "" Then lblUpdate.Text = lblPublish.Text
-
-        txtResult = htmlDoc
-
+        lblProgress.Text = msg
         Application.DoEvents()
-
-        If InStr(LCase(txtResult), "chapter not found") = 0 _
-        And InStr(LCase(txtResult), "story not found") = 0 _
-        Then
-
-            data = cls.GrabBody(htmlDoc)
-
-            txtSource.Text = "<p></p>" & data
-            txtResult = "<html><body>"
-            txtResult &= "<p>" & title & "</p>"
-            txtResult &= "<p>" & lblAuthor.Text & "</p>"
-            If lblAnime.Text <> "" Then
-                txtResult &= "<p>" & lblAnime.Text & "</p>"
-            End If
-            txtResult &= cls.WriteDate( _
-                                        lblPublish.Text, _
-                                        lblUpdate.Text, _
-                                        chapter, _
-                                        ChapterCount _
-                                      )
-            txtResult &= "<p>----------------------------------</p>"
-            txtResult &= txtSource.Text
-        Else
-            txtResult = "<p>Error writing file</p>"
-            txtResult = txtResult & "<p>Try downloading the file from " & _
-                        "<a href=" & Chr(34) & txtUrl.Text & (i + 1) & "/" & _
-                        Chr(34) & ">here</a> in a regular browser</p>"
-            txtResult = txtResult & "<p>DOWNLOAD ERROR</p>"
-        End If
-
-        txtResult = HttpUtility.HtmlDecode(txtResult)
-
-        Dim ecp1252 As Encoding = Encoding.GetEncoding(1252)
-        Dim sr As StreamReader
-        sr = New StreamReader(StringToStream(txtResult))
-        Dim sw As StreamWriter
-
-        FileMask = Replace(FileMask, "-", "")
-
-        If IsNumeric(Mid(FileMask, Len(FileMask), 1)) Then
-            FileMask += "-"
-        End If
-
-        sw = New StreamWriter(Environment.GetFolderPath( _
-                               Environment.SpecialFolder.Desktop) _
-                               & "\" & FileMask & _
-                               Format(chapter, "0#") & ".htm", _
-                               False, ecp1252)
-        sw.Write(sr.ReadToEnd)
-        sr.Close()
-        sw.Close()
-        sr = Nothing
-        sw = Nothing
 
     End Sub
 
@@ -875,7 +645,7 @@ oops:
 
         If link = "" Then GoTo abort
 
-        dsRSS = cls.GrabFeed(link)
+        dsRSS = BL.GrabFeed(link)
 
         If IsNothing(dsRSS) Then GoTo abort
 
@@ -893,7 +663,7 @@ oops:
 
         For idx = 0 To dsRSS.Tables(0).Rows.Count - 1
 
-            fic = cls.GrabStoryInfo(idx)
+            fic = BL.GrabStoryInfo(idx)
 
             ' Story Title
             cmbStory.Items.Add(fic.Title)
@@ -916,6 +686,64 @@ abort:
         Exit Sub
 
     End Sub
+
+#Region "Site Logic"
+
+    Function CheckURL(ByVal link As String) As Boolean
+
+        Dim ret As Boolean
+
+        ret = BL.CheckUrl(link)
+
+        If ret Then
+            LoadSiteByName(BL.Name, True)
+        Else
+            ret = LoadSiteByName(cmbType.Text, False)
+        End If
+
+        Return ret
+
+    End Function
+
+    Function LoadSiteByName(ByVal clsname As String, Optional ByVal bypass As Boolean = False) As Boolean
+
+        Dim ret As Boolean = False
+        Dim host As String = ""
+
+        Select Case clsname
+            Case "FFNet"
+                Me.Text = "Fanfiction.net - Story Downloader"
+                lblAtom.Text = "Atom Feed or Author URL"
+                host = "fanfiction.net"
+            Case "AFF"
+                Me.Text = "AdultFanfiction.net - Story Downloader"
+                lblAtom.Text = "Valid Author URL"
+                host = "adultfanfiction.net"
+                'Case "Your FanFiction"
+                '    Me.Text = "YourFanFiction.com - Story Downloader"
+                '    lblAtom.Text = "Valid Author URL"
+                '    host = "yourfanfiction.com"
+            Case "FicWad"
+                Me.Text = "FicWad - Story Downloader"
+                lblAtom.Text = "Valid Author URL or Atom Feed"
+                host = "ficwad.com"
+            Case "MediaMiner"
+                Me.Text = "MediaMiner - Story Downloader"
+                lblAtom.Text = "Valid Author URL"
+                host = "mediaminer.org"
+            Case Else
+                clsname = ""
+        End Select
+
+        If Not bypass Then
+            ret = BL.LoadSiteByHost(host)
+        End If
+
+        Return ret
+
+    End Function
+
+#End Region
 
 #End Region
 

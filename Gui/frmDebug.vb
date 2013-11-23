@@ -550,7 +550,7 @@ Public Class Debug
             link = dt.Rows(grdDB.CurrentRow.Index).Item("Internet")
             link = Replace(link, "#", "")
 
-            ret = myCaller.CheckUrl(link)
+            ret = myCaller.BL.CheckUrl(link)
 
         End If
 
@@ -580,7 +580,7 @@ Public Class Debug
 
         frmMain.txtFileMask.Text = folder & "-"
 
-        check = InStr(LCase(frmMain.txtSource.Text), frmMain.cls.ErrorMessage) <> 0
+        check = InStr(LCase(frmMain.txtSource.Text), frmMain.BL.ErrorMessage) <> 0
 
         If check Then
             frmMain.lblChapterCount.Text = _
@@ -779,7 +779,14 @@ bypass:
                                ByVal sender As System.Object, _
                                ByVal e As System.EventArgs _
                              ) Handles btnSave.Click
+
+        Dim BL As clsBL
+        Dim fic As clsFanfic.Story
+        Dim id As String
+
         Dim dt As DataTable
+
+        BL = myCaller.BL
 
         dt = grdDB.DataSource
 
@@ -802,34 +809,25 @@ bypass:
 
                 Dim dr As DataRow = dt.NewRow
 
-                If myCaller.urlAtom.Text = "" Then
-                    link = myCaller.txtUrl.Text
-                Else
-                    link = myCaller.urlAtom.Text
-                End If
+                link = myCaller.txtUrl.Text
+                id = BL.GetStoryID(link)
+                fic = BL.GetStoryInfoByID(id)
 
-                dr("Title") = myCaller.lblTitle.Text
-                dr("Author") = myCaller.lblAuthor.Text
+                dr("Title") = fic.Title
+                dr("Author") = fic.Author
                 dr("Folder") = folder 'Folder Name
+
                 'dr("Chapter") = "" 'Current Chapter
+
                 dr("Count") = 0 'Chapter Count
+
                 'dr("Matchup") = "" ' Matchup
-                dr("Description") = Trim(myCaller.txtSource.Text)
 
-                dr("Internet") = _
-                myCaller.lblAuthor.Text & _
-                "#" & myCaller.cls.GetAuthorURL(link) & "#"
-
-                dr("StoryId") = myCaller.cls.GetStoryID(myCaller.txtUrl.Text)
+                dr("Description") = fic.Summary
+                dr("Internet") = fic.Author & "#" & fic.AuthorURL & "#"
+                dr("StoryId") = fic.ID
                 dr("Complete") = False
-                dr("Publish_Date") = CDate( _
-                                            Replace( _
-                                                     frmMain.lblPublish.Text, _
-                                                     "Published:", _
-                                                     "" _
-                                                   ) _
-                                          )
-
+                dr("Publish_Date") = fic.PublishDate
                 dr("Category_Id") = cat_id
 
                 dt.Rows.Add(dr)
@@ -1061,7 +1059,7 @@ bypass:
             If StoryID = "" Then
                 link = ""
             Else
-                link = myCaller.cls.GetStoryURL(StoryID)
+                link = myCaller.BL.GetStoryURL(StoryID)
             End If
 
         End If
@@ -1113,46 +1111,41 @@ bypass:
 
     Private Sub UpdateRecord()
 
+        Dim BL As clsBL
+        Dim fic As clsFanfic.Story
+        Dim id As String
+        Dim link As String
+        Dim dt As DataTable
         Dim dte As Date
 
-        Dim dt As DataTable
+        BL = myCaller.BL
         dt = grdDB.DataSource
 
-        Dim link As String
-
-        If myCaller.urlAtom.Text = "" Then
-            link = myCaller.txtUrl.Text
-        Else
-            link = myCaller.urlAtom.Text
-        End If
+        link = myCaller.txtUrl.Text
+        id = BL.GetStoryID(link)
+        fic = BL.GetStoryInfoByID(id)
 
         dt.Rows(grdDB.CurrentRow.Index). _
-        Item("Title") = myCaller.lblTitle.Text
+        Item("Title") = fic.Title
 
         dt.Rows(grdDB.CurrentRow.Index). _
-        Item("Author") = myCaller.lblAuthor.Text
+        Item("Author") = fic.Author
 
         dt.Rows(grdDB.CurrentRow.Index). _
-        Item("Description") = Trim(myCaller.txtSource.Text)
+        Item("Description") = fic.Summary
 
         dt.Rows(grdDB.CurrentRow.Index). _
-        Item("Internet") = myCaller.lblAuthor.Text & "#" & myCaller.cls.GetAuthorURL(link) & "#"
+        Item("Internet") = fic.Author & "#" & fic.AuthorURL & "#"
 
         dt.Rows(grdDB.CurrentRow.Index). _
-        Item("StoryId") = myCaller.cls.GetStoryID(myCaller.txtUrl.Text)
+        Item("StoryId") = id
 
         dt.Rows(grdDB.CurrentRow.Index). _
         Item("Complete") = False
         dt.Rows(grdDB.CurrentRow.Index). _
         Item("Abandoned") = False
 
-        dte = CDate( _
-                     Replace( _
-                              frmMain.lblPublish.Text, _
-                              "Published:", _
-                              "" _
-                            ) _
-                   )
+        dte = fic.PublishDate
 
         dt.Rows(grdDB.CurrentRow.Index). _
         Item("Publish_Date") = dte

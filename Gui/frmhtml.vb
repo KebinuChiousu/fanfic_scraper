@@ -3,6 +3,7 @@ Imports System.io
 
 Public Class Html
 
+    Dim BL As New clsBL
 
 #Region "Drag and Drop / File Browsing"
 
@@ -66,7 +67,7 @@ Public Class Html
 
         CleanHTML(html)
 
-        frmMain.ProcessChapter(html, txtPrefix.Text, txtChapter.Text)
+        BL.ProcessChapter(html, txtPrefix.Text, txtChapter.Text)
 
     End Sub
 

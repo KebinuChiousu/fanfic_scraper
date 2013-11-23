@@ -329,6 +329,7 @@ Retry:
 
         Dim index As Integer
 
+        Dim rss_url As String
 
         ' Story Name
         fic.Title = dsRSS.Tables("entry"). _
@@ -339,6 +340,11 @@ Retry:
         ' Story Author
         fic.Author = dsRSS.Tables("author"). _
                           Rows(idx).Item(0)
+
+        rss_url = fic.Author
+
+        fic.AuthorURL = GetAuthorURL(rss_url)
+
         ' Story Location
         fic.StoryURL = dsRSS.Tables("link"). _
                           Rows(idx).Item(1)
@@ -427,6 +433,11 @@ Retry:
     Public Overrides Function GetAuthorURL(ByVal link As String) As String
 
         Dim ret As String
+
+        If InStr(link, Me.HostName) = 0 Then
+            link = Replace(link, ".", "")
+            link = "http://www.fanfiction.net/~" & link
+        End If
 
         ret = Replace(link, "atom/", "")
 

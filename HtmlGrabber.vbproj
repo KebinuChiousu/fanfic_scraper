@@ -218,6 +218,7 @@
     <Compile Include="AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BusinessLogic\clsBL.vb" />
     <Compile Include="Data\DAL\clsDAL.vb" />
     <Compile Include="Data\DAL\nHibernate\Database\clsSQLite.vb" />
     <Compile Include="Data\DAL\nHibernate\nHibernateHelper.vb" />
@@ -254,14 +255,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="BL\Sites\clsAFF.vb" />
-    <Compile Include="BL\Sites\Base\clsFanfic.vb" />
-    <Compile Include="BL\Sites\clsFicWad.vb" />
-    <Compile Include="BL\Sites\clsMM.vb" />
+    <Compile Include="BusinessLogic\Sites\clsAFF.vb" />
+    <Compile Include="BusinessLogic\Sites\Base\clsFanfic.vb" />
+    <Compile Include="BusinessLogic\Sites\clsFicWad.vb" />
+    <Compile Include="BusinessLogic\Sites\clsMM.vb" />
     <Compile Include="Utility\Browser\clsCookie.vb" />
     <Compile Include="Utility\Browser\HTML\modHTML.vb" />
     <Compile Include="Utility\Browser\XML\modRSS.vb" />
-    <Compile Include="BL\Sites\clsFFNet.vb">
+    <Compile Include="BusinessLogic\Sites\clsFFNet.vb">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Gui\frmDebug.vb">

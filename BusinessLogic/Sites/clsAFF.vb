@@ -668,7 +668,7 @@ Class AFF
 
     Public Overrides ReadOnly Property Name() As String
         Get
-            Return "Adult FanFiction"
+            Return "AFF"
         End Get
     End Property
 

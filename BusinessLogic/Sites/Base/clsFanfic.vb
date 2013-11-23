@@ -218,6 +218,7 @@ Public MustInherit Class clsFanfic
         Dim AuthorURL As String
         Dim StoryURL As String
         Dim Category As String
+        Dim Chapters() As String
         Dim ChapterCount As String
         Dim PublishDate As String
         Dim UpdateDate As String
