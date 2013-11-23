@@ -328,8 +328,6 @@ Public Class Debug
 
 #Region "Interface Code"
 
-
-
     Private Sub UpdateRec( _
                             ByVal sender As System.Object, _
                             ByVal e As System.EventArgs _
@@ -550,7 +548,7 @@ Public Class Debug
             link = dt.Rows(grdDB.CurrentRow.Index).Item("Internet")
             link = Replace(link, "#", "")
 
-            ret = myCaller.BL.CheckUrl(link)
+            ret = BL.CheckUrl(link)
 
         End If
 
@@ -580,7 +578,7 @@ Public Class Debug
 
         frmMain.txtFileMask.Text = folder & "-"
 
-        check = InStr(LCase(frmMain.txtSource.Text), frmMain.BL.ErrorMessage) <> 0
+        check = InStr(LCase(frmMain.txtSource.Text), BL.ErrorMessage) <> 0
 
         If check Then
             frmMain.lblChapterCount.Text = _
@@ -780,23 +778,18 @@ bypass:
                                ByVal e As System.EventArgs _
                              ) Handles btnSave.Click
 
-        Dim BL As clsBL
         Dim fic As clsFanfic.Story
         Dim id As String
-
         Dim dt As DataTable
-
-        BL = myCaller.BL
-
-        dt = grdDB.DataSource
-
-        Dim NewRow As Integer = dt.Rows.Count
-
+        Dim NewRow As Integer
         Dim iYesNo As Integer
-
         Dim link As String
         Dim folder As String
         Dim cat_id As Integer
+
+        dt = grdDB.DataSource
+
+        NewRow = dt.Rows.Count
 
         iYesNo = MsgBox("Add New Record?", MsgBoxStyle.YesNo)
         cat_id = CInt(cmbChooseDB.SelectedValue)
@@ -1059,7 +1052,7 @@ bypass:
             If StoryID = "" Then
                 link = ""
             Else
-                link = myCaller.BL.GetStoryURL(StoryID)
+                link = BL.GetStoryURL(StoryID)
             End If
 
         End If
@@ -1111,14 +1104,12 @@ bypass:
 
     Private Sub UpdateRecord()
 
-        Dim BL As clsBL
         Dim fic As clsFanfic.Story
         Dim id As String
         Dim link As String
         Dim dt As DataTable
         Dim dte As Date
 
-        BL = myCaller.BL
         dt = grdDB.DataSource
 
         link = myCaller.txtUrl.Text

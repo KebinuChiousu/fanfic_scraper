@@ -367,7 +367,6 @@ Public Class HtmlGrabber
 #End Region
 
     'Declarations used within class
-    Public BL As New clsBL
     Public clsname As String
 
     Dim Title As String
