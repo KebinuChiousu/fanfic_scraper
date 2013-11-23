@@ -39,50 +39,83 @@ Public Class frmPath
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents txtPath As System.Windows.Forms.TextBox
     Friend WithEvents btnPath As System.Windows.Forms.Button
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents txtOutput As System.Windows.Forms.TextBox
+    Friend WithEvents btnOutput As System.Windows.Forms.Button
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.txtPath = New System.Windows.Forms.TextBox
-        Me.btnUpdate = New System.Windows.Forms.Button
-        Me.btnPath = New System.Windows.Forms.Button
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtPath = New System.Windows.Forms.TextBox()
+        Me.btnUpdate = New System.Windows.Forms.Button()
+        Me.btnPath = New System.Windows.Forms.Button()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.txtOutput = New System.Windows.Forms.TextBox()
+        Me.btnOutput = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(8, 8)
+        Me.Label1.Location = New System.Drawing.Point(10, 9)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(120, 16)
+        Me.Label1.Size = New System.Drawing.Size(144, 19)
         Me.Label1.TabIndex = 0
         Me.Label1.Tag = "FanFic"
         Me.Label1.Text = "FanFic Database Path"
         '
         'txtPath
         '
-        Me.txtPath.Location = New System.Drawing.Point(8, 24)
+        Me.txtPath.Location = New System.Drawing.Point(10, 28)
         Me.txtPath.Name = "txtPath"
-        Me.txtPath.Size = New System.Drawing.Size(336, 20)
+        Me.txtPath.Size = New System.Drawing.Size(403, 22)
         Me.txtPath.TabIndex = 1
         '
         'btnUpdate
         '
-        Me.btnUpdate.Location = New System.Drawing.Point(125, 50)
+        Me.btnUpdate.Location = New System.Drawing.Point(155, 102)
         Me.btnUpdate.Name = "btnUpdate"
-        Me.btnUpdate.Size = New System.Drawing.Size(136, 32)
+        Me.btnUpdate.Size = New System.Drawing.Size(163, 37)
         Me.btnUpdate.TabIndex = 4
         Me.btnUpdate.Text = "Update INI File"
         '
         'btnPath
         '
-        Me.btnPath.Location = New System.Drawing.Point(352, 24)
+        Me.btnPath.Location = New System.Drawing.Point(422, 28)
         Me.btnPath.Name = "btnPath"
-        Me.btnPath.Size = New System.Drawing.Size(24, 20)
+        Me.btnPath.Size = New System.Drawing.Size(29, 23)
         Me.btnPath.TabIndex = 5
         Me.btnPath.Text = "..."
         '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(10, 53)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(95, 17)
+        Me.Label2.TabIndex = 6
+        Me.Label2.Text = "Output Folder"
+        '
+        'txtOutput
+        '
+        Me.txtOutput.Location = New System.Drawing.Point(10, 73)
+        Me.txtOutput.Name = "txtOutput"
+        Me.txtOutput.Size = New System.Drawing.Size(403, 22)
+        Me.txtOutput.TabIndex = 7
+        '
+        'btnOutput
+        '
+        Me.btnOutput.Location = New System.Drawing.Point(422, 72)
+        Me.btnOutput.Name = "btnOutput"
+        Me.btnOutput.Size = New System.Drawing.Size(29, 23)
+        Me.btnOutput.TabIndex = 8
+        Me.btnOutput.Text = "..."
+        '
         'frmPath
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(384, 89)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
+        Me.ClientSize = New System.Drawing.Size(469, 151)
+        Me.Controls.Add(Me.btnOutput)
+        Me.Controls.Add(Me.txtOutput)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.btnPath)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.txtPath)
@@ -101,12 +134,12 @@ Public Class frmPath
                                  ByVal e As System.EventArgs _
                                 ) Handles btnPath.Click
         Dim dlg As OpenFileDialog = New OpenFileDialog
-        
+
         dlg.DefaultExt = "db"
         'dlg.Filter = "Access Database|*.mdb|SQL Lite Database|*.db"
         dlg.Filter = "SQL Lite Database|*.db"
-        
-        dlg.CheckFileExists = True
+
+        dlg.CheckFileExists = False
         dlg.CheckPathExists = True
         dlg.Title = "Select Path to Database."
         Try
@@ -116,6 +149,30 @@ Public Class frmPath
         Catch ex As Exception
             MessageBox.Show(ex.Message)
         End Try
+    End Sub
+
+    Private Sub btnOutput_Click(sender As System.Object, e As System.EventArgs) Handles btnOutput.Click
+
+        Dim dlg As OpenFileDialog = New OpenFileDialog
+
+        Dim temp As String
+
+        dlg.DefaultExt = "htm"
+        dlg.Filter = "HTML File|*.htm|Text File|*.txt"
+
+        dlg.CheckFileExists = False
+        dlg.CheckPathExists = True
+        dlg.Title = "Select Path to Output Folder."
+
+        Try
+            If dlg.ShowDialog() = DialogResult.OK Then
+                temp = dlg.FileName
+                txtOutput.Text = System.IO.Path.GetDirectoryName(temp)
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message)
+        End Try
+
     End Sub
 
     Private Sub frmPath_Load( _
@@ -164,18 +221,24 @@ Public Class frmPath
 
     Sub InitIniFile()
 
+        Dim OutputFolder As String
+
+        OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+
         Dim fi As FileInfo
         Dim sc As StringCollection
         fi = New FileInfo(Application.StartupPath & "\\" & "config.ini")
         If fi.Exists Then
             ifr = New IniFileReader(Application.StartupPath & "\config.ini", True)
             txtPath.Text = ifr.GetIniValue("FanFic", "Path")
+            txtOutput.Text = ifr.GetIniValue("Output", "Path")
         Else
             ifr = New IniFileReader(Application.StartupPath & "\config.ini", True)
             sc = ifr.GetIniComments(Nothing)
             sc.Add("Fanfiction Downloader DB Configuration")
             ifr.SetIniComments(Nothing, sc)
             ifr.SetIniValue("FanFic", "Path", "No Path Set")
+            ifr.SetIniValue("Output", "Path", OutputFolder)
             ifr.OutputFilename = Application.StartupPath & "\config.ini"
             ifr.SaveAsIniFile()
         End If
@@ -184,10 +247,20 @@ Public Class frmPath
 
     Sub UpdateIniFile()
 
+        Dim OutputFolder As String
+
+        OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+
         If txtPath.Text = "" Then
             ifr.SetIniValue("FanFic", "Path", "No Path Set")
         Else
             ifr.SetIniValue("FanFic", "Path", txtPath.Text)
+        End If
+
+        If txtOutput.Text = "" Then
+            ifr.SetIniValue("Output", "Path", OutputFolder)
+        Else
+            ifr.SetIniValue("Output", "Path", txtOutput.Text)
         End If
 
         ifr.OutputFilename = Application.StartupPath & "\config.ini"
@@ -203,18 +276,31 @@ Public Class frmPath
     Sub InitConfigFile()
 
         txtPath.Text = conf.GetPath("FanFic")
+        txtOutput.Text = conf.GetConfigValue("Output")
 
     End Sub
 
     Sub UpdateConfigFile()
 
+        Dim OutputFolder As String
+
+        OutputFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+
         If txtPath.Text <> "" Then
             conf.UpdateConnStr("FanFic", txtPath.Text)
         End If
+
+        If txtOutput.Text = "" Then
+            conf.SetConfigValue("Output", OutputFolder)
+        Else
+            conf.SetConfigValue("Output", txtOutput.Text)
+        End If
+
 
     End Sub
 
 #End Region
 
+   
 End Class
 

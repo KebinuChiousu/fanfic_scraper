@@ -228,25 +228,25 @@
     <Compile Include="Data\DAL\nHibernate\Mapping\FanficMap.vb" />
     <Compile Include="Data\DAL\nHibernate\Tables\Category.vb" />
     <Compile Include="Data\DAL\nHibernate\Tables\Fanfic.vb" />
-    <Compile Include="frmCategory.Designer.vb">
+    <Compile Include="Gui\frmCategory.Designer.vb">
       <DependentUpon>frmCategory.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmCategory.vb">
+    <Compile Include="Gui\frmCategory.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmHtml.Designer.vb">
+    <Compile Include="Gui\frmHtml.Designer.vb">
       <DependentUpon>frmHtml.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmHtml.vb">
+    <Compile Include="Gui\frmHtml.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmPath.vb">
+    <Compile Include="Gui\frmPath.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmStory.Designer.vb">
+    <Compile Include="Gui\frmStory.Designer.vb">
       <DependentUpon>frmStory.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmStory.vb">
+    <Compile Include="Gui\frmStory.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\Settings1.Designer.vb">
@@ -254,20 +254,20 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Sites\clsAFF.vb" />
-    <Compile Include="Sites\Base\clsFanfic.vb" />
-    <Compile Include="Sites\clsFicWad.vb" />
-    <Compile Include="Sites\clsMM.vb" />
+    <Compile Include="BL\Sites\clsAFF.vb" />
+    <Compile Include="BL\Sites\Base\clsFanfic.vb" />
+    <Compile Include="BL\Sites\clsFicWad.vb" />
+    <Compile Include="BL\Sites\clsMM.vb" />
     <Compile Include="Utility\Browser\clsCookie.vb" />
     <Compile Include="Utility\Browser\HTML\modHTML.vb" />
     <Compile Include="Utility\Browser\XML\modRSS.vb" />
-    <Compile Include="Sites\clsFFNet.vb">
+    <Compile Include="BL\Sites\clsFFNet.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="frmDebug.vb">
+    <Compile Include="Gui\frmDebug.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.vb">
+    <Compile Include="Gui\frmMain.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Utility\Browser\clsWeb.vb">
@@ -284,26 +284,26 @@
     <Compile Include="Utility\Browser\XML\modStripTags.vb" />
     <Compile Include="Utility\Browser\XML\modXML.vb" />
     <Compile Include="Utility\Browser\XML\modXMLUtilty.vb" />
-    <EmbeddedResource Include="frmCategory.resx">
+    <EmbeddedResource Include="Gui\frmCategory.resx">
       <DependentUpon>frmCategory.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmDebug.resx">
+    <EmbeddedResource Include="Gui\frmDebug.resx">
       <DependentUpon>frmDebug.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmHtml.resx">
+    <EmbeddedResource Include="Gui\frmHtml.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmHtml.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMain.resx">
+    <EmbeddedResource Include="Gui\frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPath.resx">
+    <EmbeddedResource Include="Gui\frmPath.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmPath.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmStory.resx">
+    <EmbeddedResource Include="Gui\frmStory.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmStory.vb</DependentUpon>
     </EmbeddedResource>
@@ -313,9 +313,6 @@
       <LastGenOutput>Settings1.Designer.vb</LastGenOutput>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="x64\SQLite.Interop.dll">
