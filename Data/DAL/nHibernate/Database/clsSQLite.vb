@@ -382,15 +382,19 @@ Public Class SQLite
     ''' <summary>
     ''' Extracts path to SQLite Database from Connection String
     ''' </summary>
-    ''' <param name="ConnStr">SQLite Connection String</param>
+    ''' <param name="csName">SQLite Connection String Name</param>
     ''' <returns>Path to SQLite Database</returns>
     ''' <remarks></remarks>
     Public Overrides _
-    Function GetPath(ConnStr As String) As String
+    Function GetPath(csName As String) As String
 
         Dim Conn() As String
         Dim path As String = ""
         Dim index As Integer
+
+        Dim ConnStr As String
+
+        ConnStr = MyBase.GetConnStr(csName)
 
         Try
             Conn = Split(ConnStr, ";")
