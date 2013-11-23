@@ -75,39 +75,29 @@ Class FFNet
 
         Dim ret As String = ""
 
-        Dim xmldoc As New XmlDocument
+        Dim author As String = GrabAuthor(htmlDoc)
+        Dim rss_link As String = author
+        Dim fic As clsFanfic.Story = Nothing
 
-        xmldoc.LoadXml(htmlDoc)
+Retry:
 
-        Dim temp As String = ""
-        Dim XmlList As XmlNodeList
-        Dim node As XmlNode
-        Dim count As Integer
-
-        XmlList = GetNodes(xmldoc, "//div")
-
-        For count = 0 To XmlList.Count - 1
-            node = XmlList(count)
-            temp = node.InnerXml
-            If InStr(temp, title) <> 0 Then
-                temp = node.InnerText
-                Exit For
-            End If
-        Next
-
-        Dim sstart As Integer
-
-
-        sstart = InStr(temp, title)
-
-        If sstart > 0 Then
-            sstart += Len(title)
-            ret = Mid(temp, sstart, 8)
-        Else
-            ret = ""
+        If IsNothing(datasetRSS) Then
+            MyBase.GrabFeed(rss_link)
         End If
 
-        xmldoc = Nothing
+        fic = GetStoryInfoByID(GetStoryID(StoryURL))
+
+        If LCase(fic.Author) <> LCase(author) Then
+            datasetRSS = Nothing
+            GoTo Retry
+        End If
+
+        Select Case title
+            Case "Published: "
+                ret = fic.PublishDate
+            Case "Updated: "
+                ret = fic.UpdateDate
+        End Select
 
         Return ret
 
@@ -124,24 +114,15 @@ Class FFNet
         Dim XmlList As XmlNodeList
         Dim node As XmlNode
         Dim count As Integer
-        Dim XmlList2 As XmlNodeList
 
-        XmlList = GetNodes(xmldoc, "//td")
+        XmlList = GetNodes(xmldoc, "//a")
 
         For count = 0 To XmlList.Count - 1
             node = XmlList(count)
-            temp = node.InnerXml
-            If InStr(temp, "Author") <> 0 Then
-                XmlList2 = node.SelectNodes(".//a")
-                Try
-                    node = XmlList2(0)
-                    temp = node.InnerText
-                Catch
-                    temp = ""
-                End Try
-                If temp <> "" Then
-                    Exit For
-                End If
+            temp = node.OuterXml
+            If InStr(temp, "/u/") <> 0 Then
+                temp = node.InnerText
+                Exit For
             End If
         Next
 
@@ -203,18 +184,27 @@ Class FFNet
         Dim htmldoc As String
 
         htmldoc = MyBase.GrabData(url)
-
-        StripTags(htmldoc, "menulinks", paramType.Attribute)
-        StripTags(htmldoc, "menu-child xxhide", paramType.Attribute)
-        StripTags(htmldoc, "xxmenu", paramType.Attribute)
+        
+        StripTags(htmldoc, "menu", paramType.Attribute, partialM.Yes)
         StripTags(htmldoc, "javascript", paramType.Attribute, partialM.Yes)
         StripTags(htmldoc, "a2a", paramType.Attribute, partialM.Yes)
+
+        'StripTags(htmldoc, "a", paramType.Tag, partialM.No)
+        StripTags(htmldoc, "button", paramType.Tag, partialM.Yes)
+        StripTags(htmldoc, "link", paramType.Tag, partialM.Yes)
+        StripTags(htmldoc, "img", paramType.Tag, partialM.Yes)
+        StripTags(htmldoc, "script", paramType.Tag, partialM.Yes)
+        StripTags(htmldoc, "style", paramType.Tag, partialM.Yes)
+        StripTags(htmldoc, "meta", paramType.Tag, partialM.Yes)
+
+        StripTags(htmldoc, "dropdown", paramType.Attribute, partialM.Yes)
+        StripTags(htmldoc, "cursor", paramType.Attribute, partialM.Yes)
 
         Return htmldoc
 
     End Function
 
-    Public Overrides Function GrabFeed(ByRef rss As String) As System.Xml.XmlDocument
+    Protected Overrides Function GrabFeedData(ByRef rss As String) As System.Xml.XmlDocument
 
         Dim txtatom As String
         Dim txtresult As String
@@ -269,22 +259,30 @@ Class FFNet
             xmldoc = CleanFeed(xmldoc)
         End If
 
+        If Not IsNothing(xmldoc) Then
+
+        End If
+
         Return xmldoc
 
     End Function
 
     Public Overrides _
-    Function InitialDownload(ByVal url As String) As String
+    Function InitialDownload(ByVal link As String) As String
 
         Dim host As String
         Dim htmlDoc As String
 
-        host = "http://www.fanfiction.net/s/"
-        url = Replace(url, host, "")
-        host = host & Mid(url, 1, InStr(url, "/") - 1)
-        url = host & "/1/"
+        Dim URL As URL
 
-        htmlDoc = GrabData(url)
+        URL = ExtractUrl(link)
+
+        host = URL.Scheme & "://" & URL.Host & "/s/"
+        link = Replace(link, host, "")
+        host = host & Mid(link, 1, InStr(link, "/") - 1)
+        link = host & "/1/"
+
+        htmlDoc = GrabData(link)
 
         InitialDownload = htmlDoc
 
@@ -299,7 +297,12 @@ Class FFNet
         Dim host As String
         Dim temp As String
         Dim params() As String
-        host = "http://www.fanfiction.net/s/"
+
+        Dim url As URL
+
+        url = ExtractUrl(link)
+
+        host = url.Scheme & "://" & url.Host & "/s/"
 
         temp = Replace(link, host, "")
         params = Split(temp, "/")
@@ -314,9 +317,9 @@ Class FFNet
 
     End Function
 
+    Public Overrides Function GrabStoryInfo(ByVal idx As Integer) As clsFanfic.Story
 
-
-    Public Overrides Function GrabStoryInfo(ByRef dsRSS As System.Data.DataSet, ByVal idx As Integer) As clsFanfic.Story
+        Dim dsRSS As DataSet = MyBase.datasetRSS
 
         Dim fic As New clsFanfic.Story
 
@@ -331,7 +334,7 @@ Class FFNet
         fic.Title = dsRSS.Tables("entry"). _
                         Rows(idx).Item("title")
 
-        
+
 
         ' Story Author
         fic.Author = dsRSS.Tables("author"). _
