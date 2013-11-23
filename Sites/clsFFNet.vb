@@ -382,12 +382,12 @@ Retry:
                          Rows(idx).Item("id")
         fic.UpdateDate = Split(fic.UpdateDate, ",")(1)
         fic.UpdateDate = Split(fic.UpdateDate, ":")(0)
-        fic.UpdateDate = "Updated: " & CDate(fic.UpdateDate).ToShortDateString
+        fic.UpdateDate = CDate(fic.UpdateDate).ToShortDateString
 
         'Published
         fic.PublishDate = dsRSS.Tables("entry"). _
                           Rows(idx).Item("published")
-        fic.PublishDate = "Published: " & CDate(fic.PublishDate).ToShortDateString
+        fic.PublishDate = CDate(fic.PublishDate).ToShortDateString
 
         'Summary
 
