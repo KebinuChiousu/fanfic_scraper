@@ -275,8 +275,19 @@ Public Class frmPath
 
     Sub InitConfigFile()
 
-        txtPath.Text = conf.GetPath("FanFic")
-        txtOutput.Text = conf.GetConfigValue("Output")
+        Dim Path As String = ""
+        Dim Output As String = ""
+
+        Path = conf.GetPath("FanFic")
+        Output = conf.GetConfigValue("Output")
+
+        If Path <> "" Then
+            txtPath.Text = Path
+        End If
+
+        If Output <> "" Then
+            txtOutput.Text = Output
+        End If
 
     End Sub
 
