@@ -3,6 +3,7 @@ Imports System.text
 Imports System.net
 Imports System.IO
 Imports System.Xml
+Imports HtmlAgilityPack
 
 Class FFNet
     Inherits clsFanfic
@@ -13,19 +14,17 @@ Class FFNet
 
     Public Overrides _
     Function GrabTitle( _
-                        ByVal htmlDoc As String _
+                        ByVal htmldoc As String _
                       ) As String
 
-        Dim xmldoc As New XmlDocument
-
-        xmldoc.LoadXml(htmlDoc)
-
+        Dim value As String
+        Dim doc As HtmlDocument
         Dim ch As Integer = 0
-
         Dim title As String
 
-        Dim value As String = GetFirstNodeValue(xmldoc, "//title")
+        doc = CleanHTML(htmldoc)
 
+        value = doc.DocumentNode.SelectSingleNode("//title").InnerText
         value = Replace(value, "| FanFiction", "")
 
         ch = InStr(value, "Chapter")
@@ -39,29 +38,28 @@ Class FFNet
 
         End If
 
-        xmldoc = Nothing
+        doc = Nothing
 
         Return value
 
-
     End Function
-
 
     Public Overrides _
     Function GrabSeries(ByVal htmlDoc As String) As String
 
-        Dim xmldoc As New XmlDocument
+        Dim value As String
+        Dim doc As HtmlDocument
 
-        xmldoc.LoadXml(htmlDoc)
+        doc = CleanHTML(htmlDoc)
 
-        Dim value As String = GetFirstNodeValue(xmldoc, "//title")
+        value = doc.DocumentNode.SelectSingleNode("//title").InnerText
         value = Replace(value, "| FanFiction", "")
 
         If value <> "" Then
             value = Trim(Mid(value, LastPos(value, ",") + 1))
         End If
 
-        xmldoc = Nothing
+        doc = Nothing
 
         Return value
 
@@ -96,7 +94,11 @@ Retry:
             Case "Published: "
                 ret = fic.PublishDate
             Case "Updated: "
-                ret = fic.UpdateDate
+                If CDate(fic.PublishDate) > CDate(fic.UpdateDate) Then
+                    ret = fic.PublishDate
+                Else
+                    ret = fic.UpdateDate
+                End If
         End Select
 
         Return ret
@@ -106,53 +108,43 @@ Retry:
     Public Overrides _
     Function GrabAuthor(ByVal htmldoc As String) As String
 
-        Dim xmldoc As New XmlDocument
+        Dim ret As String
+        Dim temp As HtmlNodeCollection
+        Dim doc As HtmlDocument
 
-        xmldoc.LoadXml(htmldoc)
+        doc = CleanHTML(htmldoc)
 
-        Dim temp As String = ""
-        Dim XmlList As XmlNodeList
-        Dim node As XmlNode
-        Dim count As Integer
+        temp = FindLinksByHref(doc.DocumentNode, "/u/")
 
-        XmlList = GetNodes(xmldoc, "//a")
+        ret = temp(0).InnerText
 
-        For count = 0 To XmlList.Count - 1
-            node = XmlList(count)
-            temp = node.OuterXml
-            If InStr(temp, "/u/") <> 0 Then
-                temp = node.InnerText
-                Exit For
-            End If
-        Next
+        temp = Nothing
+        doc = Nothing
 
-        xmldoc = Nothing
-
-        GrabAuthor = temp
+        Return ret
 
     End Function
 
     Public Overrides _
     Function GrabBody(ByVal htmldoc As String) As String
 
-        Dim xmldoc As New XmlDocument
+        Dim ret As String = ""
 
-        xmldoc.LoadXml(htmldoc)
+        Dim doc As HtmlDocument
+        Dim temp As HtmlNodeCollection
 
-        Dim XmlList As XmlNodeList
-        Dim value As String
+        doc = CleanHTML(htmldoc)
 
-        XmlList = GetNodes(xmldoc, "//div[@id='storytext']")
+        temp = doc.DocumentNode.SelectNodes("//div[@id='storytext']")
 
-        Try
-            value = XmlList(0).InnerXml
-        Catch
-            value = xmldoc.InnerXml
-        End Try
+        htmldoc = temp(0).InnerHtml
 
-        xmldoc = Nothing
+        doc = Nothing
+        temp = Nothing
 
-        Return value
+        ret = htmldoc
+
+        Return ret
 
     End Function
 
@@ -184,21 +176,16 @@ Retry:
         Dim htmldoc As String
 
         htmldoc = MyBase.GrabData(url)
-        
-        StripTags(htmldoc, "menu", paramType.Attribute, partialM.Yes)
-        StripTags(htmldoc, "javascript", paramType.Attribute, partialM.Yes)
-        StripTags(htmldoc, "a2a", paramType.Attribute, partialM.Yes)
 
-        'StripTags(htmldoc, "a", paramType.Tag, partialM.No)
-        StripTags(htmldoc, "button", paramType.Tag, partialM.Yes)
-        StripTags(htmldoc, "link", paramType.Tag, partialM.Yes)
-        StripTags(htmldoc, "img", paramType.Tag, partialM.Yes)
-        StripTags(htmldoc, "script", paramType.Tag, partialM.Yes)
-        StripTags(htmldoc, "style", paramType.Tag, partialM.Yes)
-        StripTags(htmldoc, "meta", paramType.Tag, partialM.Yes)
+        StripTag(htmldoc, "class", "menu", partialM.Yes)
+        StripTag(htmldoc, "clsas", "dropdown", partialM.Yes)
 
-        StripTags(htmldoc, "dropdown", paramType.Attribute, partialM.Yes)
-        StripTags(htmldoc, "cursor", paramType.Attribute, partialM.Yes)
+        StripTag(htmldoc, "button")
+        StripTag(htmldoc, "link")
+        StripTag(htmldoc, "img")
+        StripTag(htmldoc, "script")
+        StripTag(htmldoc, "style")
+        StripTag(htmldoc, "meta")
 
         Return htmldoc
 

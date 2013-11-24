@@ -1,3 +1,4 @@
+Imports HtmlAgilityPack
 Imports System.Xml
 Imports System.Data
 Imports System.Web.HttpUtility
@@ -92,9 +93,9 @@ Public MustInherit Class clsFanfic
                               Optional ByVal param As String = "" _
                             ) As String()
 
-        Dim xmldoc As New XmlDocument
+        Dim doc As HtmlDocument
 
-        xmldoc.LoadXml(htmlDoc)
+        doc = CleanHTML(htmlDoc)
 
         Dim result As String = ""
         Dim values() As String
@@ -102,46 +103,45 @@ Public MustInherit Class clsFanfic
 
         ReDim values(0)
 
-        Dim XmlList As XmlNodeList
+        Dim temp As HtmlNodeCollection
 
         If param = "" Then
-            XmlList = GetNodes(xmldoc, "//select")
+            temp = doc.DocumentNode.SelectNodes("//select")
         Else
-            XmlList = GetNodes(xmldoc, "//select[@title='" & param & "']")
+            temp = doc.DocumentNode.SelectNodes("//select[@title='" & param & "']")
         End If
 
 
-        If XmlList.Count = 0 Then
+        If temp.Count = 0 Then
             Return Nothing
         End If
 
-        result = XmlList(0).InnerXml
-
-        Dim xml_doc As New XmlDocument
+        result = temp(0).InnerHtml
 
         result = "<select>" & result & "</select>"
 
-        xml_doc.LoadXml(result)
+        doc = CleanHTML(result)
 
         Dim count As Integer
-        Dim node As XmlNode
+        Dim node As HtmlNode
 
-        With xml_doc.DocumentElement.ChildNodes
+        temp = doc.DocumentNode.SelectNodes("//option")
 
+        With temp
 
             For count = 0 To (.Count - 1)
                 node = .Item(count)
 
-                If node.InnerText <> "" Then
+                If node.NextSibling.InnerText <> "" Then
                     ReDim Preserve values(idx)
-                    values(idx) = node.InnerText
+                    values(idx) = node.NextSibling.InnerText
                     idx = idx + 1
                 End If
             Next
 
         End With
 
-        xmldoc = Nothing
+        doc = Nothing
 
         Return values
 

@@ -2,6 +2,11 @@ Imports System.Xml
 
 Module modXMLUtilty
 
+    Public Enum paramType
+        Tag = 1
+        Attribute = 2
+    End Enum
+
     Function GetNodes( _
                        ByVal xmldoc As XmlDocument, _
                        ByVal xpath As String _

@@ -37,7 +37,7 @@ Module modXML
 
         xml = ConvertXMLtoFeed(source.OuterXml, filter)
 
-        StripTags(xml, "dd")
+        StripTag(xml, "dd")
 
         xmlDoc.LoadXml(xml)
 

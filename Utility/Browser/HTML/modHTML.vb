@@ -15,6 +15,7 @@ Module modHTML
 
         doc.LoadHtml(html)
 
+        doc.OptionFixNestedTags = True
         doc.OptionOutputAsXml = True
 
         doc.Save(outputFile)
@@ -78,6 +79,19 @@ Module modHTML
         Return ret
 
 
+
+    End Function
+
+    Function GetHTMLNodes( _
+                           ByVal htmldoc As HtmlDocument, _
+                           ByVal xpath As String _
+                         ) As HtmlNodeCollection
+
+        Dim XmlList As HtmlNodeCollection
+
+        XmlList = htmldoc.DocumentNode.SelectNodes(xpath)
+
+        Return XmlList
 
     End Function
 

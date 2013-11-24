@@ -548,7 +548,11 @@ Public Class Debug
 
             params = Split(link, "#")
 
-            link = params(1)
+            If UBound(params) > 0 Then
+                link = params(1)
+            Else
+                link = params(0)
+            End If
 
             ret = BL.CheckUrl(link)
 
@@ -1174,4 +1178,5 @@ bypass:
 
     End Sub
 
+    
 End Class
