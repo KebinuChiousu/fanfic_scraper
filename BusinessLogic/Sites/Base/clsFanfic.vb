@@ -111,6 +111,9 @@ Public MustInherit Class clsFanfic
             temp = doc.DocumentNode.SelectNodes("//select[@title='" & param & "']")
         End If
 
+        If IsNothing(temp) Then
+            Return Nothing
+        End If
 
         If temp.Count = 0 Then
             Return Nothing
