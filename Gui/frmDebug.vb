@@ -522,9 +522,6 @@ Public Class Debug
         tsDelta = Date.Today.Subtract(last_checked)
         If tsDelta.Days < wait Then
             ret = True
-        Else
-            dt.Rows(pos).Item("Last_Checked") = CDate(Date.Today)
-            UpdateData(dt)
         End If
 
         Return ret
@@ -539,6 +536,8 @@ Public Class Debug
         Dim ret As Boolean = False
         Dim link As String
 
+        Dim params() As String
+
         If dt.Rows(grdDB.CurrentRow.Index). _
            Item("Internet").GetType Is GetType(DBNull) _
         Then
@@ -546,7 +545,10 @@ Public Class Debug
         Else
 
             link = dt.Rows(grdDB.CurrentRow.Index).Item("Internet")
-            link = Replace(link, "#", "")
+
+            params = Split(link, "#")
+
+            link = params(1)
 
             ret = BL.CheckUrl(link)
 
@@ -558,61 +560,55 @@ Public Class Debug
 
 #End Region
 
-
     Sub ProcessStory( _
                       ByVal dt As DataTable, _
-                      ByVal pos As Long _
+                      ByVal pos As Long, _
+                      ByVal link As String _
                     )
 
+        Dim fic As clsFanfic.Story
         Dim folder As String
         Dim check As Boolean
+        Dim current As Integer
+        Dim start As Integer
 
-        frmMain.lblTitle.Text = dt.Rows(pos). _
-                                Item("Title")
-
-        frmMain.txtStart.Text = dt.Rows(pos). _
-                                Item("Count") + 1
-
-        folder = dt.Rows(pos). _
-                 Item("Folder")
-
-        frmMain.txtFileMask.Text = folder & "-"
-
-        check = InStr(LCase(frmMain.txtSource.Text), BL.ErrorMessage) <> 0
+        check = BL.GetChapters(link)
 
         If check Then
-            frmMain.lblChapterCount.Text = _
-                 CInt(dt.Rows(pos).Item("Count")) + 1
-            frmMain.DownloadData()
-            Exit Sub
-        End If
 
-        If dt.Rows(pos).Item("Publish_Date").ToString = "" Then
-            dt.Rows(pos).Item("Publish_Date") = CDate(frmMain.lblPublish.Text)
-            UpdateData(dt)
-        End If
+            fic = BL.FanFic
 
-        'If folder = "RTP2" Then
-        '    System.Diagnostics.Debugger.Break()
-        'End If
+            start = CInt(dt.Rows(pos).Item("Count") + 1)
 
-        If frmMain.lblChapterCount.Text > _
-           dt.Rows(pos).Item("Count") _
-        Then
+            frmMain.UpdateUI(fic, BL.Result, start)
 
-            dt.Rows(pos).Item("Count") = CInt(frmMain.lblChapterCount.Text)
+            Application.DoEvents()
 
-            If frmMain.lblUpdate.Text = "" Then
-                frmMain.lblUpdate.Text = frmMain.lblPublish.Text
-            End If
+            folder = dt.Rows(pos).Item("Folder")
+
+            frmMain.txtFileMask.Text = folder & "-"
 
             If dt.Rows(pos).Item("Publish_Date").ToString = "" Then
-                dt.Rows(pos).Item("Update_Date") = CDate(frmMain.lblPublish.Text)
+                dt.Rows(pos).Item("Publish_Date") = CDate(fic.PublishDate)
+                UpdateData(dt)
             End If
 
-            dt.Rows(pos).Item("Update_Date") = CDate(frmMain.lblUpdate.Text)
+            current = dt.Rows(pos).Item("Count")
 
-            frmMain.DownloadData()
+            If CInt(fic.ChapterCount) > current Then
+
+                dt.Rows(pos).Item("Update_Date") = CDate(fic.UpdateDate)
+                dt.Rows(pos).Item("Count") = CInt(fic.ChapterCount)
+
+                BL.ProcessChapters(link, start, fic.ChapterCount, folder, cmbChooseDB.Text)
+
+            Else
+                If CInt(fic.ChapterCount) < current Then
+                    dt.Rows(pos).Item("Count") = CInt(fic.ChapterCount)
+                End If
+            End If
+
+            dt.Rows(pos).Item("Last_Checked") = CDate(Date.Today)
 
             UpdateData(dt)
 
@@ -686,10 +682,7 @@ bypass:
                 Case Process.AuthorPage
                     UpdateAtom(url)
                 Case Process.StoryPage
-
-                    UpdateURL(url)
-                    Application.DoEvents()
-                    ProcessStory(dt, pos)
+                    ProcessStory(dt, pos, url)
             End Select
         End If
 
@@ -1156,16 +1149,7 @@ bypass:
         frmMain.ObtainFeed(url)
     End Sub
 
-    Sub UpdateURL(ByVal url As String)
-        'Update txtUrl with story Page
-        frmMain.txtUrl.Text = url
-        'Reset frmMain
-        ResetInfo()
-        'Update btnURL Caption for Correct Processing
-        frmMain.btnURL.Text = "Get Chapters"
-        'Obtain Story Info From Story Page
-        frmMain.DownloadData()
-    End Sub
+   
 
     Sub ResetInfo()
         'Clear Information from source

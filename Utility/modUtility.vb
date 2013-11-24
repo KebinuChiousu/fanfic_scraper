@@ -196,4 +196,68 @@ Module modUtility
         Return st
     End Function
 
+    Sub Increment_FileNumber(ByVal Folder As String)
+
+        Dim base As String = Folder
+
+        Dim strFiles As String() = Directory.GetFiles(base, "*.htm", SearchOption.TopDirectoryOnly)
+        Dim filename As String = ""
+        Dim newfilename As String = ""
+        Dim idx As Integer
+        Dim fi As FileInfo
+
+        Dim num As Integer
+
+        If strFiles.Length > 0 Then
+            For idx = UBound(strFiles) To 0 Step -1
+                filename = strFiles(idx)
+                fi = New FileInfo(filename)
+                newfilename = Split(fi.Name, ".")(0)
+
+                num = CInt(Mid(newfilename, Len(newfilename) - 1, 2))
+                num += 1
+
+                newfilename = Mid(newfilename, 1, Len(newfilename) - 2)
+                newfilename += Format(num, "0#")
+                newfilename += ".htm"
+
+                fi.MoveTo(base & "\" & newfilename)
+
+            Next
+        End If
+
+    End Sub
+
+    Sub Decrement_FileNumber(ByVal Folder As String)
+
+        Dim base As String = Folder
+
+        Dim strFiles As String() = Directory.GetFiles(base, "*.htm", SearchOption.TopDirectoryOnly)
+        Dim filename As String = ""
+        Dim newfilename As String = ""
+        Dim idx As Integer
+        Dim fi As FileInfo
+
+        Dim num As Integer
+
+        If strFiles.Length > 0 Then
+            For idx = UBound(strFiles) To 0 Step -1
+                filename = strFiles(idx)
+                fi = New FileInfo(filename)
+                newfilename = Split(fi.Name, ".")(0)
+
+                num = CInt(Mid(newfilename, Len(newfilename) - 1, 2))
+                num -= 1
+
+                newfilename = Mid(newfilename, 1, Len(newfilename) - 2)
+                newfilename += Format(num, "0#")
+                newfilename += ".htm"
+
+                fi.MoveTo(base & "\" & newfilename)
+
+            Next
+        End If
+
+    End Sub
+
 End Module

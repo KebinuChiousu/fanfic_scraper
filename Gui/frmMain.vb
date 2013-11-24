@@ -374,7 +374,9 @@ Public Class HtmlGrabber
 
     Dim i As Integer
 
-    Sub ResetInfo()
+#Region "UI Update Code"
+
+    Sub ClearUI()
 
         lblTitle.Text = ""
         lblAuthor.Text = ""
@@ -396,7 +398,42 @@ Public Class HtmlGrabber
         cmbStory.Text = ""
         urlAtom.Text = ""
 
+        Application.DoEvents()
+
     End Sub
+
+    Sub UpdateUI(ByRef fic As clsFanfic.Story, ByRef Result As String, Optional ByVal Start As Integer = 1)
+
+        Dim idx As Integer
+
+        btnURL.Text = "Process Chapters"
+
+        lblChapterCount.Text = fic.ChapterCount
+
+        For idx = 0 To UBound(fic.Chapters)
+            ListChapters.Items.Add(fic.Chapters(idx))
+        Next
+
+        lblStoryID.Text = fic.ID
+        lblTitle.Text = fic.Title
+        lblAuthor.Text = fic.Author
+        lblPublish.Text = fic.PublishDate
+        lblUpdate.Text = fic.UpdateDate
+
+        lblChapterCount.Text = fic.ChapterCount
+        lblProgress.Text = "< -- Enter Starting Chapter"
+        txtStart.Text = Start
+
+        txtSource.Text = Result
+
+        lblStart.Visible = True
+        txtStart.Visible = True
+
+        Application.DoEvents()
+
+    End Sub
+
+#End Region
 
 #Region "Interface Code"
 
@@ -449,7 +486,7 @@ Public Class HtmlGrabber
 
         clsname = cmbType.Items(cmbType.SelectedIndex)
 
-        ResetInfo()
+        ClearUI()
 
         LoadSiteByName(clsname)
 
@@ -515,6 +552,9 @@ Public Class HtmlGrabber
 
 #Region "Business Logic"
 
+
+
+
     Sub LoadStoryInfo(ByVal idx As Integer)
 
         btnURL.Text = "Get Chapters"
@@ -556,7 +596,6 @@ Public Class HtmlGrabber
 
     Sub DownloadData()
 
-        Dim idx As Integer
         Dim ret As Boolean
         Dim fic As clsFanfic.Story
 
@@ -565,30 +604,9 @@ Public Class HtmlGrabber
                 ret = BL.GetChapters(txtUrl.Text)
                 If Not ret Then GoTo oops
 
-                btnURL.Text = "Process Chapters"
-
                 fic = BL.FanFic
 
-                lblChapterCount.Text = fic.ChapterCount
-
-                For idx = 0 To fic.ChapterCount
-                    ListChapters.Items.Add(fic.Chapters(idx))
-                Next
-
-                lblStoryID.Text = fic.ID
-                lblTitle.Text = fic.Title
-                lblAuthor.Text = fic.Author
-                lblPublish.Text = fic.PublishDate
-                lblUpdate.Text = fic.UpdateDate
-
-                lblChapterCount.Text = fic.ChapterCount
-                lblProgress.Text = "< -- Enter Starting Chapter"
-                txtStart.Text = 1
-
-                txtSource.Text = BL.Result
-
-                lblStart.Visible = True
-                txtStart.Visible = True
+                UpdateUI(fic, BL.Result)
 
             Case "Process Chapters"
 
@@ -599,17 +617,7 @@ Public Class HtmlGrabber
                                     txtFileMask.Text _
                                   )
 
-                'Make Sure New Information is Downloaded
-                btnURL.Text = "Get Chapters"
-
-                'Clear Information from source
-                ListChapters.Items.Clear()
-                lblChapterCount.Text = ""
-                lblProgress.Text = ""
-                lblStart.Visible = False
-                txtStart.Text = "1"
-                txtStart.Visible = False
-                txtSource.Text = ""
+                ClearUI()
 
         End Select
 

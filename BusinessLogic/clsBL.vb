@@ -5,10 +5,10 @@ Imports System.Text
 Public Class clsBL
 
     Private cls As clsFanfic
-
     Private txtResult As String
+    Private Story As New clsFanfic.Story
 
-    Dim Story As New clsFanfic.Story
+    Public OutputPath As String
 
     Public Function GetChapters(ByVal link As String) As Boolean
 
@@ -51,7 +51,7 @@ Public Class clsBL
 
             If Story.UpdateDate = "" Then Story.UpdateDate = Story.PublishDate
 
-            Story.ChapterCount = UBound(Story.Chapters)
+            Story.ChapterCount = UBound(Story.Chapters) + 1
 
             txtResult = cls.GrabBody(htmldoc)
 
@@ -77,10 +77,10 @@ Public Class clsBL
 
         'Process Chapters from Source
 
-        For idx = (Start - 1) To (Count - 1)
+        For idx = Start To Count
 
             msg = "Chapter " & _
-                  (idx + 1) & _
+                  idx & _
                   " of " & _
                   Count
 
@@ -88,7 +88,7 @@ Public Class clsBL
 
             htmldoc = cls.ProcessChapters( _
                                            link, _
-                                           idx _
+                                           idx - 1 _
                                          )
 
             ProcessChapter( _
@@ -96,7 +96,8 @@ Public Class clsBL
                             FileMask, _
                             idx, _
                             Count, _
-                            link
+                            link,
+                            Category _
                           )
 
         Next
@@ -118,6 +119,8 @@ Public Class clsBL
 
         Dim Body As String
         Dim data As String = ""
+
+        Dim Path As String
 
         If ChapterCount = 0 Then
             ChapterCount = chapter
@@ -160,7 +163,7 @@ Public Class clsBL
         Else
             txtResult = "<p>Error writing file</p>"
             txtResult += "<p>Try downloading the file from " & _
-                        "<a href=" & Chr(34) & link & (chapter + 1) & "/" & _
+                        "<a href=" & Chr(34) & link & chapter & "/" & _
                         Chr(34) & ">here</a> in a regular browser</p>"
             txtResult += "<p>DOWNLOAD ERROR</p>"
         End If
@@ -175,11 +178,25 @@ Public Class clsBL
             FileMask += "-"
         End If
 
-        sw = New StreamWriter(Environment.GetFolderPath( _
-                               Environment.SpecialFolder.Desktop) _
+        Path = OutputPath
+
+        If Category <> "" Then
+            Path += "\"
+            Path += Replace(Category, " ", "_")
+        End If
+
+        If Not Directory.Exists(Path) Then
+            Directory.CreateDirectory(Path)
+        End If
+
+        sw = New StreamWriter( _
+                               Path _
                                & "\" & FileMask & _
                                Format(chapter, "0#") & ".htm", _
-                               False, ecp1252)
+                               False, _
+                               ecp1252 _
+                             )
+
         sw.Write(sr.ReadToEnd)
         sr.Close()
         sw.Close()
@@ -258,7 +275,7 @@ Public Class clsBL
             host = Mid(host, InStr(host, ".") + 1)
         End If
 
-        LoadSiteByHost(host)
+        ret = LoadSiteByHost(host)
 
         If IsNothing(cls) Then
             ret = False
