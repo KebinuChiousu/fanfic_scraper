@@ -126,19 +126,20 @@ Public Class clsBL
             ChapterCount = chapter
         End If
 
-        Story.Title = cls.GrabTitle(htmlDoc)
-        Story.Author = cls.GrabAuthor(htmlDoc)
-        Story.Category = cls.GrabSeries(htmlDoc)
-        Story.PublishDate = cls.GrabDate(htmlDoc, "Published: ")
-        Story.UpdateDate = cls.GrabDate(htmlDoc, "Updated: ")
-
-        If Story.UpdateDate = "" Then Story.UpdateDate = Story.PublishDate
-
+        
         txtResult = htmlDoc
 
         If InStr(LCase(txtResult), "chapter not found") = 0 _
         And InStr(LCase(txtResult), "story not found") = 0 _
         Then
+
+            Story.Title = cls.GrabTitle(htmlDoc)
+            Story.Author = cls.GrabAuthor(htmlDoc)
+            Story.Category = cls.GrabSeries(htmlDoc)
+            Story.PublishDate = cls.GrabDate(htmlDoc, "Published: ")
+            Story.UpdateDate = cls.GrabDate(htmlDoc, "Updated: ")
+
+            If Story.UpdateDate = "" Then Story.UpdateDate = Story.PublishDate
 
             data = cls.GrabBody(htmlDoc)
 
