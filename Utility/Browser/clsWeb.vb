@@ -191,8 +191,6 @@ ErrorDetail:
 
         Catch ex As System.Net.WebException
             Select Case ex.Message
-                Case "The remote server returned an error: (404) Not Found."
-                    Return ""
                 Case "Invalid URI: The format of the URI could not be determined."
                     MsgBox("Please enter a valid URL")
                     Return Nothing
@@ -207,7 +205,7 @@ ErrorDetail:
                     If InStr(ex.Message, "500") Then GoTo retry
                     If InStr(ex.Message, "503") Then GoTo retry
                     If InStr(ex.Message, "502") Then GoTo retry
-                    If InStr(ex.Message, "403") Then
+                    If InStr(ex.Message, "403") Or InStr(ex.Message, "404") Then
                         objResponse = ex.Response
                         GoTo errordetail
                     End If
