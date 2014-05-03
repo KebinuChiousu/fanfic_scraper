@@ -11,7 +11,7 @@ Class clsWeb
     Public blnConnected As Boolean
 
     'Public UserAgent As String = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"
-    Private UserAgent As String = "Chrome/21.0.1180.60"
+    Private UserAgent As String = "Chrome/34.0.1847.131"
     Private Accept As String = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 
     Private Sub WriteFile(ByVal file As String, ByVal data As String)
