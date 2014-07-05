@@ -22,21 +22,22 @@ Partial Class Html
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.btnBrowse = New System.Windows.Forms.Button
-        Me.Label1 = New System.Windows.Forms.Label
-        Me.txtPrefix = New System.Windows.Forms.TextBox
-        Me.btnClean = New System.Windows.Forms.Button
-        Me.txtFile = New System.Windows.Forms.TextBox
-        Me.Label2 = New System.Windows.Forms.Label
-        Me.txtChapter = New System.Windows.Forms.TextBox
-        Me.OpenFile = New System.Windows.Forms.OpenFileDialog
+        Me.btnBrowse = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtPrefix = New System.Windows.Forms.TextBox()
+        Me.btnClean = New System.Windows.Forms.Button()
+        Me.txtFile = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.txtChapter = New System.Windows.Forms.TextBox()
+        Me.OpenFile = New System.Windows.Forms.OpenFileDialog()
         Me.SuspendLayout()
         '
         'btnBrowse
         '
-        Me.btnBrowse.Location = New System.Drawing.Point(265, 9)
+        Me.btnBrowse.Location = New System.Drawing.Point(353, 11)
+        Me.btnBrowse.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.btnBrowse.Name = "btnBrowse"
-        Me.btnBrowse.Size = New System.Drawing.Size(25, 23)
+        Me.btnBrowse.Size = New System.Drawing.Size(33, 28)
         Me.btnBrowse.TabIndex = 2
         Me.btnBrowse.Text = "..."
         Me.btnBrowse.UseVisualStyleBackColor = True
@@ -44,24 +45,27 @@ Partial Class Html
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 44)
+        Me.Label1.Location = New System.Drawing.Point(16, 54)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(55, 13)
+        Me.Label1.Size = New System.Drawing.Size(73, 17)
         Me.Label1.TabIndex = 3
         Me.Label1.Text = "File Prefix:"
         '
         'txtPrefix
         '
-        Me.txtPrefix.Location = New System.Drawing.Point(73, 41)
+        Me.txtPrefix.Location = New System.Drawing.Point(97, 50)
+        Me.txtPrefix.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtPrefix.Name = "txtPrefix"
-        Me.txtPrefix.Size = New System.Drawing.Size(52, 20)
+        Me.txtPrefix.Size = New System.Drawing.Size(68, 22)
         Me.txtPrefix.TabIndex = 4
         '
         'btnClean
         '
-        Me.btnClean.Location = New System.Drawing.Point(117, 70)
+        Me.btnClean.Location = New System.Drawing.Point(156, 86)
+        Me.btnClean.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.btnClean.Name = "btnClean"
-        Me.btnClean.Size = New System.Drawing.Size(69, 23)
+        Me.btnClean.Size = New System.Drawing.Size(92, 28)
         Me.btnClean.TabIndex = 7
         Me.btnClean.Text = "Clean Html"
         Me.btnClean.UseVisualStyleBackColor = True
@@ -70,33 +74,36 @@ Partial Class Html
         '
         Me.txtFile.AllowDrop = True
         Me.txtFile.ForeColor = System.Drawing.SystemColors.WindowText
-        Me.txtFile.Location = New System.Drawing.Point(3, 12)
+        Me.txtFile.Location = New System.Drawing.Point(4, 15)
+        Me.txtFile.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtFile.Name = "txtFile"
         Me.txtFile.ReadOnly = True
-        Me.txtFile.Size = New System.Drawing.Size(256, 20)
+        Me.txtFile.Size = New System.Drawing.Size(340, 22)
         Me.txtFile.TabIndex = 1
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(142, 44)
+        Me.Label2.Location = New System.Drawing.Point(189, 54)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(44, 13)
+        Me.Label2.Size = New System.Drawing.Size(58, 17)
         Me.Label2.TabIndex = 5
         Me.Label2.Text = "Chapter"
         '
         'txtChapter
         '
-        Me.txtChapter.Location = New System.Drawing.Point(201, 41)
+        Me.txtChapter.Location = New System.Drawing.Point(268, 50)
+        Me.txtChapter.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtChapter.Name = "txtChapter"
-        Me.txtChapter.Size = New System.Drawing.Size(37, 20)
+        Me.txtChapter.Size = New System.Drawing.Size(48, 22)
         Me.txtChapter.TabIndex = 6
         '
         'Html
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(295, 104)
+        Me.ClientSize = New System.Drawing.Size(393, 128)
         Me.Controls.Add(Me.txtChapter)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtFile)
@@ -104,6 +111,7 @@ Partial Class Html
         Me.Controls.Add(Me.txtPrefix)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnBrowse)
+        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Name = "Html"
         Me.Text = "frmHtml"
         Me.ResumeLayout(False)

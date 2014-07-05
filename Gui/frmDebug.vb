@@ -71,76 +71,76 @@ Public Class Debug
         '
         Me.grdRSS.DataMember = ""
         Me.grdRSS.HeaderForeColor = System.Drawing.SystemColors.ControlText
-        Me.grdRSS.Location = New System.Drawing.Point(7, 7)
+        Me.grdRSS.Location = New System.Drawing.Point(8, 8)
         Me.grdRSS.Name = "grdRSS"
-        Me.grdRSS.Size = New System.Drawing.Size(712, 127)
+        Me.grdRSS.Size = New System.Drawing.Size(855, 147)
         Me.grdRSS.TabIndex = 27
         '
         'btnUpdateDB
         '
         Me.btnUpdateDB.Enabled = False
-        Me.btnUpdateDB.Location = New System.Drawing.Point(619, 318)
+        Me.btnUpdateDB.Location = New System.Drawing.Point(743, 367)
         Me.btnUpdateDB.Name = "btnUpdateDB"
-        Me.btnUpdateDB.Size = New System.Drawing.Size(100, 21)
+        Me.btnUpdateDB.Size = New System.Drawing.Size(120, 24)
         Me.btnUpdateDB.TabIndex = 31
         Me.btnUpdateDB.Text = "Update Database"
         '
         'btnUpdateRecord
         '
         Me.btnUpdateRecord.Enabled = False
-        Me.btnUpdateRecord.Location = New System.Drawing.Point(619, 344)
+        Me.btnUpdateRecord.Location = New System.Drawing.Point(743, 397)
         Me.btnUpdateRecord.Name = "btnUpdateRecord"
-        Me.btnUpdateRecord.Size = New System.Drawing.Size(100, 21)
+        Me.btnUpdateRecord.Size = New System.Drawing.Size(120, 24)
         Me.btnUpdateRecord.TabIndex = 32
         Me.btnUpdateRecord.Text = "Update Record"
         '
         'cmbSearch
         '
         Me.cmbSearch.Items.AddRange(New Object() {"Title", "Author", "Folder"})
-        Me.cmbSearch.Location = New System.Drawing.Point(355, 344)
+        Me.cmbSearch.Location = New System.Drawing.Point(426, 397)
         Me.cmbSearch.Name = "cmbSearch"
-        Me.cmbSearch.Size = New System.Drawing.Size(84, 21)
+        Me.cmbSearch.Size = New System.Drawing.Size(101, 24)
         Me.cmbSearch.TabIndex = 33
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(352, 322)
+        Me.Label1.Location = New System.Drawing.Point(422, 372)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(80, 14)
+        Me.Label1.Size = New System.Drawing.Size(96, 16)
         Me.Label1.TabIndex = 34
         Me.Label1.Text = "Search By"
         '
         'btnBatch
         '
         Me.btnBatch.Enabled = False
-        Me.btnBatch.Location = New System.Drawing.Point(445, 344)
+        Me.btnBatch.Location = New System.Drawing.Point(534, 397)
         Me.btnBatch.Name = "btnBatch"
-        Me.btnBatch.Size = New System.Drawing.Size(168, 21)
+        Me.btnBatch.Size = New System.Drawing.Size(202, 24)
         Me.btnBatch.TabIndex = 35
         Me.btnBatch.Text = "Batch Download Updates"
         '
         'btnOpenDB
         '
-        Me.btnOpenDB.Location = New System.Drawing.Point(148, 343)
+        Me.btnOpenDB.Location = New System.Drawing.Point(178, 396)
         Me.btnOpenDB.Name = "btnOpenDB"
-        Me.btnOpenDB.Size = New System.Drawing.Size(52, 21)
+        Me.btnOpenDB.Size = New System.Drawing.Size(62, 24)
         Me.btnOpenDB.TabIndex = 38
         Me.btnOpenDB.Text = "Open"
         '
         'btnPath
         '
-        Me.btnPath.Location = New System.Drawing.Point(7, 323)
+        Me.btnPath.Location = New System.Drawing.Point(8, 373)
         Me.btnPath.Name = "btnPath"
-        Me.btnPath.Size = New System.Drawing.Size(48, 41)
+        Me.btnPath.Size = New System.Drawing.Size(58, 47)
         Me.btnPath.TabIndex = 39
         Me.btnPath.Text = "Set Paths"
         '
         'btnSave
         '
         Me.btnSave.Enabled = False
-        Me.btnSave.Location = New System.Drawing.Point(206, 325)
+        Me.btnSave.Location = New System.Drawing.Point(247, 375)
         Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(72, 40)
+        Me.btnSave.Size = New System.Drawing.Size(87, 46)
         Me.btnSave.TabIndex = 40
         Me.btnSave.Text = "Save Story to DB"
         '
@@ -151,50 +151,50 @@ Public Class Debug
         'btnSearch
         '
         Me.btnSearch.Enabled = False
-        Me.btnSearch.Location = New System.Drawing.Point(284, 325)
+        Me.btnSearch.Location = New System.Drawing.Point(341, 375)
         Me.btnSearch.Name = "btnSearch"
-        Me.btnSearch.Size = New System.Drawing.Size(62, 40)
+        Me.btnSearch.Size = New System.Drawing.Size(74, 46)
         Me.btnSearch.TabIndex = 41
         Me.btnSearch.Text = "Search DB"
         '
         'cmbChooseDB
         '
         Me.cmbChooseDB.FormattingEnabled = True
-        Me.cmbChooseDB.Location = New System.Drawing.Point(61, 323)
+        Me.cmbChooseDB.Location = New System.Drawing.Point(73, 373)
         Me.cmbChooseDB.Name = "cmbChooseDB"
-        Me.cmbChooseDB.Size = New System.Drawing.Size(139, 21)
+        Me.cmbChooseDB.Size = New System.Drawing.Size(167, 24)
         Me.cmbChooseDB.TabIndex = 42
         '
         'lblStatus
         '
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Location = New System.Drawing.Point(442, 324)
+        Me.lblStatus.Location = New System.Drawing.Point(530, 374)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(25, 13)
+        Me.lblStatus.Size = New System.Drawing.Size(31, 17)
         Me.lblStatus.TabIndex = 43
         Me.lblStatus.Text = "DB:"
         '
         'grdDB
         '
         Me.grdDB.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.grdDB.Location = New System.Drawing.Point(7, 140)
+        Me.grdDB.Location = New System.Drawing.Point(8, 162)
         Me.grdDB.Name = "grdDB"
-        Me.grdDB.Size = New System.Drawing.Size(712, 172)
+        Me.grdDB.Size = New System.Drawing.Size(855, 198)
         Me.grdDB.TabIndex = 44
         '
         'btnCategory
         '
-        Me.btnCategory.Location = New System.Drawing.Point(61, 344)
+        Me.btnCategory.Location = New System.Drawing.Point(73, 397)
         Me.btnCategory.Name = "btnCategory"
-        Me.btnCategory.Size = New System.Drawing.Size(82, 20)
+        Me.btnCategory.Size = New System.Drawing.Size(99, 23)
         Me.btnCategory.TabIndex = 46
         Me.btnCategory.Text = "Categories..."
         Me.btnCategory.UseVisualStyleBackColor = True
         '
         'Debug
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(873, 428)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
+        Me.ClientSize = New System.Drawing.Size(870, 430)
         Me.Controls.Add(Me.btnCategory)
         Me.Controls.Add(Me.grdDB)
         Me.Controls.Add(Me.lblStatus)
