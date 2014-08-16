@@ -674,7 +674,7 @@ Class AFF
 
     Public Overrides ReadOnly Property ErrorMessage() As String
         Get
-            Return "The member you are looking for dose not exsist."
+            Return "The member you are looking for does not exsist."
         End Get
     End Property
 
