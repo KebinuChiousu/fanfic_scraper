@@ -311,6 +311,8 @@ Public Class clsBL
                 cls = New FicWad
             Case "mediaminer.org"
                 cls = New MM
+            Case "hpfanficarchive.com"
+                cls = New HPFFA
             Case Else
                 cls = Nothing
         End Select

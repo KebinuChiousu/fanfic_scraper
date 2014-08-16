@@ -257,7 +257,7 @@ Public Class HtmlGrabber
         '
         'cmbType
         '
-        Me.cmbType.Items.AddRange(New Object() {"FFNet", "AFF", "FicWad", "MediaMiner"})
+        Me.cmbType.Items.AddRange(New Object() {"FFNet", "AFF", "FicWad", "MediaMiner", "HPFFA"})
         Me.cmbType.Location = New System.Drawing.Point(440, 8)
         Me.cmbType.Name = "cmbType"
         Me.cmbType.Size = New System.Drawing.Size(152, 24)
@@ -738,6 +738,10 @@ abort:
                 Me.Text = "MediaMiner - Story Downloader"
                 lblAtom.Text = "Valid Author URL"
                 host = "mediaminer.org"
+            Case "HPFFA"
+                Me.Text = "HP FanFic Archive - Story Downloader"
+                lblAtom.Text = "Valid Category URL"
+                host = "hpfanficarchive.com"
             Case Else
                 clsname = ""
         End Select

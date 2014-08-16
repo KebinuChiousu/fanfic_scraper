@@ -217,6 +217,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BusinessLogic\clsBL.vb" />
+    <Compile Include="BusinessLogic\Sites\clsHPFFA.vb" />
     <Compile Include="Data\DAL\clsDAL.vb" />
     <Compile Include="Data\DAL\nHibernate\Database\clsSQLite.vb" />
     <Compile Include="Data\DAL\nHibernate\nHibernateHelper.vb" />
