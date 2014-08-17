@@ -277,6 +277,9 @@ Public Class HPFFA
 
         author_url = rss
 
+        If InStr(rss, "action=storiesby") = 0 And InStr(rss, "viewuser.php") > 0 Then
+            rss += "&action=storiesby"
+        End If
         html = Me.GrabData(rss)
 
         doc = CleanHTML(html)
