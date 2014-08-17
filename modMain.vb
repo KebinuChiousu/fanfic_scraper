@@ -2,6 +2,7 @@
 
 Module modMain
 
+    Public cls As clsFanfic
     Public BL As New clsBL
 
     Sub InitIniFile()

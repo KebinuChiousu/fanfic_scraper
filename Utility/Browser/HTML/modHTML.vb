@@ -67,6 +67,20 @@ Module modHTML
 
     End Function
 
+    Function FindNodesByAttribute( _
+                                   ByVal node As HtmlNode, _
+                                   ByVal NodeName As String, _
+                                   ByVal Attr As String _
+                                 ) As HtmlNodeCollection
+
+        Dim ret As HtmlNodeCollection
+
+        ret = node.SelectNodes("//" & NodeName & "[@" & Attr & "]")
+
+        Return ret
+
+    End Function
+
     Function FindLinksByHref( _
                              ByVal node As HtmlNode, _
                              ByVal href As String _

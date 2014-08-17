@@ -4,7 +4,7 @@ Imports System.Text
 
 Public Class clsBL
 
-    Private cls As clsFanfic
+
     Private txtResult As String
     Private Story As New clsFanfic.Story
 
