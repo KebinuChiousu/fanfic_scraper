@@ -454,7 +454,7 @@ Public Class HPFFA
 
     Public Overrides ReadOnly Property ErrorMessage As String
         Get
-            Return "You are not authorized to access that function."
+            Return "does not exist on this archive"
         End Get
     End Property
 
