@@ -206,6 +206,59 @@ Public Class clsBL
 
     End Sub
 
+    Sub ProcessError(link As String, chapter As Integer, filemask As String, Optional ByVal Category As String = "")
+
+        Dim ecp1252 As Encoding = Encoding.GetEncoding(1252)
+        Dim sr As StreamReader
+        Dim sw As StreamWriter
+
+        Dim Path As String
+
+        Dim txtResult As String
+
+        txtResult = "<p>Error writing file</p>"
+        txtResult += "<p>Try downloading the file from " & _
+                    "<a href=" & Chr(34) & link & chapter & _
+                    Chr(34) & ">here</a> in a regular browser</p>"
+        txtResult += "<p>DOWNLOAD ERROR</p>"
+
+        txtResult = HttpUtility.HtmlDecode(txtResult)
+
+        sr = New StreamReader(StringToStream(txtResult))
+
+        filemask = Replace(filemask, "-", "")
+
+        If IsNumeric(Mid(filemask, Len(filemask), 1)) Then
+            filemask += "-"
+        End If
+
+        Path = OutputPath
+
+        If category <> "" Then
+            Path += "\"
+            Path += Replace(category, " ", "_")
+        End If
+
+        If Not Directory.Exists(Path) Then
+            Directory.CreateDirectory(Path)
+        End If
+
+        sw = New StreamWriter( _
+                               Path _
+                               & "\" & filemask & _
+                               Format(chapter, "0#") & ".htm", _
+                               False, _
+                               ecp1252 _
+                             )
+
+        sw.Write(sr.ReadToEnd)
+        sr.Close()
+        sw.Close()
+        sr = Nothing
+        sw = Nothing
+
+    End Sub
+
 #Region "Pass-Thru Functions"
 
     Public Function GrabStoryInfo(ByVal idx As Integer) As clsFanfic.Story

@@ -578,17 +578,17 @@ Public Class Debug
 
         check = BL.GetChapters(link)
 
+        fic = BL.FanFic
+
+        start = CInt(dt.Rows(pos).Item("Count") + 1)
+
+        folder = dt.Rows(pos).Item("Folder")
+
         If check Then
-
-            fic = BL.FanFic
-
-            start = CInt(dt.Rows(pos).Item("Count") + 1)
 
             frmMain.UpdateUI(fic, BL.Result, start)
 
             Application.DoEvents()
-
-            folder = dt.Rows(pos).Item("Folder")
 
             frmMain.txtFileMask.Text = folder & "-"
 
@@ -615,6 +615,10 @@ Public Class Debug
             dt.Rows(pos).Item("Last_Checked") = CDate(Date.Today)
 
             UpdateData(dt)
+
+        Else
+
+            BL.ProcessError(link, start, folder, cmbChooseDB.Text)
 
         End If
 
