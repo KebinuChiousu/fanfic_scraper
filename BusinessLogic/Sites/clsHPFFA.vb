@@ -130,15 +130,19 @@ Public Class HPFFA
 
         tdoc = CleanHTML(summary(p_idx))
         dummy = tdoc.DocumentNode.InnerText
-        dummy = Mid(dummy, InStr(dummy, ">") + 1)
-        dummy = Mid(dummy, 1, InStr(dummy, "<") - 1)
+        'dummy = Mid(dummy, InStr(dummy, ">") + 1)
+        'dummy = Mid(dummy, 1, InStr(dummy, "<") - 1)
+
+        dummy = Trim(Split(dummy, ":")(1))
 
         info.PublishDate = CDate(dummy).ToShortDateString()
 
         tdoc = CleanHTML(summary(u_idx))
         dummy = tdoc.DocumentNode.InnerText
-        dummy = Mid(dummy, InStr(dummy, ">") + 1)
-        dummy = Mid(dummy, 1, InStr(dummy, "<") - 1)
+        'dummy = Mid(dummy, InStr(dummy, ">") + 1)
+        'dummy = Mid(dummy, 1, InStr(dummy, "<") - 1)
+
+        dummy = Trim(Split(dummy, ":")(1))
 
         info.UpdateDate = CDate(dummy).ToShortDateString()
 
