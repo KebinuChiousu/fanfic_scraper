@@ -42,9 +42,9 @@ Public Class clsBL
             Story.StoryURL = link
 
             Story.ID = cls.GetStoryID(link)
-
             Story.Title = cls.GrabTitle(htmldoc)
             Story.Author = cls.GrabAuthor(htmldoc)
+            Story.Category = cls.GrabSeries(htmldoc)
 
             Story.PublishDate = cls.GrabDate(htmldoc, "Published: ")
             Story.UpdateDate = cls.GrabDate(htmldoc, "Updated: ")
