@@ -1,4 +1,5 @@
 Imports System
+Imports System.Collections.Generic
 Imports System.Text
 Imports System.Text.Encoding
 Imports System.Net
@@ -11,7 +12,6 @@ Class FicWad
 
 #Region "Downloading HTML"
 
-    Private Browser As New clsWeb
     Private AgeCheck As Boolean = True
     Private Username As String
     Private Password As String
@@ -41,7 +41,7 @@ Class FicWad
         Dim ret As MsgBoxResult
         Dim doc As HtmlDocument
         Dim msg As String
-        Dim postData As String = ""
+        Dim fields As List(Of KeyValuePair(Of String, String))
 
         Dim link As URL
         Dim target As String = ""
@@ -78,13 +78,14 @@ Class FicWad
 
                 target = "http://www." & Me.HostName & "/account/login"
 
-                postData = "username=" & URLEncode(Me.Username)
-                postData += "&"
-                postData += "password=" & URLEncode(Me.Password)
-                postData += "&"
-                postData += "keeploggedin=on"
+                fields = New List(Of KeyValuePair(Of String, String))
 
-                Browser.DownloadCookies(target, postData, Me.cookie_name)
+                fields.Add(New KeyValuePair(Of String, String)("username", Me.Username))
+                fields.Add(New KeyValuePair(Of String, String)("password", Me.Password))
+                fields.Add(New KeyValuePair(Of String, String)("keeploggedin", "on"))
+                fields.Add(New KeyValuePair(Of String, String)("submit", "Log in"))
+
+                Browser.LogIn(target, "login", fields, Me.cookie_name)
 
                 html = Browser.DownloadPage(url, Me.cookie_name)
                 doc = CleanHTML(html)
@@ -107,104 +108,146 @@ Class FicWad
 
         Dim html As String
         Dim doc As HtmlDocument = Nothing
-
+        Dim tdoc As HtmlDocument = Nothing
+        Dim nodes As HtmlNodeCollection
         Dim temp As HtmlNodeCollection
-        Dim node As HtmlNodeCollection
+
+        Dim dte As DateTime
+        Dim ymd() As String
+
+        Dim dummy As String
+
+        Dim temp_idx As Integer
         Dim node_idx As Integer
 
-        Dim fic As New clsFanfic.Story
+        Dim warning() As String = Nothing
 
-        Dim story_url As String
+        Dim author_url As String
 
-        Dim link As URL
-        Dim entry As String
-        Dim value As String
-        Dim text As String
         Dim summary() As String
+
+        Dim ch_idx As Integer = 5
+
+        Dim fic() As clsFanfic.Story
+
+        Dim idx As Integer
 
         Dim xmldoc As XmlDocument = Nothing
 
-        If InStr(rss, "author") = 0 Then Return Nothing
+        author_url = rss
 
-        If InStr(rss, "nc17") = 0 Then
-            If InStr(rss, "feed") = 0 Then
-                link = ExtractUrl(rss)
-                rss = link.Scheme & "://" & link.Host & "/feed" & link.URI
-            End If
+        html = Me.GrabData(rss)
 
-            rss += "/nc17"
+        doc = CleanHTML(html)
 
-        End If
+        nodes = GetListNodes(doc.DocumentNode, "class", "storylist", True)
 
-        html = GrabData(rss)
+        Try
 
-        If Me.AgeCheck Then
+            ReDim fic(nodes.Count - 1)
 
-            html = Replace(html, "<!--", "")
-            html = Replace(html, "DATA[", "")
-            html = Replace(html, "-->", "")
-            doc = CleanHTML(html)
+            For node_idx = 0 To nodes.Count - 1
 
-            node = doc.DocumentNode.SelectNodes("//entry")
+                doc = CleanHTML(nodes(node_idx).InnerHtml)
 
-            html = "<feed>"
+                temp = doc.DocumentNode.SelectNodes("//a")
 
-            For node_idx = 0 To node.Count - 1
+                fic(node_idx).Title = temp(0).InnerText
+                fic(node_idx).StoryURL = "http://www." & Me.HostName & temp(0).Attributes("href").Value
+                fic(node_idx).Author = temp(1).InnerText
+                fic(node_idx).AuthorURL = "http://www." & Me.HostName & temp(1).Attributes("href").Value
+                fic(node_idx).Category = temp(3).InnerText
 
-                entry = node(node_idx).OuterHtml
-                doc = CleanHTML(entry)
-                entry = doc.DocumentNode.InnerHtml
+                temp = FindLinksByHref(doc.DocumentNode, "/help#38")
 
-                text = doc.DocumentNode.SelectSingleNode("//title").InnerHtml
-                fic.Title = Trim(Mid(text, 1, LastPos(text, "(") - 1))
+                If Not IsNothing(temp) Then
 
-                entry = Replace(entry, text, fic.Title)
+                    ReDim warning(temp.Count - 1)
 
-                text = Mid(text, LastPos(text, "(") + 1)
-                fic.Category = Trim(Replace(text, ")", ""))
-                fic.Category = URLEncode(fic.Category)
+                    For temp_idx = 0 To temp.Count - 1
+                        warning(temp_idx) = temp(temp_idx).Attributes("title").Value
+                    Next
 
-                value = doc.DocumentNode.SelectSingleNode("//id").OuterHtml
-                story_url = doc.DocumentNode.SelectSingleNode("//id").InnerHtml
-
-                fic.ID = Me.GetStoryID(story_url)
-
-                text = Me.GrabData(story_url)
-                doc = CleanHTML(text)
-
-                temp = FindNodesByAttribute(doc.DocumentNode, "p", "class", "meta", False)
-                text = temp(0).InnerHtml
-                text = HtmlDecode(text)
-                text = HtmlDecode(text)
-                text = Replace(text, vbLf, "")
-                text = Replace(text, vbTab, " ")
-
-                summary = Split(text, " - ")
-
-                If InStr(text, "Chapter") > 0 Then
-                    fic.ChapterCount = summary(5)
-                    fic.ChapterCount = Mid(fic.ChapterCount, InStr(fic.ChapterCount, ":") + 2)
-                Else
-                    fic.ChapterCount = 1
                 End If
 
-                text = "<id>"
-                text += Trim(fic.Category) & ":" & fic.ID & ":" & fic.ChapterCount
-                text += "</id>"
+                temp = FindNodesByAttribute(doc.DocumentNode, "blockquote", "class", "summary", False)
 
-                entry = Replace(entry, value, text)
+                dummy = temp(0).InnerText
 
-                html += entry
+                fic(node_idx).Summary = dummy
+
+                temp = FindNodesByAttribute(doc.DocumentNode, "p", "class", "meta", False)
+
+                dummy = temp(0).InnerText
+                dummy = DecodeHTML(dummy)
+
+                summary = Split(dummy, " - ")
+
+                If InStr(summary(5), "Chapter") > 0 Then
+                    ch_idx = 5
+                    fic(node_idx).ChapterCount = CleanString(summary(ch_idx).Split(":")(1).Trim)
+                Else
+                    ch_idx = 4
+                    fic(node_idx).ChapterCount = 1
+                End If
+
+                dummy = CleanString(summary(ch_idx + 1).Split(":")(1).Trim)
+                ymd = Split(dummy, "-")
+                dte = New DateTime(ymd(0), ymd(1), ymd(2))
+
+                fic(node_idx).PublishDate = dte.ToShortDateString
+
+                dummy = CleanString(summary(ch_idx + 2).Split(":")(1).Trim)
+                ymd = Split(dummy, "-")
+                dte = New DateTime(ymd(0), ymd(1), ymd(2))
+
+                fic(node_idx).UpdateDate = dte.ToShortDateString
 
 
-            Next
 
-            html += "</feed>"
+                dummy = fic(node_idx).Summary
+                dummy += vbCrLf
+                dummy += CleanString(summary(1))
+                dummy += vbCrLf
+                dummy += CleanString(summary(2))
+                dummy += vbCrLf
+                dummy += CleanString(summary(3))
+                dummy += vbCrLf
+                dummy += "Warnings: "
+
+                For idx = 0 To UBound(warning)
+                    If idx < UBound(warning) Then
+                        dummy += warning(idx) & ","
+                    Else
+                        dummy += warning(idx)
+                    End If
+                Next
+
+                fic(node_idx).Summary = dummy
+
+                fic(node_idx).ID = GetStoryID(fic(node_idx).StoryURL)
+
+            Next node_idx
+
+            html = GenerateAtomFeed(fic)
+
+            doc = CleanHTML(html)
+
+            html = doc.DocumentNode.OuterHtml
 
             xmldoc = New XmlDocument
+
             xmldoc.LoadXml(html)
 
-        End If
+        Catch
+            xmldoc = Nothing
+        Finally
+            doc = Nothing
+            tdoc = Nothing
+            nodes = Nothing
+            temp = Nothing
+            fic = Nothing
+        End Try
 
         Return xmldoc
 
@@ -240,8 +283,8 @@ Class FicWad
 
         temp = Split(dsRSS.Tables("entry").Rows(idx).Item("id"), ":")
 
-        fic.Category = UrlDecode(temp(0))
-        fic.ID = temp(1)
+        fic.Category = UrlDecode(temp(1))
+        fic.ID = temp(0)
         fic.ChapterCount = temp(2)
 
         fic.Summary = dsRSS.Tables("summary").Rows(idx).Item("summary_Text")
@@ -268,7 +311,7 @@ Class FicWad
         doc = CleanHTML(htmlDoc)
         htmlDoc = doc.DocumentNode.InnerHtml
 
-        temp = FindNodesByAttribute(doc.DocumentNode, "ul", "id", "storylist")
+        temp = FindNodesByAttribute(doc.DocumentNode, "ul", "class", "storylist")
         htmlDoc = temp(0).OuterHtml
 
         doc = CleanHTML(htmlDoc)
@@ -353,7 +396,7 @@ Class FicWad
 
         Dim ret As String = ""
 
-        ret = "http://www." & Me.HostName & "/story/" & id
+        ret = "http://" & Me.HostName & "/story/" & id
 
         Return ret
 
@@ -375,7 +418,7 @@ Class FicWad
         htmlDoc = GrabStoryDiv(htmlDoc)
         doc = CleanHTML(htmlDoc)
 
-        temp = FindLinksByHref(doc.DocumentNode, "/author")
+        temp = FindLinksByHref(doc.DocumentNode, "/a")
 
         ret = temp(0).InnerText
 
@@ -388,22 +431,21 @@ Class FicWad
 
     Public Overrides Function GrabBody(ByVal htmldoc As String) As String
 
+        Dim ret As String
         Dim doc As HtmlDocument
         Dim temp As HtmlNodeCollection
 
         htmldoc = GrabStoryDiv(htmldoc)
         doc = CleanHTML(htmldoc)
 
-        temp = FindNodesByAttribute(doc.DocumentNode, "div", "id", "storytext")
+        temp = FindNodesByAttribute(doc.DocumentNode, "div", "id", "storytext", False)
 
-        htmldoc = "<div>"
-        htmldoc = temp(0).InnerHtml
-        htmldoc += "</div>"
+        ret = "<div>" & temp(0).InnerHtml & "</div>"
 
         doc = Nothing
         temp = Nothing
 
-        Return htmldoc
+        Return ret
 
     End Function
 
@@ -413,36 +455,34 @@ Class FicWad
         Dim temp As HtmlNodeCollection
         Dim doc As HtmlDocument
 
+        Dim dte As DateTime
+        Dim ymd() As String
+        Dim ch_idx As Integer
+
         Dim summary As String()
 
         doc = CleanHTML(htmlDoc)
         htmlDoc = doc.DocumentNode.InnerHtml
 
-        htmlDoc = GrabStoryDiv(htmlDoc)
-        doc = CleanHTML(htmlDoc)
-
         temp = FindNodesByAttribute(doc.DocumentNode, "p", "class", "meta")
-        ret = temp(0).InnerHtml
-        ret = HtmlDecode(ret)
-        ret = HtmlDecode(ret)
-        ret = Replace(ret, vbLf, "")
-        ret = Replace(ret, vbTab, " ")
+        ret = temp(0).InnerText
+        ret = DecodeHTML(ret)
 
         summary = Split(ret, " - ")
 
+        For ch_idx = 0 To UBound(summary)
 
-        Select Case title
-            Case "Published: "
-                ret = summary(5)
-            Case "Updated: "
-                ret = summary(6)
-        End Select
+            If InStr(summary(ch_idx), Trim(title)) > 0 Then
+                Exit For
+            End If
 
-        ret = ConvertToAscii(ret)
-        ret = Replace(ret, "?", " ")
-        ret = Replace(ret, title, "")
-        ret = RTrim(ret)
-        ret = LTrim(ret)
+        Next
+
+        ret = CleanString(summary(ch_idx).Split(":")(1).Trim)
+        ymd = Split(ret, "-")
+        dte = New DateTime(ymd(0), ymd(1), ymd(2))
+
+        ret = dte.ToShortDateString
 
         temp = Nothing
         doc = Nothing
@@ -453,36 +493,24 @@ Class FicWad
 
     Public Overrides Function GrabSeries(ByVal htmlDoc As String) As String
 
-        Dim ret As String = ""
-        Dim temp As HtmlNodeCollection
+        Dim ret As String
+
         Dim doc As HtmlDocument
-
-        Dim summary As String()
-       
-        htmlDoc = GrabStoryDiv(htmlDoc)
-        doc = CleanHTML(htmlDoc)
-
-        temp = FindNodesByAttribute(doc.DocumentNode, "p", "class", "meta")
-        ret = temp(0).InnerHtml
-        ret = HtmlDecode(ret)
-        ret = HtmlDecode(ret)
-        ret = Replace(ret, vbLf, "")
-        ret = Replace(ret, vbTab, " ")
-
-        summary = Split(ret, " - ")
-
-        htmlDoc = "<div>"
-        htmlDoc += summary(0)
-        htmlDoc += "</div>"
+        Dim node As HtmlNodeCollection
+        Dim temp As HtmlNodeCollection
 
         doc = CleanHTML(htmlDoc)
+        htmlDoc = doc.DocumentNode.InnerHtml
 
-        temp = FindLinksByHref(doc.DocumentNode, "/category")
+        temp = FindNodesByAttribute(doc.DocumentNode, "div", "class", "storylist")
+        htmlDoc = temp(0).OuterHtml
 
-        ret = temp(0).InnerText
+        doc = CleanHTML(htmlDoc)
+        htmlDoc = doc.DocumentNode.InnerHtml
 
-        temp = Nothing
-        doc = Nothing
+        node = doc.DocumentNode.SelectNodes("//a")
+
+        ret = node(3).InnerText
 
         Return ret
 
@@ -514,21 +542,23 @@ Class FicWad
     Public Overrides Function GrabTitle(ByVal htmlDoc As String) As String
 
         Dim ret As String
+
         Dim doc As HtmlDocument
+        Dim node As HtmlNodeCollection
         Dim temp As HtmlNodeCollection
 
-        htmlDoc = GrabStoryDiv(htmlDoc)
         doc = CleanHTML(htmlDoc)
+        htmlDoc = doc.DocumentNode.InnerHtml
 
-        htmlDoc = doc.DocumentNode.SelectSingleNode("//h3").OuterHtml
+        temp = FindNodesByAttribute(doc.DocumentNode, "div", "class", "storylist")
+        htmlDoc = temp(0).OuterHtml
+
         doc = CleanHTML(htmlDoc)
+        htmlDoc = doc.DocumentNode.InnerHtml
 
-        temp = FindLinksByHref(doc.DocumentNode, "/story")
+        node = doc.DocumentNode.SelectNodes("//a")
 
-        ret = temp(0).InnerText
-
-        temp = Nothing
-        doc = Nothing
+        ret = node(0).InnerText
 
         Return ret
 
@@ -559,7 +589,4 @@ Class FicWad
 
 #End Region
 
-    Public Sub New()
-        Browser = New clsWeb
-    End Sub
 End Class
