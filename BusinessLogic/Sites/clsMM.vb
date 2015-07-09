@@ -9,8 +9,6 @@ Imports System.Web.HttpUtility
 Public Class MM
     Inherits clsFanfic
 
-    Private Browser As clsWeb
-
 #Region "Downloading HTML"
 
     Public Overrides Function GrabData(ByVal url As String) As String
@@ -560,7 +558,4 @@ Public Class MM
 
 #End Region
 
-    Public Sub New()
-        Browser = New clsWeb
-    End Sub
 End Class

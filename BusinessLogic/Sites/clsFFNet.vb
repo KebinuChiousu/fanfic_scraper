@@ -8,8 +8,6 @@ Imports HtmlAgilityPack
 Class FFNet
     Inherits clsFanfic
 
-    Private Browser As clsWeb
-
 #Region "Retrieval Functions"
 
     Public Overrides _
@@ -454,9 +452,4 @@ Retry:
 
 #End Region
 
-    Public Sub New()
-
-        Browser = New clsWeb
-
-    End Sub
 End Class

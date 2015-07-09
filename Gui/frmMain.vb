@@ -497,16 +497,8 @@ Public Class HtmlGrabber
                                   ByVal e As System.EventArgs _
                                 ) Handles MyBase.Load
 
-        Dim path As String = ""
-
         cmbType.SelectedIndex = 0
         frmMain = Me
-
-        path = My.Application.Info.DirectoryPath
-
-        If Not File.Exists(path & "\" & "XMLtoINI.xslt") Then
-            GetEmbeddedFile("XMLtoINI.xslt")
-        End If
 
     End Sub
 
@@ -732,7 +724,7 @@ abort:
                 '    host = "yourfanfiction.com"
             Case "FicWad"
                 Me.Text = "FicWad - Story Downloader"
-                lblAtom.Text = "Valid Author URL or Atom Feed"
+                lblAtom.Text = "Valid Author URL"
                 host = "ficwad.com"
             Case "MediaMiner"
                 Me.Text = "MediaMiner - Story Downloader"

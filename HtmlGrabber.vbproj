@@ -198,6 +198,10 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="WebDriver, Version=2.46.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Selenium.WebDriver.2.46.0\lib\net35\WebDriver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="XMLFilter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Libraries\XMLFilter.dll</HintPath>
@@ -259,7 +263,7 @@
     <Compile Include="BusinessLogic\Sites\Base\clsFanfic.vb" />
     <Compile Include="BusinessLogic\Sites\clsFicWad.vb" />
     <Compile Include="BusinessLogic\Sites\clsMM.vb" />
-    <Compile Include="Utility\Browser\clsCookie.vb" />
+    <Compile Include="Utility\Browser\clsWeb.vb" />
     <Compile Include="Utility\Browser\HTML\modHTML.vb" />
     <Compile Include="Utility\Browser\XML\modRSS.vb" />
     <Compile Include="BusinessLogic\Sites\clsFFNet.vb">
@@ -270,9 +274,6 @@
     </Compile>
     <Compile Include="Gui\frmMain.vb">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Utility\Browser\clsWeb.vb">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utility\modExtension.vb" />
     <Compile Include="Utility\modFormManagement.vb">
@@ -316,6 +317,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="packages\PhantomJS.2.0.0\tools\phantomjs\phantomjs.exe" />
+    <Content Include="phantomjs-license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -4,6 +4,23 @@ Module modMain
 
     Public cls As clsFanfic
     Public BL As New clsBL
+    Public Browser As clsWeb
+
+    Sub ExtractResources()
+
+        Dim path As String = ""
+
+        path = My.Application.Info.DirectoryPath
+
+        If Not File.Exists(path & "\" & "XMLtoINI.xslt") Then
+            GetEmbeddedFile("XMLtoINI.xslt")
+        End If
+
+        If Not File.Exists(path & "\" & "phantomjs.exe") Then
+            GetEmbeddedFile("phantomjs.exe")
+        End If
+
+    End Sub
 
     Sub InitIniFile()
 
@@ -35,10 +52,13 @@ Module modMain
     Sub Main()
 
         Dim frmMain As New HtmlGrabber
+        Browser = New clsWeb
 
         InitIniFile()
 
         frmMain.ShowDialog()
+
+        Browser.Dispose()
 
     End Sub
 

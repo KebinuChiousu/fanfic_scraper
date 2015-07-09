@@ -1,217 +1,303 @@
-Imports System
+﻿Imports System
 Imports System.IO
-Imports System.IO.Compression
-Imports System.Text
 Imports System.Net
+Imports System.Collections.Generic
+Imports System.Collections.ObjectModel
+Imports OpenQA.Selenium
+Imports OpenQA.Selenium.PhantomJS
+Imports HtmlAgilityPack
+Imports System.Runtime.Serialization.Formatters.Binary
 
-Class clsWeb
+Public Class clsWeb
+    Implements IDisposable
 
-    Private wsk As New Collection
-    Private txtResponse As String
-    Public blnConnected As Boolean
+    Private _driver As IWebDriver
+    Private _options As PhantomJSOptions
+    Private _service As PhantomJSDriverService
+    Private _cookie As Boolean = False
+    'Private UserAgent As String = "Chrome/34.0.1847.131"
 
-    'Public UserAgent As String = "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)"
-    Private UserAgent As String = "Chrome/34.0.1847.131"
-    Private Accept As String = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    Sub New()
 
-    Private Sub WriteFile(ByVal file As String, ByVal data As String)
-        Dim path As String = file
-        Dim fs As FileStream
+        _service = PhantomJSDriverService. _
+                   CreateDefaultService(Environment.CurrentDirectory)
+        _service.HideCommandPromptWindow = True
 
-        ' Delete the file if it exists.
-        If IO.File.Exists(path) = False Then
-            ' Create the file.
-            fs = IO.File.Create(path)
-            Dim info As Byte() = New UTF8Encoding(True).GetBytes(data)
+        _options = New PhantomJSOptions
+        '_options.AddAdditionalCapability("phantomjs.page.settings.userAgent", UserAgent)
 
-            ' Add some information to the file.
-            fs.Write(info, 0, info.Length)
-            fs.Close()
-        End If
+        _driver = New PhantomJSDriver(_service, _options)
+        _driver.Manage().Timeouts().ImplicitlyWait(New TimeSpan(0, 0, 30))
+
     End Sub
 
-    Public Function DownloadCookies(ByVal URL As String, ByVal postData As String, ByVal cookie As String) As Boolean
+    Sub Dispose() Implements IDisposable.Dispose
 
-        Dim ret As Boolean = True
+        _driver.Quit()
+        _driver = Nothing
+        _options = Nothing
+        _service = Nothing
 
-Retry:
-        Try
-            Dim oHttp As HttpWebRequest = System.Net.HttpWebRequest.Create(URL)
-            Dim objResponse As HttpWebResponse
+    End Sub
 
-            Dim cc As CookieContainer
-            Dim c As Cookie
-            Dim fi As FileInfo
+    Private Function InnerElements(ctrl As IWebElement) As Boolean
 
-            Dim encoding As New System.Text.UTF8Encoding
-            Dim data() As Byte
-            Dim postStream As System.IO.Stream = Nothing
+        Dim ret As Boolean = False
+        Dim html As String
+        Dim doc As HtmlDocument = Nothing
 
-            Dim hl As URL
+        html = ctrl.GetAttribute("outerHTML")
 
+        doc = CleanHTML(html)
 
-            'oHttp.UserAgent = "Mozilla/5.0 " & _
-            '                  "(Windows NT 6.1; WOW64) " & _
-            '                  "AppleWebKit/536.11 (KHTML, like Gecko) " & _
-            '                  "Chrome/20.0.1132.47 " & _
-            '                  "Safari/536.11"
-
-            oHttp.UserAgent = UserAgent
-
-            If postData = "" Then
-                oHttp.Method = "GET"
+        If doc.DocumentNode.FirstChild.HasChildNodes Then
+            If doc.DocumentNode.FirstChild.FirstChild.Name = "#text" Then
+                ret = False
             Else
-                oHttp.Method = "POST"
+                ret = True
             End If
+        End If
 
-            oHttp.Timeout = (180 * 1000) '3 Minutes
-            oHttp.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
-            oHttp.Accept = Accept
-
-            data = encoding.GetBytes(postData)
-
-            cc = New CookieContainer
-
-            oHttp.CookieContainer = cc
-
-            If postData <> "" Then
-                oHttp.ContentType = "application/x-www-form-urlencoded"
-                oHttp.ContentLength = data.Length
-                postStream = oHttp.GetRequestStream
-                postStream.Write(data, 0, data.Length)
-            End If
-
-
-            objResponse = oHttp.GetResponse
-
-            hl = ExtractUrl(URL)
-
-
-
-            c = cc.GetCookies(New Uri("http://" & hl.Host))(0)
-            c.Expires = Date.Now.AddYears(1)
-
-            fi = New FileInfo(Application.StartupPath & "\\" & cookie)
-
-            clsCookie.WriteCookiesToDisk(fi.FullName, cc)
-
-            fi = Nothing
-
-            If postData <> "" Then
-                postStream.Close()
-            End If
-
-        Catch ex As System.Exception
-            Select Case ex.Message
-                Case "The remote server returned an error: (404) Not Found."
-                    Return ""
-                Case "Invalid URI: The format of the URI could not be determined."
-                    MsgBox("Please enter a valid URL")
-                    Return Nothing
-                Case "The underlying connection was closed: " & _
-                     "The server committed an HTTP protocol violation."
-                    GoTo retry
-                Case "Unable to read data from the transport connection: " & _
-                     "The connection was closed."
-                    GoTo retry
-
-                Case Else
-                    If InStr(ex.Message, "500") Then GoTo retry
-                    If InStr(ex.Message, "503") Then GoTo retry
-                    If InStr(ex.Message, "502") Then GoTo retry
-                    Throw New System.Exception(ex.Message, ex)
-            End Select
-
-            ret = False
-
-
-        End Try
+        doc = Nothing
 
         Return ret
 
+    End Function
+
+    Private Function ProcessElement( _
+                                     ByRef item As IWebElement, _
+                                     ByRef kvp As KeyValuePair(Of String, String) _
+                                   ) As Boolean
+
+        Dim ret As Boolean = False
+        Dim check As String
+
+        check = item.GetAttribute("name")
+        If check = kvp.Key Then
+            Select Case item.GetAttribute("type")
+                Case "text", "password"
+                    item.SendKeys(kvp.Value)
+                Case "checkbox"
+                    item.Click()
+            End Select
+            ret = True
+        End If
+
+        Return ret
 
     End Function
 
-    Public Function DownloadPage(ByVal URL As String, Optional ByVal Cookie As String = "") As String
+    Private Sub GetInnerElements( _
+                                  ByRef ctrl As IWebElement, _
+                                  ByRef Fields As List(Of KeyValuePair(Of String, String)) _
+                                )
 
-        Dim objResponse As HttpWebResponse
+        Dim idx As Integer
+        Dim ret As Boolean
 
-Retry:
-        Try
-            Dim sResult As String
-            Dim oHttp As HttpWebRequest = System.Net.HttpWebRequest.Create(URL)
+        Dim kvp As KeyValuePair(Of String, String)
+        Dim ChildElements As ReadOnlyCollection(Of IWebElement)
 
+        ChildElements = ctrl.FindElements(By.XPath("*"))
 
-            Dim cc As CookieContainer
+        For Each item As IWebElement In ChildElements
 
-            'oHttp.UserAgent = "Mozilla/5.0 " & _
-            '                  "(Windows NT 6.1; WOW64) " & _
-            '                  "AppleWebKit/536.11 (KHTML, like Gecko) " & _
-            '                  "Chrome/20.0.1132.47 " & _
-            '                  "Safari/536.11"
-
-            oHttp.UserAgent = UserAgent
-
-            oHttp.Method = "GET"
-            oHttp.Timeout = (180 * 1000) '3 Minutes
-            oHttp.AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate
-            oHttp.Accept = Accept
-
-            If Cookie <> "" Then
-                If File.Exists(Cookie) Then
-
-                    cc = clsCookie.ReadCookiesFromDisk(Cookie)
-                    oHttp.CookieContainer = cc
-
-                Else
-
-                    DownloadCookies(URL, "", Cookie)
-                    cc = clsCookie.ReadCookiesFromDisk(Cookie)
-                    oHttp.CookieContainer = cc
-
-                End If
+            If InnerElements(item) Then
+                GetInnerElements(item, Fields)
             End If
 
-            objResponse = oHttp.GetResponse
+            For idx = 0 To (Fields.Count - 1)
 
-ErrorDetail:
+                kvp = Fields(idx)
+                ret = ProcessElement(item, kvp)
 
-            Dim sr As StreamReader
-            sr = New StreamReader( _
-                                   objResponse.GetResponseStream(), _
-                                   System.Text.Encoding.UTF8 _
-                                 )
+                If ret = True Then
+                    Exit For
+                End If
 
+            Next
 
-            sResult = sr.ReadToEnd()
-            ' Close and clean up the StreamReader
-            sr.Close()
+        Next
 
-            Return sResult
+    End Sub
 
-        Catch ex As System.Net.WebException
-            Select Case ex.Message
-                Case "Invalid URI: The format of the URI could not be determined."
-                    MsgBox("Please enter a valid URL")
-                    Return Nothing
-                Case "The underlying connection was closed: " & _
-                     "The server committed an HTTP protocol violation."
-                    GoTo retry
-                Case "Unable to read data from the transport connection: " & _
-                     "The connection was closed."
-                    GoTo retry
+    Public Sub LogIn(ByVal URL As String, formName As String, Fields As List(Of KeyValuePair(Of String, String)), cookieName As String)
 
-                Case Else
-                    If InStr(ex.Message, "500") Then GoTo retry
-                    If InStr(ex.Message, "503") Then GoTo retry
-                    If InStr(ex.Message, "502") Then GoTo retry
-                    If InStr(ex.Message, "403") Or InStr(ex.Message, "404") Then
-                        objResponse = ex.Response
-                        GoTo errordetail
+        Dim cookies As ReadOnlyCollection(Of OpenQA.Selenium.Cookie)
+        Dim cookies2 As New List(Of OpenQA.Selenium.Cookie)
+
+        Dim idx As Integer
+        Dim check As String
+        Dim ret As Boolean
+        Dim kvp As KeyValuePair(Of String, String)
+        Dim formElement As IWebElement
+        Dim allFormChildElements As ReadOnlyCollection(Of IWebElement)
+
+        Dim btn As IWebElement = Nothing
+
+        _driver.Navigate.GoToUrl(URL)
+
+        formElement = _driver.FindElement(By.Id(formName))
+        allFormChildElements = formElement.FindElements(By.XPath("*"))
+
+        For Each item As IWebElement In allFormChildElements
+
+            System.Diagnostics.Debug.WriteLine("Item type: " & item.GetAttribute("type"))
+            System.Diagnostics.Debug.WriteLine("Item name: " & item.GetAttribute("name"))
+
+            If InnerElements(item) Then
+                GetInnerElements(item, Fields)
+            End If
+
+            For idx = 0 To (Fields.Count - 1)
+
+                kvp = Fields(idx)
+
+                ret = ProcessElement(item, kvp)
+
+                If ret = True Then
+                    Exit For
+                End If
+
+                check = item.GetAttribute("type")
+                If check = kvp.Key Then
+                    If item.Text = kvp.Value Then
+                        btn = item
+                        Exit For
                     End If
-                    Throw New System.Exception(ex.Message, ex)
-            End Select
+                End If
+
+            Next
+
+        Next
+
+        btn.Submit()
+
+        cookies = _driver.Manage.Cookies.AllCookies
+
+        For idx = 0 To cookies.Count - 1
+            cookies2.Add(cookies(idx))
+        Next
+
+        WriteCookiesToDisk(cookieName, cookies2)
+
+    End Sub
+
+    Public Function DownloadPage(ByVal URL As String, Optional ByVal Cookie As String = "") As String
+
+        Dim cookies As List(Of OpenQA.Selenium.Cookie)
+        Dim idx As Integer
+
+        Dim ret As String = ""
+
+        _driver.Navigate.GoToUrl(URL)
+
+        If System.IO.File.Exists(Environment.CurrentDirectory & "\" & Cookie) Then
+
+            cookies = ReadCookiesFromDisk(Cookie, URL)
+            _driver.Manage.Cookies.DeleteAllCookies()
+
+            For idx = 0 To cookies.Count - 1
+                _driver.Manage.Cookies.AddCookie(cookies(idx))
+            Next
+
+            _driver.Navigate.GoToUrl(URL)
+
+            _cookie = True
+
+        End If
+
+        ret = _driver.PageSource
+
+        Return ret
+
+    End Function
+
+    Sub WriteCookiesToDisk(ByVal fileName As String, ByVal cookieJar As List(Of OpenQA.Selenium.Cookie))
+
+        Dim cookies As New CookieContainer
+        Dim cookie As System.Net.Cookie
+
+        Dim idx As Integer
+
+        For idx = 0 To cookieJar.Count - 1
+            cookie = New System.Net.Cookie( _
+                                            cookieJar(idx).Name, _
+                                            cookieJar(idx).Value, _
+                                            cookieJar(idx).Path, _
+                                            cookieJar(idx).Domain _
+                                          )
+
+            cookie.Expires = cookieJar(idx).Expiry
+
+            cookies.Add(cookie)
+
+        Next
+
+        Using stream As Stream = File.Create(fileName)
+            Try
+                'MsgBox("Writing cookies to disk... ")
+                Dim formatter As New BinaryFormatter()
+                formatter.Serialize(stream, cookies)
+                'MsgBox("Done.")
+            Catch e As Exception
+                MsgBox("Problem writing cookies to disk: " & e.Message)
+            End Try
+        End Using
+    End Sub
+
+    Function ReadCookiesFromDisk(ByVal fileName As String, URL As String) As List(Of OpenQA.Selenium.Cookie)
+
+        Dim cookies As CookieContainer
+        Dim cookiec As CookieCollection
+
+        Dim ts As New TimeSpan
+
+        Dim dte As DateTime = DateTime.Now
+
+        dte = dte.AddDays(365)
+
+        Dim u As New System.Uri(URL)
+
+        URL = Replace(URL, u.PathAndQuery, "")
+
+        u = Nothing
+        u = New System.Uri(URL)
+
+        Dim idx As Integer
+
+        Dim cookiejar As New List(Of OpenQA.Selenium.Cookie)
+        Dim cookie As OpenQA.Selenium.Cookie
+
+        Try
+            Using stream As Stream = File.Open(fileName, FileMode.Open)
+                'MsgBox("Reading cookies from disk... ")
+                Dim formatter As New BinaryFormatter()
+                'MsgBox("Done.")
+                cookies = CType(formatter.Deserialize(stream), CookieContainer)
+                cookiec = cookies.GetCookies(u)
+
+                For idx = 0 To cookiec.Count - 1
+                    cookie = New OpenQA.Selenium.Cookie( _
+                                                         cookiec(idx).Name, _
+                                                         cookiec(idx).Value, _
+                                                         cookiec(idx).Domain, _
+                                                         cookiec(idx).Path, _
+                                                         dte _
+                                                       )
+
+                    cookiejar.Add(cookie)
+
+                Next
+
+
+            End Using
+        Catch e As Exception
+            MsgBox("Problem reading cookies from disk: " & e.Message())
+            cookiejar = Nothing
         End Try
+
+        Return cookiejar
 
     End Function
 

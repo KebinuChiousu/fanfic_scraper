@@ -10,8 +10,7 @@ Public Class HPFFA
     Inherits clsFanfic
 
     Private info As clsFanfic.Story
-    Private Browser As clsWeb
-
+    
 #Region "Chapter Navigation"
 
     Public Overrides Function ProcessChapters(link As String, index As Integer) As String
@@ -474,9 +473,4 @@ Public Class HPFFA
 
 #End Region
 
-    Public Sub New()
-
-        Browser = New clsWeb
-
-    End Sub
 End Class

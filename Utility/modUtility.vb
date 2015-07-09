@@ -193,6 +193,7 @@ Module modUtility
         For i As Integer = 14 To 31
             st = st.Replace(Chr(i), "")
         Next
+        st = st.Replace(Chr(160), "")
         Return st
     End Function
 

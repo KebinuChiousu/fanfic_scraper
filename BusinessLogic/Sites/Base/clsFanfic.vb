@@ -87,68 +87,7 @@ Public MustInherit Class clsFanfic
 
     End Function
 
-    Protected _
-    Function GetOptionValues( _
-                              ByVal htmlDoc As String, _
-                              Optional ByVal param As String = "" _
-                            ) As String()
-
-        Dim doc As HtmlDocument
-
-        doc = CleanHTML(htmlDoc)
-
-        Dim result As String = ""
-        Dim values() As String
-        Dim idx As Integer = 0
-
-        ReDim values(0)
-
-        Dim temp As HtmlNodeCollection
-
-        If param = "" Then
-            temp = doc.DocumentNode.SelectNodes("//select")
-        Else
-            temp = doc.DocumentNode.SelectNodes("//select[@title='" & param & "']")
-        End If
-
-        If IsNothing(temp) Then
-            Return Nothing
-        End If
-
-        If temp.Count = 0 Then
-            Return Nothing
-        End If
-
-        result = temp(0).InnerHtml
-
-        result = "<select>" & result & "</select>"
-
-        doc = CleanHTML(result)
-
-        Dim count As Integer
-        Dim node As HtmlNode
-
-        temp = doc.DocumentNode.SelectNodes("//option")
-
-        With temp
-
-            For count = 0 To (.Count - 1)
-                node = .Item(count)
-
-                If node.NextSibling.InnerText <> "" Then
-                    ReDim Preserve values(idx)
-                    values(idx) = node.NextSibling.InnerText
-                    idx = idx + 1
-                End If
-            Next
-
-        End With
-
-        doc = Nothing
-
-        Return values
-
-    End Function
+    
 
 #End Region
 
@@ -169,7 +108,6 @@ Public MustInherit Class clsFanfic
 
     Public Overridable Function GrabData(ByVal url As String) As String
 
-        Dim Browser As New clsWeb
         Dim html As String
 
         Me.StoryURL = url
@@ -179,8 +117,6 @@ Public MustInherit Class clsFanfic
         CleanHTML(html)
 
         Return html
-
-        Browser = Nothing
 
     End Function
 
