@@ -580,6 +580,7 @@ Public Class Debug
 
         fic = BL.FanFic
 
+
         start = CInt(dt.Rows(pos).Item("Count") + 1)
 
         folder = dt.Rows(pos).Item("Folder")
@@ -601,10 +602,13 @@ Public Class Debug
 
             If CInt(fic.ChapterCount) > current Then
 
-                dt.Rows(pos).Item("Update_Date") = CDate(fic.UpdateDate)
                 dt.Rows(pos).Item("Count") = CInt(fic.ChapterCount)
 
                 BL.ProcessChapters(link, start, fic.ChapterCount, folder, cmbChooseDB.Text)
+
+                fic = BL.FanFic
+
+                dt.Rows(pos).Item("Update_Date") = CDate(fic.UpdateDate)
 
             Else
                 If CInt(fic.ChapterCount) < current Then
