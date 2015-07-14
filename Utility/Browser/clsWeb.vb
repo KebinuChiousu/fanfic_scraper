@@ -213,7 +213,7 @@ Public Class clsWeb
 
     End Function
 
-    Sub WriteCookiesToDisk(ByVal fileName As String, ByVal cookieJar As List(Of OpenQA.Selenium.Cookie))
+    Private Sub WriteCookiesToDisk(ByVal fileName As String, ByVal cookieJar As List(Of OpenQA.Selenium.Cookie))
 
         Dim cookies As New CookieContainer
         Dim cookie As System.Net.Cookie
@@ -246,7 +246,7 @@ Public Class clsWeb
         End Using
     End Sub
 
-    Function ReadCookiesFromDisk(ByVal fileName As String, URL As String) As List(Of OpenQA.Selenium.Cookie)
+    Private Function ReadCookiesFromDisk(ByVal fileName As String, URL As String) As List(Of OpenQA.Selenium.Cookie)
 
         Dim cookies As CookieContainer
         Dim cookiec As CookieCollection
@@ -259,7 +259,7 @@ Public Class clsWeb
 
         Dim u As New System.Uri(URL)
 
-        URL = Replace(URL, u.PathAndQuery, "")
+        URL = u.Scheme & Uri.SchemeDelimiter & GetDomain(u)
 
         u = Nothing
         u = New System.Uri(URL)
@@ -299,6 +299,16 @@ Public Class clsWeb
 
         Return cookiejar
 
+    End Function
+
+    Private Function GetDomain(u As Uri) As String
+        If u.HostNameType <> UriHostNameType.Dns Then Return String.Empty
+        Dim parts = u.Host.Split("."c)
+        If parts.Length > 1 Then
+            Return String.Join(".", parts, parts.Length - 2, 2)
+        Else
+            Return parts(0)
+        End If
     End Function
 
 End Class
