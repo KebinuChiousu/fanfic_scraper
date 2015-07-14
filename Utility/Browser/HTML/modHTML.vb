@@ -34,6 +34,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function FindNodesByValue( _
                                ByVal node As HtmlNode, _
                                ByVal NodeName As String, _
@@ -48,6 +49,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function FindNodesByAttribute( _
                                    ByVal node As HtmlNode, _
                                    ByVal NodeName As String, _
@@ -69,6 +71,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function FindNodesByAttribute( _
                                    ByVal node As HtmlNode, _
                                    ByVal NodeName As String, _
@@ -83,6 +86,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function FindLinksByHref( _
                              ByVal node As HtmlNode, _
                              ByVal href As String _
@@ -98,6 +102,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function GetOptionValues( _
                               ByVal htmlDoc As String, _
                               Optional ByVal param As String = "" _
@@ -160,6 +165,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function GetListNodes( _
                            ByVal node As HtmlNode, _
                            Optional ByVal Attr As String = "", _
@@ -210,6 +216,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function GetHTMLNodes( _
                            ByVal htmldoc As HtmlDocument, _
                            ByVal xpath As String _
@@ -223,6 +230,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function IsHtmlEncoded(text As String) As Boolean
 
         Dim ret As Boolean = False
@@ -240,6 +248,7 @@ Module modHTML
 
     End Function
 
+    <DebuggerStepThrough()> _
     Function DecodeHTML(html As String) As String
 
         Dim ret As String
