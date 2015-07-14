@@ -156,13 +156,17 @@ Public Class clsWeb
         Dim ret As Boolean
         Dim kvp As KeyValuePair(Of String, String)
         Dim formElement As IWebElement
+        Dim forms As ReadOnlyCollection(Of IWebElement)
         Dim allFormChildElements As ReadOnlyCollection(Of IWebElement)
 
         Dim btn As IWebElement = Nothing
 
         _driver.Navigate.GoToUrl(URL)
 
-        formElement = _driver.FindElement(By.Id(formName))
+        forms = _driver.FindElements(By.TagName("form"))
+
+        formElement = forms(0)
+
         allFormChildElements = formElement.FindElements(By.XPath("*"))
 
         For Each item As IWebElement In allFormChildElements
