@@ -4,6 +4,7 @@ Imports System.Net
 Imports System.Collections.Generic
 Imports System.Collections.ObjectModel
 Imports OpenQA.Selenium
+Imports OpenQA.Selenium.Support.UI
 Imports OpenQA.Selenium.PhantomJS
 Imports HtmlAgilityPack
 Imports System.Runtime.Serialization.Formatters.Binary
@@ -15,6 +16,8 @@ Public Class clsWeb
     Private _options As PhantomJSOptions
     Private _service As PhantomJSDriverService
     Private _cookie As Boolean = False
+    Private _submit As IWebElement
+
     'Private UserAgent As String = "Chrome/34.0.1847.131"
 
     Sub New()
@@ -51,10 +54,15 @@ Public Class clsWeb
         doc = CleanHTML(html)
 
         If doc.DocumentNode.FirstChild.HasChildNodes Then
-            If doc.DocumentNode.FirstChild.FirstChild.Name = "#text" Then
-                ret = False
-            Else
+
+            If doc.DocumentNode.FirstChild.ChildNodes.Count > 1 Then
                 ret = True
+            Else
+                If doc.DocumentNode.FirstChild.FirstChild.Name = "#text" Then
+                    ret = False
+                Else
+                    ret = True
+                End If
             End If
         End If
 
@@ -64,47 +72,28 @@ Public Class clsWeb
 
     End Function
 
-    Private Function ProcessElement( _
-                                     ByRef item As IWebElement, _
-                                     ByRef kvp As KeyValuePair(Of String, String) _
-                                   ) As Boolean
+    Private Function CheckTag(name As String) As Boolean
 
-        Dim ret As Boolean = False
-        Dim check As String
+        Select Case name
+            Case "input", "select"
+                Return True
+            Case Else
+                Return False
+        End Select
 
-        check = item.GetAttribute("name")
-        If check = kvp.Key Then
-            Select Case item.GetAttribute("type")
-                Case "text", "password"
-                    item.SendKeys(kvp.Value)
-                Case "checkbox"
-                    item.Click()
-            End Select
-            ret = True
-        End If
-
-        Return ret
 
     End Function
 
-    Private Sub GetInnerElements( _
-                                  ByRef ctrl As IWebElement, _
-                                  ByRef Fields As List(Of KeyValuePair(Of String, String)) _
-                                )
+    Private Sub ProcessFields( _
+                               ByRef item As IWebElement, _
+                               ByRef Fields As List(Of KeyValuePair(Of String, String)) _
+                             )
 
         Dim idx As Integer
+        Dim kvp As KeyValuePair(Of String, String)
         Dim ret As Boolean
 
-        Dim kvp As KeyValuePair(Of String, String)
-        Dim ChildElements As ReadOnlyCollection(Of IWebElement)
-
-        ChildElements = ctrl.FindElements(By.XPath("*"))
-
-        For Each item As IWebElement In ChildElements
-
-            If InnerElements(item) Then
-                GetInnerElements(item, Fields)
-            End If
+        If CheckTag(item.TagName) Then
 
             For idx = 0 To (Fields.Count - 1)
 
@@ -116,6 +105,66 @@ Public Class clsWeb
                 End If
 
             Next
+
+        End If
+
+    End Sub
+
+    Private Function ProcessElement( _
+                                     ByRef item As IWebElement, _
+                                     ByRef kvp As KeyValuePair(Of String, String) _
+                                   ) As Boolean
+
+        Dim sel As SelectElement
+        Dim ret As Boolean = False
+        Dim name As String
+        Dim type As String
+
+        name = item.GetAttribute("name")
+        type = item.GetAttribute("type")
+
+        If name = kvp.Key Then
+            Select Case type
+                Case "text", "password"
+                    item.SendKeys(kvp.Value)
+                Case "checkbox"
+                    item.Click()
+                Case "select-one"
+                    sel = New SelectElement(item)
+                    sel.SelectByValue(kvp.Value)
+            End Select
+            ret = True
+        End If
+
+        If Not ret Then
+            If type = kvp.Key Then
+                If item.Text = kvp.Value Or item.GetAttribute("value") = kvp.Value Then
+                    _submit = item
+                End If
+            End If
+        End If
+
+
+        Return ret
+
+    End Function
+
+    Private Sub GetInnerElements( _
+                                  ByRef ctrl As IWebElement, _
+                                  ByRef Fields As List(Of KeyValuePair(Of String, String)) _
+                                )
+
+        Dim ChildElements As ReadOnlyCollection(Of IWebElement)
+
+        ChildElements = ctrl.FindElements(By.XPath("*"))
+
+        For Each item As IWebElement In ChildElements
+
+            If InnerElements(item) Then
+                GetInnerElements(item, Fields)
+            End If
+
+            ProcessFields(item, Fields)
 
         Next
 
@@ -152,9 +201,6 @@ Public Class clsWeb
         Dim cookies2 As New List(Of OpenQA.Selenium.Cookie)
 
         Dim idx As Integer
-        Dim check As String
-        Dim ret As Boolean
-        Dim kvp As KeyValuePair(Of String, String)
         Dim formElement As IWebElement
         Dim forms As ReadOnlyCollection(Of IWebElement)
         Dim allFormChildElements As ReadOnlyCollection(Of IWebElement)
@@ -175,29 +221,11 @@ Public Class clsWeb
                 GetInnerElements(item, Fields)
             End If
 
-            For idx = 0 To (Fields.Count - 1)
-
-                kvp = Fields(idx)
-
-                ret = ProcessElement(item, kvp)
-
-                If ret = True Then
-                    Exit For
-                End If
-
-                check = item.GetAttribute("type")
-                If check = kvp.Key Then
-                    If item.Text = kvp.Value Then
-                        btn = item
-                        Exit For
-                    End If
-                End If
-
-            Next
+            ProcessFields(item, Fields)
 
         Next
 
-        btn.Submit()
+        _submit.Submit()
 
         cookies = _driver.Manage.Cookies.AllCookies
 
@@ -285,10 +313,10 @@ Public Class clsWeb
 
         Dim u As New System.Uri(URL)
 
-        URL = u.Scheme & Uri.SchemeDelimiter & GetDomain(u)
+        'URL = u.Scheme & Uri.SchemeDelimiter & GetDomain(u)
 
-        u = Nothing
-        u = New System.Uri(URL)
+        'u = Nothing
+        'u = New System.Uri(URL)
 
         Dim idx As Integer
 
