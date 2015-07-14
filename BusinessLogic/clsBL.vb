@@ -358,7 +358,7 @@ Public Class clsBL
         Select Case host
             Case "fanfiction.net"
                 cls = New FFNet
-            Case "adultfanfiction.net"
+            Case "adult-fanfiction.org"
                 cls = New AFF
             Case "ficwad.com"
                 cls = New FicWad
@@ -372,6 +372,38 @@ Public Class clsBL
 
         If Not IsNothing(cls) Then
             ret = True
+        End If
+
+        Return ret
+
+    End Function
+
+    Function LoadSiteByName(ByVal clsname As String) As Boolean
+
+        Dim ret As Boolean = True
+        Dim host As String = ""
+
+        cls = Nothing
+
+        Select Case clsname
+            Case "FFNet"
+                cls = New FFNet
+            Case "AFF"
+                cls = New AFF
+            Case "FicWad"
+                cls = New FicWad
+            Case "MediaMiner"
+                cls = New MM
+            Case "HPFFA"
+                cls = New HPFFA
+            Case Else
+                cls = Nothing
+        End Select
+
+        If Not IsNothing(cls) Then
+            ret = True
+        Else
+            ret = False
         End If
 
         Return ret

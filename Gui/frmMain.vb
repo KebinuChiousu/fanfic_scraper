@@ -709,37 +709,13 @@ abort:
         Dim ret As Boolean = False
         Dim host As String = ""
 
-        Select Case clsname
-            Case "FFNet"
-                Me.Text = "Fanfiction.net - Story Downloader"
-                lblAtom.Text = "Atom Feed or Author URL"
-                host = "fanfiction.net"
-            Case "AFF"
-                Me.Text = "AdultFanfiction.net - Story Downloader"
-                lblAtom.Text = "Valid Author URL"
-                host = "adultfanfiction.net"
-                'Case "Your FanFiction"
-                '    Me.Text = "YourFanFiction.com - Story Downloader"
-                '    lblAtom.Text = "Valid Author URL"
-                '    host = "yourfanfiction.com"
-            Case "FicWad"
-                Me.Text = "FicWad - Story Downloader"
-                lblAtom.Text = "Valid Author URL"
-                host = "ficwad.com"
-            Case "MediaMiner"
-                Me.Text = "MediaMiner - Story Downloader"
-                lblAtom.Text = "Valid Author URL"
-                host = "mediaminer.org"
-            Case "HPFFA"
-                Me.Text = "HP FanFic Archive - Story Downloader"
-                lblAtom.Text = "Valid Category URL"
-                host = "hpfanficarchive.com"
-            Case Else
-                clsname = ""
-        End Select
+        ret = BL.LoadSiteByName(clsname)
 
-        If Not bypass Then
-            ret = BL.LoadSiteByHost(host)
+        If ret Then
+            Me.Text = cls.HostName & " - Story Downloader"
+            lblAtom.Text = "Valid Author URL"
+        Else
+            Me.Text = "Story Downloader"
         End If
 
         Return ret
