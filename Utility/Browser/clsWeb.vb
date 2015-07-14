@@ -121,6 +121,31 @@ Public Class clsWeb
 
     End Sub
 
+    Public Sub FollowLink(ByVal URL As String, ByVal LinkText As String, cookieName As String)
+
+        Dim cookies As ReadOnlyCollection(Of OpenQA.Selenium.Cookie)
+        Dim cookies2 As New List(Of OpenQA.Selenium.Cookie)
+        Dim link As IWebElement
+        Dim ret As String
+
+        _driver.Navigate.GoToUrl(URL)
+
+        link = _driver.FindElement(By.LinkText(LinkText))
+
+        link.Click()
+
+        ret = _driver.PageSource
+
+        cookies = _driver.Manage.Cookies.AllCookies
+
+        For idx = 0 To cookies.Count - 1
+            cookies2.Add(cookies(idx))
+        Next
+
+        WriteCookiesToDisk(cookieName, cookies2)
+
+    End Sub
+
     Public Sub LogIn(ByVal URL As String, formName As String, Fields As List(Of KeyValuePair(Of String, String)), cookieName As String)
 
         Dim cookies As ReadOnlyCollection(Of OpenQA.Selenium.Cookie)
@@ -141,9 +166,6 @@ Public Class clsWeb
         allFormChildElements = formElement.FindElements(By.XPath("*"))
 
         For Each item As IWebElement In allFormChildElements
-
-            System.Diagnostics.Debug.WriteLine("Item type: " & item.GetAttribute("type"))
-            System.Diagnostics.Debug.WriteLine("Item name: " & item.GetAttribute("name"))
 
             If InnerElements(item) Then
                 GetInnerElements(item, Fields)
