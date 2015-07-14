@@ -35,6 +35,26 @@ Module modHTML
     End Function
 
     <DebuggerStepThrough()> _
+    Function GetTitle(ByVal html As String) As String
+
+        Dim doc As HtmlDocument
+        Dim title As String
+
+        doc = CleanHTML(html)
+
+        Try
+            title = doc.DocumentNode.SelectSingleNode("//title").InnerText
+        Catch
+            title = ""
+        End Try
+
+        doc = Nothing
+
+        Return title
+
+    End Function
+
+    <DebuggerStepThrough()> _
     Function FindNodesByValue( _
                                ByVal node As HtmlNode, _
                                ByVal NodeName As String, _
