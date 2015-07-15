@@ -4,6 +4,7 @@ Imports System.Diagnostics
 Imports System.IO
 Imports System.Text
 Imports System.Text.Encoding
+Imports System.Text.RegularExpressions
 
 Module modUtility
 
@@ -183,18 +184,11 @@ Module modUtility
     End Function
 
     Public Function CleanString(ByVal s As String) As String
-        Dim st As String = s
-        For i As Integer = 0 To 7
-            st = st.Replace(Chr(i), "")
-        Next
-        For i As Integer = 11 To 12
-            st = st.Replace(Chr(i), "")
-        Next
-        For i As Integer = 14 To 31
-            st = st.Replace(Chr(i), "")
-        Next
-        st = st.Replace(Chr(160), "")
-        Return st
+
+        s = Regex.Replace(s, "[^A-Za-z0-9]", String.Empty)
+
+        Return s
+
     End Function
 
     Sub Increment_FileNumber(ByVal Folder As String)
