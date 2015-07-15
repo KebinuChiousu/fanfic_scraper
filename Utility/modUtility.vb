@@ -185,9 +185,11 @@ Module modUtility
 
     Public Function CleanString(ByVal s As String) As String
 
-        s = Regex.Replace(s, "[^A-Za-z0-9]", String.Empty)
+        Dim ret As String
 
-        Return s
+        ret = Regex.Replace(s, "[^\x20-\x7E]", String.Empty)
+
+        Return ret
 
     End Function
 
