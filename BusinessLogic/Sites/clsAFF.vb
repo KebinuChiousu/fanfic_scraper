@@ -3,6 +3,7 @@ Imports System.text
 Imports System.net
 Imports System.Xml
 Imports System.Data
+Imports System.Collections.Generic
 Imports HtmlAgilityPack
 Imports System.Web.HttpUtility
 
@@ -12,7 +13,7 @@ Class AFF
 
 #Region "Downloading HTML"
 
-    Private Browser As clsWeb
+    Private cookie_name As String = "adultfanfiction_org.cookie"
     Private AgeCheck As Boolean = True
     Private FullName As String
     Private DOB As String
@@ -21,55 +22,50 @@ Class AFF
 
         Dim html As String
         Dim title As String = ""
-        Dim doc As HtmlDocument
-        Dim link As URL
-
-        Dim rest As Boolean
-
+        Dim check1 As Boolean
+        Dim check2 As Boolean
         Dim target As String = ""
-        Dim postData As String = ""
-        Dim cookie_name As String = "adultfanfiction_net.cookie"
-
-
-        Dim nodes As HtmlNodeCollection
+        Dim u As Uri
+        Dim fields As List(Of KeyValuePair(Of String, String))
 
         html = Browser.DownloadPage(url, cookie_name)
-        doc = CleanHTML(html)
 
-        Try
-            title = doc.DocumentNode.SelectSingleNode("//title").InnerText
-        Catch
-            title = ""
-        End Try
+        title = modHTML.GetTitle(html)
 
-        html = doc.DocumentNode.OuterHtml
-
-        rest = CheckAge(url, title)
+        check1 = CheckPage(html)
+        check2 = CheckAge(title)
 
         If Not Me.AgeCheck Then
             html = "<AgeCheck value='False' />"
         Else
-            If Not rest Then
+            If Not check1 Then
 
-                nodes = FindNodesByAttribute(doc.DocumentNode, "form", "action", "check.php")
+                target = "http://www.adult-fanfiction.org/"
 
-                If nodes.Count > 0 Then
+                Browser.FollowLink(target, "I am 18 years of age or older.", cookie_name)
 
-                    link = ExtractUrl(url)
-                    target = link.Scheme & "://" & link.Host & "/check.php"
+                html = Browser.DownloadPage(url, cookie_name)
 
-                    postData = "cmbmonth=" & CDate(Me.DOB).Month
-                    postData += "&"
-                    postData += "cmbday=" & CDate(Me.DOB).Day
-                    postData += "&"
-                    postData += "cmbyear=" & CDate(Me.DOB).Year
-                    postData += "&"
-                    postData += "cmbname=" & URLEncode(Me.FullName)
+            End If
 
-                    Browser.DownloadCookies(target, postData, cookie_name)
+            If Not check2 Then
 
+                u = New Uri(url)
 
-                End If
+                target = u.Scheme & Uri.SchemeDelimiter & u.Host & "/form_adult.php"
+
+                fields = Nothing
+                fields = New List(Of KeyValuePair(Of String, String))
+
+                fields.Add(New KeyValuePair(Of String, String)("cmbmonth", CDate(Me.DOB).Month))
+                fields.Add(New KeyValuePair(Of String, String)("cmbday", CDate(Me.DOB).Day))
+                fields.Add(New KeyValuePair(Of String, String)("cmbyear", CDate(Me.DOB).Year))
+                fields.Add(New KeyValuePair(Of String, String)("cmbname", Me.FullName))
+                fields.Add(New KeyValuePair(Of String, String)("submit", "Click here to submit"))
+
+                Browser.LogIn(target, "form", fields, cookie_name)
+
+                html = Browser.DownloadPage(url, cookie_name)
 
             End If
 
@@ -79,7 +75,7 @@ Class AFF
 
     End Function
 
-    Function CheckAge(ByVal url As String, ByVal title As String) As Boolean
+    Function CheckAge(ByVal title As String) As Boolean
 
         Dim ok As Boolean = True
 
@@ -91,13 +87,7 @@ Class AFF
 
         Dim name As String = ""
 
-        Dim link As URL
-        link = ExtractUrl(url)
-
-        msg = url
-        msg += vbCrLf
-        msg += vbCrLf
-        msg += "Warning: This site requires age verification using e-signing"
+        msg = "Warning: This site requires age verification using e-signing"
         msg += vbCrLf
         msg += vbCrLf
         msg += "I hereby affirm, under the penalties of perjury pursuant to "
@@ -165,6 +155,38 @@ Class AFF
 
     End Function
 
+
+    Function CheckPage(ByVal html As String) As Boolean
+
+        Dim ok As Boolean = True
+
+        Dim ret As MsgBoxResult
+        Dim msg As String = "In order to proceed, you must be at least 18 years of age (21 years of age in some jurisdictions)"
+
+        If InStr(html, msg) > 0 Then
+
+            msg += "Welcome to adult-fanfiction.org.  "
+            msg += "In order to proceed, you must be at least 18 years of age (21 years of age in some jurisdictions), "
+            msg += "and legally permitted to view Adult Content in your area.  "
+            msg += "This is an archive of literature written by and for Adults, only. "
+            msg += vbCrLf
+            msg += vbCrLf
+            msg += "Do you wish to proceed?"
+
+            ret = MsgBox(msg, MsgBoxStyle.YesNo)
+
+            If ret = MsgBoxResult.Yes Then
+                Me.AgeCheck = True
+            End If
+
+        Else
+            Me.AgeCheck = True
+        End If
+
+        Return Me.AgeCheck
+
+    End Function
+
 #End Region
 
 #Region "RSS"
@@ -177,7 +199,7 @@ Class AFF
         Dim nodes As HtmlNodeCollection
         Dim temp As HtmlNodeCollection
 
-        Dim link As String
+        Dim link As String = ""
         Dim url As URL
 
         Dim node_idx As Integer
@@ -200,6 +222,7 @@ Class AFF
 
                 nodes = FindLinksByHref(doc.DocumentNode, "view=story")
                 link = nodes(0).Attributes("href").Value
+                link = DecodeHTML(link)
 
             Else
                 link = rss
@@ -208,8 +231,13 @@ Class AFF
             html = Me.GrabData(link)
             doc = CleanHTML(html)
 
+            nodes = FindNodesByAttribute(doc.DocumentNode, "div", "id", "contentdata", False)
+
+            doc = CleanHTML(nodes(0).OuterHtml)
+
             nodes = FindLinksByHref(doc.DocumentNode, "zone=")
             link = nodes(0).Attributes("href").Value
+            link = DecodeHTML(link)
 
         Else
             link = rss
@@ -254,7 +282,7 @@ Class AFF
 
             summary = Split(html, "<br />")
 
-            fic(node_idx).Summary = summary(1)
+            fic(node_idx).Summary = DecodeHTML(summary(1))
 
             summary = Split(summary(2), "-:-")
 
@@ -321,15 +349,14 @@ Class AFF
         fic.StoryURL = dsRSS.Tables("link"). _
                           Rows(idx).Item(1)
 
-        fic.ID = Me.GetStoryID(fic.StoryURL)
-
         fic.PublishDate = CDate(dsRSS.Tables("entry").Rows(idx).Item("published"))
 
         fic.UpdateDate = CDate(dsRSS.Tables("entry").Rows(idx).Item("updated"))
 
         temp = Split(dsRSS.Tables("entry").Rows(idx).Item("id"), ":")
 
-        fic.Category = temp(0)
+        fic.ID = temp(0)
+        fic.Category = temp(1)
         fic.ChapterCount = temp(2)
 
         fic.Summary = dsRSS.Tables("summary").Rows(idx).Item("summary_Text")
@@ -397,6 +424,8 @@ Class AFF
 
         htmldoc = GrabData(link)
 
+        Me.StoryURL = link
+
         Return htmldoc
 
     End Function
@@ -431,7 +460,7 @@ Class AFF
         url = ExtractUrl(link)
 
         ret = Split(url.Host, ".")(0)
-        ret += ":"
+        ret += "|"
         ret += url.Query(0).Value
 
         Return ret
@@ -444,7 +473,7 @@ Class AFF
         Dim link As String
         Dim category As String
 
-        temp = Split(id, ":")
+        temp = Split(id, "|")
         category = temp(0)
         id = temp(1)
 
@@ -519,7 +548,7 @@ Class AFF
 
         temp = FindLinksByHref(doc.DocumentNode, "profile.php")
 
-        ret = temp(0).InnerText
+        ret = CleanString(temp(0).InnerText)
 
         temp = Nothing
         doc = Nothing
@@ -560,39 +589,30 @@ Class AFF
         Dim category As String
         Dim summary As String()
         Dim link As String
-        Dim link2 As String
-        Dim hl As URL
 
+        Dim u As URL
+
+        u = ExtractUrl(Me.StoryURL)
 
         htmlDoc = GrabHeaderRow(htmlDoc)
 
         doc = CleanHTML(htmlDoc)
 
+        category = Replace(u.Host, Me.HostName, "").Replace(".", "")
+
         temp = FindLinksByHref(doc.DocumentNode, "profile.php")
 
         link = temp(0).Attributes("href").Value
-        link += "&view=story&zone="
+        link = DecodeHTML(link)
 
-        temp = FindLinksByHref(doc.DocumentNode, "main.php")
-
-        link += LCase(temp(0).InnerText)
-
-        category = LCase(temp(0).InnerText)
-
-        temp = FindNodesByAttribute(doc.DocumentNode, "option", "value", "story.php")
-
-        hl = ExtractUrl(link)
-        link2 = hl.Scheme & "://" & category & "." & Split(hl.Host, ".")(1) & "." & Split(hl.Host, ".")(2) & "/"
-        link2 += HtmlDecode(temp(0).Attributes("value").Value)
-        hl = ExtractUrl(link2)
-
-        link2 = hl.Scheme & "://" & hl.Host & hl.URI & "?"
-        link2 += hl.Query(0).Name & "=" & hl.Query(0).Value
+        link += "&view=story&zone=" & category
 
         htmlDoc = Me.GrabData(link)
         doc = CleanHTML(htmlDoc)
 
-        temp = FindLinksByHref(doc.DocumentNode, link2)
+        link = u.Scheme & Uri.SchemeDelimiter & u.Host & u.URI & "?" & u.Query(0).Name & "=" & u.Query(0).Value
+
+        temp = FindLinksByHref(doc.DocumentNode, link)
 
         htmlDoc = temp(0).ParentNode.InnerHtml
 
@@ -601,11 +621,11 @@ Class AFF
 
         Select Case title
             Case "Published: "
-                ret = Trim(Replace(summary(0), "Posted :", ""))
+                ret = CDate(Trim(Replace(summary(0), "Posted :", ""))).ToShortDateString
             Case "Updated: "
-                ret = Trim(Replace(summary(1), "Edited :", ""))
+                ret = CDate(Trim(Replace(summary(1), "Edited :", ""))).ToShortDateString
         End Select
-        
+
         temp = Nothing
         doc = Nothing
 
@@ -662,7 +682,7 @@ Class AFF
 
     Public Overrides ReadOnly Property HostName() As String
         Get
-            Return "adultfanfiction.net"
+            Return "adult-fanfiction.org"
         End Get
     End Property
 
@@ -679,11 +699,5 @@ Class AFF
     End Property
 
 #End Region
-
-    Public Sub New()
-
-        Browser = New clsWeb
-
-    End Sub
 
 End Class
