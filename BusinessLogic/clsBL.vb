@@ -113,7 +113,7 @@ Public Class clsBL
                               Optional ByVal Category As String = ""
                             )
 
-        Dim ecp1252 As Encoding = Encoding.GetEncoding(1252)
+        'Dim ecp1252 As Encoding = Encoding.GetEncoding(1252)
         Dim sr As StreamReader
         Dim sw As StreamWriter
 
@@ -194,8 +194,7 @@ Public Class clsBL
                                Path _
                                & "\" & FileMask & _
                                Format(chapter, "0#") & ".htm", _
-                               False, _
-                               ecp1252 _
+                               False _
                              )
 
         sw.Write(sr.ReadToEnd)
