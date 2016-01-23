@@ -278,15 +278,19 @@ Public Class frmPath
         Dim Path As String = ""
         Dim Output As String = ""
 
-        Path = conf.GetPath("FanFic")
-        Output = conf.GetConfigValue("Output")
+        If Not IsNothing(conf) Then
 
-        If Path <> "" Then
-            txtPath.Text = Path
-        End If
+            Path = conf.GetPath("FanFic")
+            Output = conf.GetConfigValue("Output")
 
-        If Output <> "" Then
-            txtOutput.Text = Output
+            If Path <> "" Then
+                txtPath.Text = Path
+            End If
+
+            If Output <> "" Then
+                txtOutput.Text = Output
+            End If
+
         End If
 
     End Sub

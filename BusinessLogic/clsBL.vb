@@ -429,6 +429,8 @@ Public Class clsBL
         Get
             If Not IsNothing(cls) Then
                 Return cls.HostName
+            Else
+                Return ""
             End If
         End Get
     End Property

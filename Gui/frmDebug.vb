@@ -266,7 +266,11 @@ Public Class Debug
 
         Dim dt As DataTable
 
-        dt = DAL.GetCategories
+        Try
+            dt = DAL.GetCategories
+        Catch
+            dt = Nothing
+        End Try
 
         Return dt
 
@@ -393,6 +397,8 @@ Public Class Debug
                 DAL.UpdateConnStr("FanFic", val)
                 ReloadDAL("Fanfic", val)
 
+            Else
+                ReloadDAL("Fanfic", "", False)
             End If
 
         End If
@@ -407,16 +413,17 @@ Public Class Debug
 
         frmDebug.DAL = Nothing
 
-        Dim fi As FileInfo
+        'Dim fi As FileInfo
+        'fi = New FileInfo(path)
 
-        fi = New FileInfo(path)
+        DAL = New SQLite("Fanfic", Init)
 
-        Select Case fi.Extension
-            'Case ".mdb"
-            '    DAL = New Access
-            Case ".db"
-                DAL = New SQLite("FanFic", Init)
-        End Select
+        'Select Case fi.Extension
+        '    Case ".mdb"
+        '      DAL = New Access
+        '    Case ".db"
+        '      DAL = New SQLite("FanFic", Init)
+        'End Select
 
     End Sub
 
