@@ -275,14 +275,14 @@ Public Class clsWeb
         Dim idx As Integer
 
         For idx = 0 To cookieJar.Count - 1
-            cookie = New System.Net.Cookie( _
-                                            cookieJar(idx).Name, _
-                                            cookieJar(idx).Value, _
-                                            cookieJar(idx).Path, _
-                                            cookieJar(idx).Domain _
-                                          )
-
-            cookie.Expires = cookieJar(idx).Expiry
+            cookie = New System.Net.Cookie(
+                                            cookieJar(idx).Name,
+                                            cookieJar(idx).Value,
+                                            cookieJar(idx).Path,
+                                            cookieJar(idx).Domain
+                                          ) With {
+                .Expires = cookieJar(idx).Expiry
+                                          }
 
             cookies.Add(cookie)
 

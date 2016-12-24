@@ -57,11 +57,15 @@ Module modXML
         Dim writer As XMLFilteringWriter
 
 
-        reader = New XMLFilteringReader(xml)
-        reader.StripPrefix = False
+        reader = New XMLFilteringReader(xml) With {
+            .StripPrefix = False
+        }
 
         outputFile = New StringWriter()
-        writer = New XMLFilteringWriter(outputFile)
+        writer = New XMLFilteringWriter(outputFile) With {
+            .FilterOutput = Filter,
+            .ConvertPrefixesToTags = True
+        }
 
         writer.FilterOutput = Filter
         writer.ConvertPrefixesToTags = True

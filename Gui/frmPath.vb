@@ -133,15 +133,14 @@ Public Class frmPath
                                  ByVal sender As System.Object, _
                                  ByVal e As System.EventArgs _
                                 ) Handles btnPath.Click
-        Dim dlg As OpenFileDialog = New OpenFileDialog
+        Dim dlg As OpenFileDialog = New OpenFileDialog With {
+            .DefaultExt = "db",
+            .Filter = "SQL Lite Database|*.db",
+            .CheckFileExists = False,
+            .CheckPathExists = True,
+            .Title = "Select Path to Database."
+        }
 
-        dlg.DefaultExt = "db"
-        'dlg.Filter = "Access Database|*.mdb|SQL Lite Database|*.db"
-        dlg.Filter = "SQL Lite Database|*.db"
-
-        dlg.CheckFileExists = False
-        dlg.CheckPathExists = True
-        dlg.Title = "Select Path to Database."
         Try
             If dlg.ShowDialog() = DialogResult.OK Then
                 txtPath.Text = dlg.FileName
@@ -175,9 +174,9 @@ Public Class frmPath
 
     End Sub
 
-    Private Sub frmPath_Load( _
-                              ByVal sender As Object, _
-                              ByVal e As System.EventArgs _
+    Private Sub frmPath_Load(
+                              ByVal sender As Object,
+                              ByVal e As System.EventArgs
                             ) Handles MyBase.Load
 
         'Obtain DAL instance from frmDebug

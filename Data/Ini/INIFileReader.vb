@@ -611,9 +611,10 @@ Public Class IniFileReader
             If Not Initialized Then Throw New IniFileReaderNotInitializedException
             Dim sb As StringBuilder = New StringBuilder
             Dim sw As StringWriter = New StringWriter(sb)
-            Dim xw As XmlTextWriter = New XmlTextWriter(sw)
-            xw.Indentation = 3
-            xw.Formatting = Formatting.Indented
+            Dim xw As XmlTextWriter = New XmlTextWriter(sw) With {
+                .Indentation = 3,
+                .Formatting = Formatting.Indented
+            }
             m_XmlDoc.WriteContentTo(xw)
             xw.Close()
             sw.Close()
