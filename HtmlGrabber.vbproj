@@ -157,6 +157,9 @@
     <NoWarn>42016,42017,42018,42019,42032</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>book-stack-multi-size.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -341,6 +344,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="packages\PhantomJS.2.1.1\tools\phantomjs\phantomjs.exe" />
+    <Content Include="book-stack-multi-size.ico" />
     <Content Include="phantomjs-license.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

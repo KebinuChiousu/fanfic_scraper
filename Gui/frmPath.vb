@@ -44,6 +44,7 @@ Public Class frmPath
     Friend WithEvents btnOutput As System.Windows.Forms.Button
     Friend WithEvents btnUpdate As System.Windows.Forms.Button
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmPath))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtPath = New System.Windows.Forms.TextBox()
         Me.btnUpdate = New System.Windows.Forms.Button()
@@ -55,63 +56,63 @@ Public Class frmPath
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(10, 9)
+        Me.Label1.Location = New System.Drawing.Point(8, 8)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(144, 19)
+        Me.Label1.Size = New System.Drawing.Size(120, 16)
         Me.Label1.TabIndex = 0
         Me.Label1.Tag = "FanFic"
         Me.Label1.Text = "FanFic Database Path"
         '
         'txtPath
         '
-        Me.txtPath.Location = New System.Drawing.Point(10, 28)
+        Me.txtPath.Location = New System.Drawing.Point(8, 24)
         Me.txtPath.Name = "txtPath"
-        Me.txtPath.Size = New System.Drawing.Size(403, 22)
+        Me.txtPath.Size = New System.Drawing.Size(336, 20)
         Me.txtPath.TabIndex = 1
         '
         'btnUpdate
         '
-        Me.btnUpdate.Location = New System.Drawing.Point(155, 102)
+        Me.btnUpdate.Location = New System.Drawing.Point(129, 88)
         Me.btnUpdate.Name = "btnUpdate"
-        Me.btnUpdate.Size = New System.Drawing.Size(163, 37)
+        Me.btnUpdate.Size = New System.Drawing.Size(136, 32)
         Me.btnUpdate.TabIndex = 4
         Me.btnUpdate.Text = "Update INI File"
         '
         'btnPath
         '
-        Me.btnPath.Location = New System.Drawing.Point(422, 28)
+        Me.btnPath.Location = New System.Drawing.Point(352, 24)
         Me.btnPath.Name = "btnPath"
-        Me.btnPath.Size = New System.Drawing.Size(29, 23)
+        Me.btnPath.Size = New System.Drawing.Size(24, 20)
         Me.btnPath.TabIndex = 5
         Me.btnPath.Text = "..."
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(10, 53)
+        Me.Label2.Location = New System.Drawing.Point(8, 46)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(95, 17)
+        Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 6
         Me.Label2.Text = "Output Folder"
         '
         'txtOutput
         '
-        Me.txtOutput.Location = New System.Drawing.Point(10, 73)
+        Me.txtOutput.Location = New System.Drawing.Point(8, 63)
         Me.txtOutput.Name = "txtOutput"
-        Me.txtOutput.Size = New System.Drawing.Size(403, 22)
+        Me.txtOutput.Size = New System.Drawing.Size(336, 20)
         Me.txtOutput.TabIndex = 7
         '
         'btnOutput
         '
-        Me.btnOutput.Location = New System.Drawing.Point(422, 72)
+        Me.btnOutput.Location = New System.Drawing.Point(352, 62)
         Me.btnOutput.Name = "btnOutput"
-        Me.btnOutput.Size = New System.Drawing.Size(29, 23)
+        Me.btnOutput.Size = New System.Drawing.Size(24, 20)
         Me.btnOutput.TabIndex = 8
         Me.btnOutput.Text = "..."
         '
         'frmPath
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(6, 15)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
         Me.ClientSize = New System.Drawing.Size(469, 151)
         Me.Controls.Add(Me.btnOutput)
         Me.Controls.Add(Me.txtOutput)
@@ -120,6 +121,7 @@ Public Class frmPath
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.txtPath)
         Me.Controls.Add(Me.Label1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmPath"
         Me.Text = "Path to Databases"
         Me.ResumeLayout(False)

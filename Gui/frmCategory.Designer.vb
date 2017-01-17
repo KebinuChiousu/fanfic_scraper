@@ -22,6 +22,7 @@ Partial Class frmCategory
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmCategory))
         Me.btnAdd = New System.Windows.Forms.Button()
         Me.btnDelete = New System.Windows.Forms.Button()
         Me.btnUpdate = New System.Windows.Forms.Button()
@@ -33,30 +34,27 @@ Partial Class frmCategory
         '
         'btnAdd
         '
-        Me.btnAdd.Location = New System.Drawing.Point(19, 238)
-        Me.btnAdd.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnAdd.Location = New System.Drawing.Point(14, 193)
         Me.btnAdd.Name = "btnAdd"
-        Me.btnAdd.Size = New System.Drawing.Size(88, 28)
+        Me.btnAdd.Size = New System.Drawing.Size(66, 23)
         Me.btnAdd.TabIndex = 1
         Me.btnAdd.Text = "Add"
         Me.btnAdd.UseVisualStyleBackColor = True
         '
         'btnDelete
         '
-        Me.btnDelete.Location = New System.Drawing.Point(211, 238)
-        Me.btnDelete.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnDelete.Location = New System.Drawing.Point(158, 193)
         Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.Size = New System.Drawing.Size(88, 28)
+        Me.btnDelete.Size = New System.Drawing.Size(66, 23)
         Me.btnDelete.TabIndex = 3
         Me.btnDelete.Text = "Delete"
         Me.btnDelete.UseVisualStyleBackColor = True
         '
         'btnUpdate
         '
-        Me.btnUpdate.Location = New System.Drawing.Point(149, 273)
-        Me.btnUpdate.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnUpdate.Location = New System.Drawing.Point(112, 222)
         Me.btnUpdate.Name = "btnUpdate"
-        Me.btnUpdate.Size = New System.Drawing.Size(149, 28)
+        Me.btnUpdate.Size = New System.Drawing.Size(112, 23)
         Me.btnUpdate.TabIndex = 4
         Me.btnUpdate.Text = "Update Database"
         Me.btnUpdate.UseVisualStyleBackColor = True
@@ -67,18 +65,16 @@ Partial Class frmCategory
         Me.grdDB.AllowUserToDeleteRows = False
         Me.grdDB.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.grdDB.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
-        Me.grdDB.Location = New System.Drawing.Point(19, 15)
-        Me.grdDB.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.grdDB.Location = New System.Drawing.Point(14, 12)
         Me.grdDB.Name = "grdDB"
-        Me.grdDB.Size = New System.Drawing.Size(280, 215)
+        Me.grdDB.Size = New System.Drawing.Size(210, 175)
         Me.grdDB.TabIndex = 5
         '
         'btnEdit
         '
-        Me.btnEdit.Location = New System.Drawing.Point(115, 238)
-        Me.btnEdit.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnEdit.Location = New System.Drawing.Point(86, 193)
         Me.btnEdit.Name = "btnEdit"
-        Me.btnEdit.Size = New System.Drawing.Size(88, 28)
+        Me.btnEdit.Size = New System.Drawing.Size(66, 23)
         Me.btnEdit.TabIndex = 2
         Me.btnEdit.Text = "Edit"
         Me.btnEdit.UseVisualStyleBackColor = True
@@ -86,24 +82,23 @@ Partial Class frmCategory
         'lblStatus
         '
         Me.lblStatus.AutoSize = True
-        Me.lblStatus.Location = New System.Drawing.Point(24, 279)
-        Me.lblStatus.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblStatus.Location = New System.Drawing.Point(18, 227)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(0, 17)
+        Me.lblStatus.Size = New System.Drawing.Size(0, 13)
         Me.lblStatus.TabIndex = 6
         '
         'frmCategory
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(315, 316)
+        Me.ClientSize = New System.Drawing.Size(236, 257)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.grdDB)
         Me.Controls.Add(Me.btnUpdate)
         Me.Controls.Add(Me.btnDelete)
         Me.Controls.Add(Me.btnEdit)
         Me.Controls.Add(Me.btnAdd)
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
         Me.MinimizeBox = False
         Me.Name = "frmCategory"
