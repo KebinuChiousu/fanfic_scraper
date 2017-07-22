@@ -102,99 +102,100 @@ Public Class HtmlGrabber
         '
         'btnURL
         '
-        Me.btnURL.Location = New System.Drawing.Point(26, 318)
+        Me.btnURL.Location = New System.Drawing.Point(52, 587)
         Me.btnURL.Name = "btnURL"
-        Me.btnURL.Size = New System.Drawing.Size(133, 42)
+        Me.btnURL.Size = New System.Drawing.Size(266, 78)
         Me.btnURL.TabIndex = 1
         Me.btnURL.Text = "Get Chapters"
         '
         'txtUrl
         '
-        Me.txtUrl.Location = New System.Drawing.Point(26, 395)
+        Me.txtUrl.Location = New System.Drawing.Point(52, 729)
         Me.txtUrl.Name = "txtUrl"
-        Me.txtUrl.Size = New System.Drawing.Size(260, 20)
+        Me.txtUrl.Size = New System.Drawing.Size(520, 31)
         Me.txtUrl.TabIndex = 2
         '
         'txtSource
         '
-        Me.txtSource.Location = New System.Drawing.Point(27, 111)
+        Me.txtSource.Location = New System.Drawing.Point(54, 205)
         Me.txtSource.MaxLength = 9999999
         Me.txtSource.Multiline = True
         Me.txtSource.Name = "txtSource"
         Me.txtSource.ReadOnly = True
         Me.txtSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtSource.Size = New System.Drawing.Size(666, 189)
+        Me.txtSource.Size = New System.Drawing.Size(1332, 349)
         Me.txtSource.TabIndex = 3
         '
         'ListChapters
         '
-        Me.ListChapters.Location = New System.Drawing.Point(160, 263)
+        Me.ListChapters.ItemHeight = 25
+        Me.ListChapters.Location = New System.Drawing.Point(320, 486)
         Me.ListChapters.Name = "ListChapters"
-        Me.ListChapters.Size = New System.Drawing.Size(387, 4)
+        Me.ListChapters.Size = New System.Drawing.Size(774, 4)
         Me.ListChapters.TabIndex = 5
         Me.ListChapters.Visible = False
         '
         'lblPublish
         '
-        Me.lblPublish.Location = New System.Drawing.Point(527, 35)
+        Me.lblPublish.Location = New System.Drawing.Point(1054, 65)
         Me.lblPublish.Name = "lblPublish"
-        Me.lblPublish.Size = New System.Drawing.Size(166, 27)
+        Me.lblPublish.Size = New System.Drawing.Size(332, 49)
         Me.lblPublish.TabIndex = 6
         Me.lblPublish.Text = "Published Date"
         Me.lblPublish.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'lblUpdate
         '
-        Me.lblUpdate.Location = New System.Drawing.Point(527, 62)
+        Me.lblUpdate.Location = New System.Drawing.Point(1054, 114)
         Me.lblUpdate.Name = "lblUpdate"
-        Me.lblUpdate.Size = New System.Drawing.Size(166, 28)
+        Me.lblUpdate.Size = New System.Drawing.Size(332, 52)
         Me.lblUpdate.TabIndex = 7
         Me.lblUpdate.Text = "Updated Date"
         Me.lblUpdate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'txtFileMask
         '
-        Me.txtFileMask.Location = New System.Drawing.Point(173, 339)
+        Me.txtFileMask.Location = New System.Drawing.Point(346, 626)
         Me.txtFileMask.Name = "txtFileMask"
-        Me.txtFileMask.Size = New System.Drawing.Size(113, 20)
+        Me.txtFileMask.Size = New System.Drawing.Size(226, 31)
         Me.txtFileMask.TabIndex = 9
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(179, 318)
+        Me.Label1.Location = New System.Drawing.Point(358, 587)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(87, 21)
+        Me.Label1.Size = New System.Drawing.Size(174, 39)
         Me.Label1.TabIndex = 11
         Me.Label1.Text = "File Prefix"
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(26, 381)
+        Me.Label2.Location = New System.Drawing.Point(52, 703)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(127, 14)
+        Me.Label2.Size = New System.Drawing.Size(254, 26)
         Me.Label2.TabIndex = 12
         Me.Label2.Text = "Fanfiction Story Url"
         '
         'lblChapterCount
         '
-        Me.lblChapterCount.Location = New System.Drawing.Point(27, 76)
+        Me.lblChapterCount.Location = New System.Drawing.Point(54, 140)
         Me.lblChapterCount.Name = "lblChapterCount"
-        Me.lblChapterCount.Size = New System.Drawing.Size(93, 22)
+        Me.lblChapterCount.Size = New System.Drawing.Size(186, 41)
         Me.lblChapterCount.TabIndex = 13
         '
         'lblProgress
         '
-        Me.lblProgress.Location = New System.Drawing.Point(293, 69)
+        Me.lblProgress.Location = New System.Drawing.Point(586, 127)
         Me.lblProgress.Name = "lblProgress"
-        Me.lblProgress.Size = New System.Drawing.Size(234, 35)
+        Me.lblProgress.Size = New System.Drawing.Size(468, 65)
         Me.lblProgress.TabIndex = 14
         Me.lblProgress.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'lblStart
         '
-        Me.lblStart.Location = New System.Drawing.Point(133, 76)
+        Me.lblStart.Location = New System.Drawing.Point(266, 140)
         Me.lblStart.Name = "lblStart"
-        Me.lblStart.Size = New System.Drawing.Size(94, 22)
+        Me.lblStart.Size = New System.Drawing.Size(188, 41)
         Me.lblStart.TabIndex = 15
         Me.lblStart.Text = "Start @ Chapter: "
         Me.lblStart.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -202,133 +203,134 @@ Public Class HtmlGrabber
         '
         'txtStart
         '
-        Me.txtStart.Location = New System.Drawing.Point(227, 76)
+        Me.txtStart.Location = New System.Drawing.Point(454, 140)
         Me.txtStart.Name = "txtStart"
-        Me.txtStart.Size = New System.Drawing.Size(60, 20)
+        Me.txtStart.Size = New System.Drawing.Size(120, 31)
         Me.txtStart.TabIndex = 16
         Me.txtStart.Visible = False
         '
         'btnRSS
         '
-        Me.btnRSS.Location = New System.Drawing.Point(326, 318)
+        Me.btnRSS.Location = New System.Drawing.Point(652, 587)
         Me.btnRSS.Name = "btnRSS"
-        Me.btnRSS.Size = New System.Drawing.Size(87, 41)
+        Me.btnRSS.Size = New System.Drawing.Size(174, 76)
         Me.btnRSS.TabIndex = 17
         Me.btnRSS.Text = "Obtain Feed"
         '
         'urlAtom
         '
-        Me.urlAtom.Location = New System.Drawing.Point(426, 339)
+        Me.urlAtom.Location = New System.Drawing.Point(852, 626)
         Me.urlAtom.Name = "urlAtom"
-        Me.urlAtom.Size = New System.Drawing.Size(260, 20)
+        Me.urlAtom.Size = New System.Drawing.Size(520, 31)
         Me.urlAtom.TabIndex = 18
         '
         'lblAtom
         '
-        Me.lblAtom.Location = New System.Drawing.Point(426, 318)
+        Me.lblAtom.Location = New System.Drawing.Point(852, 587)
         Me.lblAtom.Name = "lblAtom"
-        Me.lblAtom.Size = New System.Drawing.Size(260, 18)
+        Me.lblAtom.Size = New System.Drawing.Size(520, 33)
         Me.lblAtom.TabIndex = 19
         Me.lblAtom.Text = "Atom Feed or Author URL"
         '
         'cmbStory
         '
-        Me.cmbStory.Location = New System.Drawing.Point(326, 395)
+        Me.cmbStory.Location = New System.Drawing.Point(652, 729)
         Me.cmbStory.Name = "cmbStory"
-        Me.cmbStory.Size = New System.Drawing.Size(360, 21)
+        Me.cmbStory.Size = New System.Drawing.Size(720, 33)
         Me.cmbStory.TabIndex = 21
         '
         'lblStory
         '
-        Me.lblStory.Location = New System.Drawing.Point(326, 381)
+        Me.lblStory.Location = New System.Drawing.Point(652, 703)
         Me.lblStory.Name = "lblStory"
-        Me.lblStory.Size = New System.Drawing.Size(127, 14)
+        Me.lblStory.Size = New System.Drawing.Size(254, 26)
         Me.lblStory.TabIndex = 22
         Me.lblStory.Text = "Fanfiction Story List"
         '
         'lstStory
         '
-        Me.lstStory.Location = New System.Drawing.Point(160, 132)
+        Me.lstStory.ItemHeight = 25
+        Me.lstStory.Location = New System.Drawing.Point(320, 244)
         Me.lstStory.Name = "lstStory"
-        Me.lstStory.Size = New System.Drawing.Size(387, 4)
+        Me.lstStory.Size = New System.Drawing.Size(774, 4)
         Me.lstStory.TabIndex = 23
         Me.lstStory.Visible = False
         '
         'cmbType
         '
         Me.cmbType.Items.AddRange(New Object() {"FFNet", "AFF", "FicWad", "MediaMiner", "HPFFA"})
-        Me.cmbType.Location = New System.Drawing.Point(367, 7)
+        Me.cmbType.Location = New System.Drawing.Point(734, 13)
         Me.cmbType.Name = "cmbType"
-        Me.cmbType.Size = New System.Drawing.Size(126, 21)
+        Me.cmbType.Size = New System.Drawing.Size(252, 33)
         Me.cmbType.TabIndex = 24
         '
         'Label6
         '
-        Me.Label6.Location = New System.Drawing.Point(280, 7)
+        Me.Label6.Location = New System.Drawing.Point(560, 13)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(113, 21)
+        Me.Label6.Size = New System.Drawing.Size(226, 39)
         Me.Label6.TabIndex = 25
         Me.Label6.Text = "Download Site:"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'lblAnime
         '
-        Me.lblAnime.Location = New System.Drawing.Point(87, 194)
+        Me.lblAnime.Location = New System.Drawing.Point(174, 358)
         Me.lblAnime.Name = "lblAnime"
-        Me.lblAnime.Size = New System.Drawing.Size(533, 28)
+        Me.lblAnime.Size = New System.Drawing.Size(1066, 52)
         Me.lblAnime.TabIndex = 27
         Me.lblAnime.Visible = False
         '
         'btnDebug
         '
-        Me.btnDebug.Location = New System.Drawing.Point(3, 1)
+        Me.btnDebug.Location = New System.Drawing.Point(6, 2)
         Me.btnDebug.Name = "btnDebug"
-        Me.btnDebug.Size = New System.Drawing.Size(40, 24)
+        Me.btnDebug.Size = New System.Drawing.Size(80, 44)
         Me.btnDebug.TabIndex = 28
         Me.btnDebug.Text = "Auto"
         '
         'lblTitle
         '
-        Me.lblTitle.Location = New System.Drawing.Point(24, 40)
+        Me.lblTitle.Location = New System.Drawing.Point(48, 74)
         Me.lblTitle.MaxLength = 99
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.ReadOnly = True
         Me.lblTitle.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.lblTitle.Size = New System.Drawing.Size(296, 20)
+        Me.lblTitle.Size = New System.Drawing.Size(592, 31)
         Me.lblTitle.TabIndex = 31
         '
         'lblAuthor
         '
-        Me.lblAuthor.Location = New System.Drawing.Point(336, 40)
+        Me.lblAuthor.Location = New System.Drawing.Point(672, 74)
         Me.lblAuthor.MaxLength = 99
         Me.lblAuthor.Name = "lblAuthor"
         Me.lblAuthor.ReadOnly = True
         Me.lblAuthor.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.lblAuthor.Size = New System.Drawing.Size(167, 20)
+        Me.lblAuthor.Size = New System.Drawing.Size(334, 31)
         Me.lblAuthor.TabIndex = 32
         '
         'lblStoryID
         '
-        Me.lblStoryID.Location = New System.Drawing.Point(577, 8)
+        Me.lblStoryID.Location = New System.Drawing.Point(1154, 15)
         Me.lblStoryID.MaxLength = 99
         Me.lblStoryID.Name = "lblStoryID"
         Me.lblStoryID.ReadOnly = True
         Me.lblStoryID.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.lblStoryID.Size = New System.Drawing.Size(116, 20)
+        Me.lblStoryID.Size = New System.Drawing.Size(232, 31)
         Me.lblStoryID.TabIndex = 33
         '
         'btnHtml
         '
-        Me.btnHtml.Location = New System.Drawing.Point(44, 1)
+        Me.btnHtml.Location = New System.Drawing.Point(88, 2)
         Me.btnHtml.Name = "btnHtml"
-        Me.btnHtml.Size = New System.Drawing.Size(40, 24)
+        Me.btnHtml.Size = New System.Drawing.Size(80, 44)
         Me.btnHtml.TabIndex = 34
         Me.btnHtml.Text = "Html"
         '
         'HtmlGrabber
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(843, 496)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(10, 24)
+        Me.ClientSize = New System.Drawing.Size(1413, 784)
         Me.Controls.Add(Me.btnHtml)
         Me.Controls.Add(Me.lblStoryID)
         Me.Controls.Add(Me.lblAuthor)

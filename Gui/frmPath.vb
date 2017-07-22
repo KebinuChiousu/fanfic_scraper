@@ -56,64 +56,64 @@ Public Class frmPath
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(8, 8)
+        Me.Label1.Location = New System.Drawing.Point(16, 15)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(120, 16)
+        Me.Label1.Size = New System.Drawing.Size(240, 29)
         Me.Label1.TabIndex = 0
         Me.Label1.Tag = "FanFic"
         Me.Label1.Text = "FanFic Database Path"
         '
         'txtPath
         '
-        Me.txtPath.Location = New System.Drawing.Point(8, 24)
+        Me.txtPath.Location = New System.Drawing.Point(16, 44)
         Me.txtPath.Name = "txtPath"
-        Me.txtPath.Size = New System.Drawing.Size(336, 20)
+        Me.txtPath.Size = New System.Drawing.Size(672, 31)
         Me.txtPath.TabIndex = 1
         '
         'btnUpdate
         '
-        Me.btnUpdate.Location = New System.Drawing.Point(129, 88)
+        Me.btnUpdate.Location = New System.Drawing.Point(258, 162)
         Me.btnUpdate.Name = "btnUpdate"
-        Me.btnUpdate.Size = New System.Drawing.Size(136, 32)
+        Me.btnUpdate.Size = New System.Drawing.Size(272, 60)
         Me.btnUpdate.TabIndex = 4
         Me.btnUpdate.Text = "Update INI File"
         '
         'btnPath
         '
-        Me.btnPath.Location = New System.Drawing.Point(352, 24)
+        Me.btnPath.Location = New System.Drawing.Point(704, 44)
         Me.btnPath.Name = "btnPath"
-        Me.btnPath.Size = New System.Drawing.Size(24, 20)
+        Me.btnPath.Size = New System.Drawing.Size(48, 37)
         Me.btnPath.TabIndex = 5
         Me.btnPath.Text = "..."
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(8, 46)
+        Me.Label2.Location = New System.Drawing.Point(16, 85)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(71, 13)
+        Me.Label2.Size = New System.Drawing.Size(143, 25)
         Me.Label2.TabIndex = 6
         Me.Label2.Text = "Output Folder"
         '
         'txtOutput
         '
-        Me.txtOutput.Location = New System.Drawing.Point(8, 63)
+        Me.txtOutput.Location = New System.Drawing.Point(16, 116)
         Me.txtOutput.Name = "txtOutput"
-        Me.txtOutput.Size = New System.Drawing.Size(336, 20)
+        Me.txtOutput.Size = New System.Drawing.Size(672, 31)
         Me.txtOutput.TabIndex = 7
         '
         'btnOutput
         '
-        Me.btnOutput.Location = New System.Drawing.Point(352, 62)
+        Me.btnOutput.Location = New System.Drawing.Point(704, 114)
         Me.btnOutput.Name = "btnOutput"
-        Me.btnOutput.Size = New System.Drawing.Size(24, 20)
+        Me.btnOutput.Size = New System.Drawing.Size(48, 37)
         Me.btnOutput.TabIndex = 8
         Me.btnOutput.Text = "..."
         '
         'frmPath
         '
-        Me.AutoScaleBaseSize = New System.Drawing.Size(5, 13)
-        Me.ClientSize = New System.Drawing.Size(469, 151)
+        Me.AutoScaleBaseSize = New System.Drawing.Size(10, 24)
+        Me.ClientSize = New System.Drawing.Size(778, 247)
         Me.Controls.Add(Me.btnOutput)
         Me.Controls.Add(Me.txtOutput)
         Me.Controls.Add(Me.Label2)
