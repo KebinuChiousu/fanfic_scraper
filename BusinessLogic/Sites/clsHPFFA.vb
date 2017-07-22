@@ -182,17 +182,21 @@ Public Class HPFFA
 
             nodes = FindNodesByAttribute(doc.DocumentNode, "option", "selected")
 
-            If nodes.Count > 0 Then
-                ret = info.Title
-                ret += "<br /><br />"
-                ret += nodes(0).NextSibling.InnerText
+            If Not IsNothing(nodes) Then
+                If nodes.Count > 0 Then
+                    ret = info.Title
+                    ret += "<br /><br />"
+                    ret += nodes(0).NextSibling.InnerText
+                Else
+                    ret = info.Title
+                End If
             Else
                 ret = info.Title
             End If
 
-        End If
+            Return ret
 
-        Return ret
+        End If
 
     End Function
 
