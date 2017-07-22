@@ -78,12 +78,12 @@ Class FicWad
 
                 target = "http://www." & Me.HostName & "/account/login"
 
-                fields = New List(Of KeyValuePair(Of String, String))
-
-                fields.Add(New KeyValuePair(Of String, String)("username", Me.Username))
-                fields.Add(New KeyValuePair(Of String, String)("password", Me.Password))
-                fields.Add(New KeyValuePair(Of String, String)("keeploggedin", "on"))
-                fields.Add(New KeyValuePair(Of String, String)("submit", "Log in"))
+                fields = New List(Of KeyValuePair(Of String, String)) From {
+                    New KeyValuePair(Of String, String)("username", Me.Username),
+                    New KeyValuePair(Of String, String)("password", Me.Password),
+                    New KeyValuePair(Of String, String)("keeploggedin", "on"),
+                    New KeyValuePair(Of String, String)("submit", "Log in")
+                }
 
                 Browser.LogIn(target, "login", fields, Me.cookie_name)
 
