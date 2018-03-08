@@ -176,7 +176,7 @@ def mov_files(path,dfolder,value):
     list_files(path,value,'N')
     confirm=raw_input("Enter Y to proceed: ") 
     if confirm == 'Y':
-        print "Archiving file"
+        print "Archiving files"
         try:
             shutil.move(os.path.join(path,value),os.path.join(dpath,value))
             print "Archive complete."
@@ -292,14 +292,25 @@ def about_story():
         dt = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
 
         _=os.system("clear")
+        if r["Abandoned"] == 1:
+            print "WARNING: This story is ABANDONED and will NOT be updated."
         print "Title: ", r["Title"]
         print "Author: ", r["Author"]
         print "Folder Name: ", r["Folder"]
         print "Chapter Count: ", r["Count"]
+        if r["Complete"] == 1:
+            print "Complete: Yes"
+        else:
+            print "Complete: No"
         print "Last Updated: ", dt.strftime("%B %d, %Y")
         print "Summary: ", r["Description"]
 
     pause()
+
+    if r["Abandoned"] == 1:
+        print "Abandoned story, entering archive mode..."
+        tfile=sfolder+'*.txt'
+        mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
  
 def mainmenu():
     global folder
