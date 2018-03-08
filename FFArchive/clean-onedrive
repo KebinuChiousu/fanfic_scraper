@@ -1,0 +1,8 @@
+#!/bin/sh
+echo "Removing temp files from OneDrive."
+for i in `find ~/OneDrive/ | egrep 'meredithkm.info|.swp'`
+do
+  echo Removing $i
+  rm $i
+done
+
