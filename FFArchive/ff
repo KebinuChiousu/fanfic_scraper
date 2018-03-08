@@ -371,15 +371,8 @@ def mainmenu():
             if not tfile:
                 print("Please select a file first!")
                 pause()
-<<<<<<< HEAD
-<<<<<<< HEAD
             else:
                 mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
-=======
-=======
->>>>>>> 529c80c678880145abe8377e7293d767c6c3a828
-            mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
->>>>>>> 529c80c678880145abe8377e7293d767c6c3a828
         elif selection == '8':
             about_story()
         elif selection == '9':
