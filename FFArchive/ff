@@ -13,15 +13,9 @@ folder=''
 dfolder=''
 sfolder=''
 tfile=''
-filename='*.*'
 
 basePath = '/home/ubuntu/OneDrive/'
 arcRoot = 'FF_Archive'
-
-def set_filter():
-    global filename
-    filename=raw_input("Enter Filename:")
-    print filename
 
 def get_entry(text,value):
     #Substitute {0} in text with value.
@@ -99,7 +93,7 @@ def choose_file(path,value):
     global tfile
     
     #get files in path
-    lfiles = get_files(path,filename)    
+    lfiles = get_files(path,'*.txt')    
     ret=''
  
     if len(lfiles) > 0:
