@@ -175,10 +175,13 @@ def mov_files(path,dfolder,value):
 
     list_files(path,value,'N')
     confirm=raw_input("Enter Y to proceed: ") 
-    if confirm == 'Y':
+    if confirm.lower() == 'y':
         print "Archiving files"
         try:
-            shutil.move(os.path.join(path,value),os.path.join(dpath,value))
+            matches = get_files(path,value)             
+            for i in range(len(matches)):
+                print "Archiving: ", matches[i]
+                shutil.move(os.path.join(path,matches[i]),os.path.join(dpath,matches[i]))
             print "Archive complete."
         except:
             print "Problem Archiving File."
@@ -371,6 +374,9 @@ def mainmenu():
         elif selection == '6':
             read_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
         elif selection == '7':
+            if not tfile:
+                print("Please select a file first!")
+                pause()
             mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
         elif selection == '8':
             about_story()
