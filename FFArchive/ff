@@ -260,6 +260,55 @@ def sync_menu():
     if ret == "Clean Folder":
         run_script(os.path.join(home,"bin/clean-onedrive"))
 
+def story_menu():
+
+   menu = ['About Story', 'Toggle Complete']
+   ret = submenu(menu,"Chose Story Option")
+
+   if ret == "About Story":
+       about_story()
+   if ret == "Toggle Complete":
+       toggle_complete()
+
+def toggle_complete():
+    
+    db_name = 'FanfictionDB.db'
+    db_folder = 'Read'
+    db_path = os.path.join(basePath,arcRoot,db_folder,db_name)
+
+    if os.path.isfile(db_path):
+
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        c = conn.cursor()        
+
+        cat = (category.replace('_',' '),)             
+  
+        c.execute("SELECT * FROM Category WHERE Name=?;",cat)
+        
+        r = c.fetchone()  
+
+        cat_id = r['Id']
+
+        f = (cat_id,sfolder)
+
+        c.execute("Select Complete from Fanfic Where Category_Id=? And Folder=?;",f)
+        r = c.fetchone()
+
+        t = r['Complete']
+
+        if t == 1:
+            t = 0
+        else:
+            t = 1
+
+        f = (t,cat_id,sfolder)
+
+        c.execute("UPDATE Fanfic set Complete = ? Where Category_Id=? And Folder=?;",f)
+        conn.commit()
+
+	about_story()
+
 def about_story():
 
     db_name = 'FanfictionDB.db'
@@ -327,7 +376,7 @@ def mainmenu():
         menu[' 5'] = get_entry("Text File: {0}",tfile)
         menu[' 6'] = "Read File"
         menu[' 7'] = "Move File"
-        menu[' 8'] = "About Story"
+        menu[' 8'] = "Story Options"
         menu[' 9'] = "Sync Options"        
         menu['10'] = "Exit"
         options=menu.keys()
@@ -374,7 +423,7 @@ def mainmenu():
             else:
                 mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
         elif selection == '8':
-            about_story()
+            story_menu()
         elif selection == '9':
             sync_menu()
         elif selection == '10': 
