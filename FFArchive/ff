@@ -13,6 +13,7 @@ folder=''
 dfolder=''
 sfolder=''
 tfile=''
+editor='vi'
 
 basePath = '/home/ubuntu/OneDrive/'
 arcRoot = 'FF_Archive'
@@ -155,7 +156,7 @@ def run_script(value):
 def read_file(value):
     #process = subprocess.Popen(['gedit',value], stdout=subprocess.PIPE)
     #process.wait()
-    subprocess.call('vi '+value,shell=True)
+    subprocess.call(editor+' '+value,shell=True)
 
 def ensure_dir(path):     
     if not os.path.exists(path):
@@ -209,6 +210,11 @@ def load_config():
         t_dfolder = config.get('ff','destfolder')
         t_tfile = config.get('ff','textfile')
 
+        t_editor = config.get('ff','editor')
+
+        if t_editor:
+            editor = t_editor
+
 	spath = os.path.join(basePath,arcRoot,t_folder)
 	dpath = os.path.join(basePath,arcRoot,t_dfolder)
 
@@ -243,6 +249,7 @@ def save_config():
     config.set('ff','storyfolder',sfolder)
     config.set('ff','destfolder',dfolder)
     config.set('ff','textfile',tfile)
+    config.set('ff','editor',editor)
 
     with open(cfg, 'w') as f:
         config.write(f)
@@ -269,6 +276,21 @@ def story_menu():
        about_story()
    if ret == "Toggle Complete":
        toggle_complete()
+
+def edit_menu():
+    global editor
+
+    menu = ['vi','gedit']
+    ret = submenu(menu,"Choose Editor")
+
+    editor = ret
+
+def options_menu();
+    menu = ['Editor', 'Main Menu']
+    ret = submenu(menu, "Choose Option")
+
+    if ret == "Editor":
+	edit_menu()
 
 def toggle_complete():
     
@@ -377,8 +399,9 @@ def mainmenu():
         menu[' 6'] = "Read File"
         menu[' 7'] = "Move File"
         menu[' 8'] = "Story Options"
-        menu[' 9'] = "Sync Options"        
-        menu['10'] = "Exit"
+        menu[' 9'] = "Sync Options"
+        menu['10'] = "Config Options"        
+        menu['11'] = "Exit"
         options=menu.keys()
         options.sort()
         _=os.system("clear")
@@ -426,7 +449,9 @@ def mainmenu():
             story_menu()
         elif selection == '9':
             sync_menu()
-        elif selection == '10': 
+        elif selection == '10':
+            option_menu()
+        elif selection == '11':
             save_config()
             break
         else: 
