@@ -154,8 +154,6 @@ def run_script(value):
     pause()
 
 def read_file(value):
-    #process = subprocess.Popen(['gedit',value], stdout=subprocess.PIPE)
-    #process.wait()
     subprocess.call(editor+' '+value,shell=True)
 
 def ensure_dir(path):     
@@ -197,20 +195,24 @@ def load_config():
     global sfolder
     global category    
     global tfile
+    global editor
+    t_editor =''
     config = SafeConfigParser()    
 
     cfg = get_config()
 
     if os.path.isfile(cfg):            
         config.read(cfg)        
-        
-        t_folder = config.get('ff','sourcefolder')
-        t_category = config.get('ff','category')
-        t_sfolder = config.get('ff','storyfolder') 
-        t_dfolder = config.get('ff','destfolder')
-        t_tfile = config.get('ff','textfile')
 
-        t_editor = config.get('ff','editor')
+        try:
+            t_folder = config.get('ff','sourcefolder')
+            t_category = config.get('ff','category')
+            t_sfolder = config.get('ff','storyfolder') 
+            t_dfolder = config.get('ff','destfolder')
+            t_tfile = config.get('ff','textfile')
+            t_editor = config.get('ff','editor')
+        except:
+            i=0
 
         if t_editor:
             editor = t_editor
@@ -280,12 +282,12 @@ def story_menu():
 def edit_menu():
     global editor
 
-    menu = ['vi','gedit']
+    menu = ['vi','gedit', 'geany', 'scite']
     ret = submenu(menu,"Choose Editor")
 
     editor = ret
 
-def options_menu();
+def options_menu():
     menu = ['Editor', 'Main Menu']
     ret = submenu(menu, "Choose Option")
 
@@ -450,7 +452,7 @@ def mainmenu():
         elif selection == '9':
             sync_menu()
         elif selection == '10':
-            option_menu()
+            options_menu()
         elif selection == '11':
             save_config()
             break
