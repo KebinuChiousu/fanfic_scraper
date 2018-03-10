@@ -407,7 +407,8 @@ def about_story():
         else:
             print "Complete: No"
         print "Last Updated: ", dt.strftime("%B %d, %Y")
-        print "Summary: ", r["Description"]
+        print "Summary: ", textwrap.fill(r["Description"])
+        print ""
 
     pause()
 
