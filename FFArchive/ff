@@ -7,6 +7,8 @@ import subprocess
 from ConfigParser import SafeConfigParser
 from datetime import datetime
 import sqlite3
+import textwrap
+
 
 category=''
 folder=''
@@ -153,6 +155,33 @@ def run_script(value):
     subprocess.call(value,shell=True)
     pause()
 
+def format_file(value):
+
+    print "Processing File... please wait."
+
+    t_file = value+".tmp"
+
+    f1 = open(value, "r")
+    f2 = open(t_file, "w")
+
+    fdata = f1.read()
+    flines = fdata.splitlines()
+    for line in flines:
+        data1 = textwrap.fill(line,80)
+        data2 = data1.splitlines()
+        for i in range(len(data2)):
+            f2.write(data2[i]+"\n")
+            if i == (len(data2)-1):
+                f2.write("\n")
+    f2.flush()
+    os.fsync(f2.fileno())
+
+    f1.close
+    f2.close
+
+    os.remove(value)
+    shutil.move(t_file,value)
+
 def read_file(value):
     subprocess.call(editor+' '+value,shell=True)
 
@@ -217,23 +246,23 @@ def load_config():
         if t_editor:
             editor = t_editor
 
-	spath = os.path.join(basePath,arcRoot,t_folder)
-	dpath = os.path.join(basePath,arcRoot,t_dfolder)
+    spath = os.path.join(basePath,arcRoot,t_folder)
+    dpath = os.path.join(basePath,arcRoot,t_dfolder)
 
         #Validate parameters in config file are valid.
-	if os.path.exists(dpath):
-	    dfolder = t_dfolder	
-	if os.path.exists(spath):        
-	    folder = t_folder
-	    spath = os.path.join(spath,t_category)
-	    if os.path.exists(spath):
-	        category = t_category
-                spath = os.path.join(spath,t_sfolder)
-                if os.path.exists(spath):
-                    sfolder = t_sfolder     
-                    sfile = os.path.join(spath,t_tfile)
-                    if os.path.isfile(sfile):
-                        tfile = t_tfile
+    if os.path.exists(dpath):
+        dfolder = t_dfolder    
+    if os.path.exists(spath):        
+        folder = t_folder
+        spath = os.path.join(spath,t_category)
+        if os.path.exists(spath):
+            category = t_category
+            spath = os.path.join(spath,t_sfolder)
+            if os.path.exists(spath):
+                sfolder = t_sfolder     
+                sfile = os.path.join(spath,t_tfile)
+                if os.path.isfile(sfile):
+                    tfile = t_tfile
              
 def save_config():    
 
@@ -271,13 +300,18 @@ def sync_menu():
 
 def story_menu():
 
-   menu = ['About Story', 'Toggle Complete']
-   ret = submenu(menu,"Chose Story Option")
+    menu = ['About Story', 'Toggle Complete', "Format File", "Main Menu"]
+    ret = submenu(menu,"Chose Story Option")
 
-   if ret == "About Story":
+    if ret == "About Story":
        about_story()
-   if ret == "Toggle Complete":
+    if ret == "Toggle Complete":
        toggle_complete()
+    if ret == "Format File":
+        if tfile:
+            format_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
+        else:
+            print "File must be selected first!"
 
 def edit_menu():
     global editor
@@ -292,7 +326,7 @@ def options_menu():
     ret = submenu(menu, "Choose Option")
 
     if ret == "Editor":
-	edit_menu()
+        edit_menu()
 
 def toggle_complete():
     
@@ -331,7 +365,7 @@ def toggle_complete():
         c.execute("UPDATE Fanfic set Complete = ? Where Category_Id=? And Folder=?;",f)
         conn.commit()
 
-	about_story()
+    about_story()
 
 def about_story():
 
@@ -426,7 +460,7 @@ def mainmenu():
                 print("Please choose a category first!")
                 pause()
             else:
-            	sfolder = choose_value(os.path.join(basePath,arcRoot,folder,category),"Choose Story Folder:") 
+                sfolder = choose_value(os.path.join(basePath,arcRoot,folder,category),"Choose Story Folder:") 
         elif selection == '4':
             if not sfolder:
                 print("Please choose a story first!")
@@ -440,7 +474,11 @@ def mainmenu():
             else:
                  tfile = choose_file(os.path.join(basePath,arcRoot,folder,category,sfolder),"Choose File:")
         elif selection == '6':
-            read_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
+            if not tfile:
+                print("Please select a file first!")
+                pause()
+            else:
+                read_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
         elif selection == '7':
             if not tfile:
                 print("Please select a file first!")
