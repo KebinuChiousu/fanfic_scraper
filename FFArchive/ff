@@ -246,26 +246,25 @@ def load_config():
         if t_editor:
             editor = t_editor
 
-    spath = os.path.join(basePath,arcRoot,t_folder)
-    dpath = os.path.join(basePath,arcRoot,t_dfolder)
+        spath = os.path.join(basePath,arcRoot,t_folder)
+        dpath = os.path.join(basePath,arcRoot,t_dfolder)
 
         #Validate parameters in config file are valid.
-    if os.path.exists(dpath):
-        dfolder = t_dfolder    
-    if os.path.exists(spath):        
-        folder = t_folder
-        spath = os.path.join(spath,t_category)
-        if os.path.exists(spath):
-            category = t_category
-            spath = os.path.join(spath,t_sfolder)
+        if os.path.exists(dpath):
+            dfolder = t_dfolder    
+        if os.path.exists(spath):        
+            folder = t_folder
+            spath = os.path.join(spath,t_category)
             if os.path.exists(spath):
-                sfolder = t_sfolder     
-                sfile = os.path.join(spath,t_tfile)
-                if os.path.isfile(sfile):
-                    tfile = t_tfile
+                category = t_category
+                spath = os.path.join(spath,t_sfolder)
+                if os.path.exists(spath):
+                    sfolder = t_sfolder     
+                    sfile = os.path.join(spath,t_tfile)
+                    if os.path.isfile(sfile):
+                        tfile = t_tfile
              
 def save_config():    
-
     cfg = get_config()    
 
     config = SafeConfigParser()
