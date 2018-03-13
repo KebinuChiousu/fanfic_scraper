@@ -131,25 +131,28 @@ def get_folders(path,value):
 
     return matches
 
-def list_files(path,value,wait):
-    matches = get_files(path,value) 
-    divisor = 8
+def list_files(path,value):
+    matches = get_files(path,value)
+    print_list(matches)
+
+def print_list(matches):
+    divisor = 6
     result = ''
  
-    for i in range(len(matches)/divisor):
+    for i in range(int(len(matches)/divisor)):
             j = divisor * (i *1)
-            for j in range(j,j+(divisor-1)):
-                result=result+matches[j]
-            print result
+            result = ''
+            for j in range(j,j+(divisor)):
+                result=result+matches[j]+'\t'
+            print(result)
     
     k = len(matches) % divisor
-    l = ((len(matches) / divisor)*divisor)
+    l = (int(len(matches) / divisor)*divisor)
 
+    result = ''
     for m in range(l,len(matches)):
-        print matches[m]     
-
-    if wait == 'Y':
-        pause()
+        result=result+matches[m]+'\t'
+    print(result)
 
 def run_script(value):
     subprocess.call(value,shell=True)
