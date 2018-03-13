@@ -39,18 +39,16 @@ def submenu(values,prompt):
         print(prompt)
         print('')        
         for i in range(start,len(values)):
-            # ignore folder name '00'
-            if values[i] <> '00':
-                print i, values[i]
-                j=i
-                # limit number of entries to stop var.
-                if i >= stop:
-                    # Stop offering next if the last entry is reached.
-                    if i < (len(values)-1):
-                        np=stop+1
-                        i=i+1
-                        print np, "Next Page"
-                        break
+            print i, values[i]
+            j=i
+            # limit number of entries to stop var.
+            if i >= stop:
+                # Stop offering next if the last entry is reached.
+                if i < (len(values)-1):
+                    np=stop+1
+                    i=i+1
+                    print np, "Next Page"
+                    break
         #if stop > inc, allow prev page.        
         if stop > inc:
             pp=i+1
@@ -88,7 +86,14 @@ def choose_value(path,value):
     #Get sub-folders in path
     subdirs = next(os.walk(path))[1]
     subdirs.sort()    
-    ret = submenu(subdirs,value)    
+    
+    if len(subdirs) > 0:
+        ret = submenu(subdirs,value)
+    else:
+        ret = ''
+        print "No folders found!"
+        pause()
+
     return ret    
 
 def choose_file(path,value):
