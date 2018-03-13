@@ -201,7 +201,7 @@ def mov_files(path,dfolder,value):
     # Create destination folder if it doesn't exist.
     ensure_dir(dpath)
 
-    list_files(path,value,'N')
+    list_files(path,value)
     confirm=raw_input("Enter Y to proceed: ") 
     if confirm.lower() == 'y':
         print "Archiving files"
