@@ -105,7 +105,7 @@ def choose_file(path,value):
     ret=''
  
     if len(lfiles) > 0:
-        lfiles.append(sfolder+'*.txt')
+        lfiles.append('*.txt')
         lfiles.sort()
         ret = submenu(lfiles,value)
     else:
@@ -424,7 +424,7 @@ def about_story():
 
     if r["Abandoned"] == 1:
         print "Abandoned story, entering archive mode..."
-        tfile=sfolder+'*.txt'
+        tfile='*.txt'
         mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
  
 def mainmenu():
