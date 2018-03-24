@@ -201,6 +201,7 @@ def ensure_dir(path):
         os.makedirs(path)
 
 def mov_files(path,dfolder,value):
+    global tfile
     # Build destination path
     dpath = os.path.join(basePath,arcRoot,dfolder,category,sfolder)    
     # Create destination folder if it doesn't exist.
@@ -219,6 +220,7 @@ def mov_files(path,dfolder,value):
         except:
             print "Problem Archiving File."
 
+    tfile = ''
     pause()
 
 def get_config():
@@ -466,12 +468,15 @@ def mainmenu():
                 pause()
             else:
                 category = choose_value(os.path.join(basePath,arcRoot,folder),"Choose Category:")
+                sfolder = ''
+                tfile = ''
         elif selection == '3':
             if not category:
                 print("Please choose a category first!")
                 pause()
             else:
-                sfolder = choose_value(os.path.join(basePath,arcRoot,folder,category),"Choose Story Folder:") 
+                sfolder = choose_value(os.path.join(basePath,arcRoot,folder,category),"Choose Story Folder:")
+                tfile = ''
         elif selection == '4':
             if not sfolder:
                 print("Please choose a story first!")
