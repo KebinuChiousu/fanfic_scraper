@@ -231,7 +231,8 @@ def get_config():
      
     return os.path.join(cfg,"config.ini")
 
-def load_config(): 
+def load_config():
+    global basePath
     global folder
     global dfolder
     global sfolder
@@ -239,6 +240,7 @@ def load_config():
     global tfile
     global editor
     t_editor =''
+    t_path = ''
     config = SafeConfigParser()    
 
     cfg = get_config()
@@ -253,11 +255,15 @@ def load_config():
             t_dfolder = config.get('ff','destfolder')
             t_tfile = config.get('ff','textfile')
             t_editor = config.get('ff','editor')
+            t_path = config.get('ff','path')
         except:
             i=0
 
         if t_editor:
             editor = t_editor
+            
+        if t_path:
+            basePath = t_path
 
         spath = os.path.join(basePath,arcRoot,t_folder)
         dpath = os.path.join(basePath,arcRoot,t_dfolder)
@@ -287,6 +293,7 @@ def save_config():
     if not config.has_section('ff'):
         config.add_section('ff')
 
+    config.set('ff','path',basePath)
     config.set('ff','sourcefolder',folder)
     config.set('ff','category',category)
     config.set('ff','storyfolder',sfolder)
@@ -334,11 +341,29 @@ def edit_menu():
     editor = ret
 
 def options_menu():
-    menu = ['Editor', 'Main Menu']
+    menu = ['Path','Editor', 'Main Menu']
     ret = submenu(menu, "Choose Option")
 
     if ret == "Editor":
         edit_menu()
+    if ret == "Path":
+        set_path()
+
+def set_path():
+    global basePath
+    
+    msg = 'Sync Folder: {0}'
+    print msg.format(basePath)
+    
+    root=raw_input("Enter root path to sync folder: ") 
+    
+    if os.path.exists(root):
+        basePath = root
+    else:
+        print "Invalid path, please try again."
+        pause()
+        _=os.system("clear")
+        set_path()
 
 def toggle_complete():
     
@@ -385,50 +410,62 @@ def about_story():
     db_folder = 'Read'
     db_path = os.path.join(basePath,arcRoot,db_folder,db_name)    
 
-    if os.path.isfile(db_path):
+    abort = False
 
+    if os.path.isfile(db_path):
+    
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         c = conn.cursor()        
-
+    
         cat = (category.replace('_',' '),)             
-  
+    
         c.execute("SELECT * FROM Category WHERE Name=?;",cat)
         
         r = c.fetchone()  
-
+    
         cat_id = r['Id']
-
+    
         f = (cat_id,sfolder)
-
+    
         c.execute("SELECT * FROM Fanfic Where Category_Id=? And Folder=?;",f)
         r= c.fetchone()
+    
+        try:
+            dt = r["Update_Date"]
+        except:
+            abort = True
+        
+        if abort == False:
+        
+            dt = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
+        
+            _=os.system("clear")
+            if r["Abandoned"] == 1:
+                print "WARNING: This story is ABANDONED and will NOT be updated."
+            print "Title: ", r["Title"]
+            print "Author: ", r["Author"]
+            print "Folder Name: ", r["Folder"]
+            print "Chapter Count: ", r["Count"]
+            if r["Complete"] == 1:
+                print "Complete: Yes"
+            else:
+                print "Complete: No"
+            print "Last Updated: ", dt.strftime("%B %d, %Y")
+            print "Summary: ", textwrap.fill(r["Description"])
+            print ""
+        
+            pause()
 
-        dt = r["Update_Date"]
-        dt = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
-
-        _=os.system("clear")
-        if r["Abandoned"] == 1:
-            print "WARNING: This story is ABANDONED and will NOT be updated."
-        print "Title: ", r["Title"]
-        print "Author: ", r["Author"]
-        print "Folder Name: ", r["Folder"]
-        print "Chapter Count: ", r["Count"]
-        if r["Complete"] == 1:
-            print "Complete: Yes"
+            if r["Abandoned"] == 1:
+                print "Abandoned story, entering archive mode..."
+                tfile='*.txt'
+                mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
+        
         else:
-            print "Complete: No"
-        print "Last Updated: ", dt.strftime("%B %d, %Y")
-        print "Summary: ", textwrap.fill(r["Description"])
-        print ""
+            print "Unable to locate story."
+            pause()
 
-    pause()
-
-    if r["Abandoned"] == 1:
-        print "Abandoned story, entering archive mode..."
-        tfile='*.txt'
-        mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
- 
 def mainmenu():
     global folder
     global dfolder
@@ -455,6 +492,8 @@ def mainmenu():
         options.sort()
         _=os.system("clear")
         print("Manage FanFiction Archive")
+        print('')
+        print(get_entry("Sync Folder: {0}",basePath))
         print('')
         for entry in options: 
             print entry, menu[entry]
