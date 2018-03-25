@@ -500,7 +500,12 @@ def mainmenu():
         print('')
         selection=raw_input("Please Select: ") 
         if selection =='1': 
-            folder = choose_value(os.path.join(basePath,arcRoot),"Choose Folder:")
+            root = os.path.join(basePath,arcRoot)
+            if not os.path.exists(root):
+                print("Please set a valid Sync Folder first!")
+                basePath = ''
+            else:
+                folder = choose_value(os.path.join(basePath,arcRoot),"Choose Folder:")
         elif selection == '2':
             if not folder:
                 print("Please choose a folder first!")
