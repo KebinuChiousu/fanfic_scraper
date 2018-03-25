@@ -467,10 +467,11 @@ def about_story():
             pause()
 
 def mainmenu():
+    global basePath
     global folder
     global dfolder
     global sfolder
-    global category    
+    global category
     global tfile
 
     load_config()
