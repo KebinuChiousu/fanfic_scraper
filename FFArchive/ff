@@ -9,7 +9,6 @@ from datetime import datetime
 import sqlite3
 import textwrap
 
-
 category=''
 folder=''
 dfolder=''
@@ -49,7 +48,7 @@ def submenu(values,prompt):
                     i=i+1
                     print np, "Next Page"
                     break
-        #if stop > inc, allow prev page.        
+        #if stop > inc, allow prev page.
         if stop > inc:
             pp=i+1
             i=i+1
@@ -61,7 +60,7 @@ def submenu(values,prompt):
         except:
             sel = j+1
         # Validate input is valid for current menu.
-        if (sel >= start) and (sel <= j): 
+        if (sel >= start) and (sel <= j):
             ret = values[sel]
             break
         else:
@@ -82,6 +81,51 @@ def submenu(values,prompt):
 
     return ret
 
+def menu_editor():
+    global editor
+
+    menu = ['vi','gedit', 'geany']
+    ret = submenu(menu,"Choose Editor")
+
+    editor = ret
+
+def menu_options():
+    menu = ['Path','Editor', 'Main Menu']
+    ret = submenu(menu, "Choose Option")
+
+    if ret == "Editor":
+        menu_editor()
+    if ret == "Path":
+        set_path()
+
+def menu_story():
+
+    menu = ['About Story', 'Toggle Complete', "Format File", "Main Menu"]
+    ret = submenu(menu,"Chose Story Option")
+
+    if ret == "About Story":
+       about_story()
+    if ret == "Toggle Complete":
+       toggle_complete()
+    if ret == "Format File":
+        if tfile:
+            format_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
+        else:
+            print "File must be selected first!"
+
+def menu_sync():
+
+    sync = ['Download','Upload','Clean Folder','Main Menu']
+    ret = submenu(sync,"Choose OneDrive Option")
+
+    home = os.path.expanduser("~")
+    if ret == "Download":
+        run_script(os.path.join(home,"bin/sync_dl.sh"))
+    if ret == "Upload":
+        run_script(os.path.join(home,"bin/sync_ul.sh"))
+    if ret == "Clean Folder":
+        run_script(os.path.join(home,"bin/clean-onedrive"))
+
 def choose_value(path,value):
     #Get sub-folders in path
     subdirs = next(os.walk(path))[1]
@@ -101,7 +145,7 @@ def choose_file(path,value):
     global tfile
     
     #get files in path
-    lfiles = get_files(path,'*.txt')    
+    lfiles = get_files(path,'*.txt')
     ret=''
  
     if len(lfiles) > 0:
@@ -196,23 +240,23 @@ def format_file(value):
 def read_file(value):
     subprocess.call(editor+' '+value,shell=True)
 
-def ensure_dir(path):     
+def ensure_dir(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
 def mov_files(path,dfolder,value):
     global tfile
     # Build destination path
-    dpath = os.path.join(basePath,arcRoot,dfolder,category,sfolder)    
+    dpath = os.path.join(basePath,arcRoot,dfolder,category,sfolder)
     # Create destination folder if it doesn't exist.
     ensure_dir(dpath)
 
     list_files(path,value)
-    confirm=raw_input("Enter Y to proceed: ") 
+    confirm=raw_input("Enter Y to proceed: ")
     if confirm.lower() == 'y':
         print "Archiving files"
         try:
-            matches = get_files(path,value)             
+            matches = get_files(path,value)
             for i in range(len(matches)):
                 print "Archiving: ", matches[i]
                 shutil.move(os.path.join(path,matches[i]),os.path.join(dpath,matches[i]))
@@ -236,22 +280,22 @@ def load_config():
     global folder
     global dfolder
     global sfolder
-    global category    
+    global category
     global tfile
     global editor
     t_editor =''
     t_path = ''
-    config = SafeConfigParser()    
+    config = SafeConfigParser()
 
     cfg = get_config()
 
-    if os.path.isfile(cfg):            
-        config.read(cfg)        
+    if os.path.isfile(cfg):
+        config.read(cfg)
 
         try:
             t_folder = config.get('ff','sourcefolder')
             t_category = config.get('ff','category')
-            t_sfolder = config.get('ff','storyfolder') 
+            t_sfolder = config.get('ff','storyfolder')
             t_dfolder = config.get('ff','destfolder')
             t_tfile = config.get('ff','textfile')
             t_editor = config.get('ff','editor')
@@ -270,21 +314,21 @@ def load_config():
 
         #Validate parameters in config file are valid.
         if os.path.exists(dpath):
-            dfolder = t_dfolder    
-        if os.path.exists(spath):        
+            dfolder = t_dfolder
+        if os.path.exists(spath):
             folder = t_folder
             spath = os.path.join(spath,t_category)
             if os.path.exists(spath):
                 category = t_category
                 spath = os.path.join(spath,t_sfolder)
                 if os.path.exists(spath):
-                    sfolder = t_sfolder     
+                    sfolder = t_sfolder
                     sfile = os.path.join(spath,t_tfile)
                     if os.path.isfile(sfile):
                         tfile = t_tfile
              
-def save_config():    
-    cfg = get_config()    
+def save_config():
+    cfg = get_config()
 
     config = SafeConfigParser()
 
@@ -304,50 +348,6 @@ def save_config():
     with open(cfg, 'w') as f:
         config.write(f)
 
-def sync_menu():
-
-    sync = ['Download','Upload','Clean Folder','Main Menu']
-    ret = submenu(sync,"Choose OneDrive Option")
-
-    home = os.path.expanduser("~")
-    if ret == "Download":        
-        run_script(os.path.join(home,"bin/sync_dl.sh"))
-    if ret == "Upload":        
-        run_script(os.path.join(home,"bin/sync_ul.sh"))
-    if ret == "Clean Folder":
-        run_script(os.path.join(home,"bin/clean-onedrive"))
-
-def story_menu():
-
-    menu = ['About Story', 'Toggle Complete', "Format File", "Main Menu"]
-    ret = submenu(menu,"Chose Story Option")
-
-    if ret == "About Story":
-       about_story()
-    if ret == "Toggle Complete":
-       toggle_complete()
-    if ret == "Format File":
-        if tfile:
-            format_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
-        else:
-            print "File must be selected first!"
-
-def edit_menu():
-    global editor
-
-    menu = ['vi','gedit', 'geany', 'scite']
-    ret = submenu(menu,"Choose Editor")
-
-    editor = ret
-
-def options_menu():
-    menu = ['Path','Editor', 'Main Menu']
-    ret = submenu(menu, "Choose Option")
-
-    if ret == "Editor":
-        edit_menu()
-    if ret == "Path":
-        set_path()
 
 def set_path():
     global basePath
@@ -355,7 +355,7 @@ def set_path():
     msg = 'Sync Folder: {0}'
     print msg.format(basePath)
     
-    root=raw_input("Enter root path to sync folder: ") 
+    root=raw_input("Enter root path to sync folder: ")
     
     if os.path.exists(root):
         basePath = root
@@ -375,13 +375,13 @@ def toggle_complete():
 
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
-        c = conn.cursor()        
+        c = conn.cursor()
 
-        cat = (category.replace('_',' '),)             
+        cat = (category.replace('_',' '),)
   
         c.execute("SELECT * FROM Category WHERE Name=?;",cat)
         
-        r = c.fetchone()  
+        r = c.fetchone()
 
         cat_id = r['Id']
 
@@ -416,9 +416,9 @@ def about_story():
     
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
-        c = conn.cursor()        
+        c = conn.cursor()
     
-        cat = (category.replace('_',' '),)             
+        cat = (category.replace('_',' '),)
     
         c.execute("SELECT * FROM Category WHERE Name=?;",cat)
         
@@ -487,7 +487,7 @@ def mainmenu():
         menu[' 7'] = "Move File"
         menu[' 8'] = "Story Options"
         menu[' 9'] = "Sync Options"
-        menu['10'] = "Config Options"        
+        menu['10'] = "Config Options"
         menu['11'] = "Exit"
         options=menu.keys()
         options.sort()
@@ -547,16 +547,16 @@ def mainmenu():
             else:
                 mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
         elif selection == '8':
-            story_menu()
+            menu_story()
         elif selection == '9':
-            sync_menu()
+            menu_sync()
         elif selection == '10':
-            options_menu()
+            menu_options()
         elif selection == '11':
             save_config()
             break
         else: 
-            print "Unknown Option Selected!"    
+            print "Unknown Option Selected!"
             pause()
 
 mainmenu()
