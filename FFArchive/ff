@@ -16,8 +16,11 @@ sfolder=''
 tfile=''
 editor='vi'
 
+#Initial Values
 basePath = '/home/ubuntu/OneDrive/'
 arcRoot = 'FF_Archive'
+db_name = 'FanfictionDB.db'
+db_folder = 'Read'
 
 def get_entry(text,value):
     #Substitute {0} in text with value.
@@ -283,8 +286,12 @@ def load_config():
     global category
     global tfile
     global editor
+    global db_folder
+    global db_name
     t_editor =''
     t_path = ''
+    t_dbname = ''
+    t_dbfolder = ''
     config = SafeConfigParser()
 
     cfg = get_config()
@@ -293,13 +300,15 @@ def load_config():
         config.read(cfg)
 
         try:
-            t_folder = config.get('ff','sourcefolder')
-            t_category = config.get('ff','category')
-            t_sfolder = config.get('ff','storyfolder')
-            t_dfolder = config.get('ff','destfolder')
-            t_tfile = config.get('ff','textfile')
-            t_editor = config.get('ff','editor')
-            t_path = config.get('ff','path')
+            t_folder = config.get('archive','sourcefolder')
+            t_category = config.get('archive','category')
+            t_sfolder = config.get('archive','storyfolder')
+            t_dfolder = config.get('archive','destfolder')
+            t_tfile = config.get('archive','textfile')
+            t_editor = config.get('options','editor')
+            t_path = config.get('path','path')
+            t_dbfolder = config.get('path','dbfolder')
+            t_dbname = config.get('path','dbname')
         except:
             i=0
 
@@ -308,6 +317,12 @@ def load_config():
             
         if t_path:
             basePath = t_path
+
+        if t_dbfolder:
+            db_folder = t_dbfolder
+
+        if t_dbname:
+            db_name = t_dbname
 
         spath = os.path.join(basePath,arcRoot,t_folder)
         dpath = os.path.join(basePath,arcRoot,t_dfolder)
@@ -334,16 +349,23 @@ def save_config():
 
     config.read(cfg)
 
-    if not config.has_section('ff'):
-        config.add_section('ff')
+    if not config.has_section('archive'):
+        config.add_section('archive')
+    if not config.has_section('options'):
+        config.add_section('options')
+    if not config.has_section('path'):
+        config.add_section('path')
 
-    config.set('ff','path',basePath)
-    config.set('ff','sourcefolder',folder)
-    config.set('ff','category',category)
-    config.set('ff','storyfolder',sfolder)
-    config.set('ff','destfolder',dfolder)
-    config.set('ff','textfile',tfile)
-    config.set('ff','editor',editor)
+    config.set('archive','sourcefolder',folder)
+    config.set('archive','category',category)
+    config.set('archive','storyfolder',sfolder)
+    config.set('archive','destfolder',dfolder)
+    config.set('archive','textfile',tfile)
+    config.set('options','editor',editor)
+    config.set('path','path',basePath)
+    config.set('path','rootfolder',arcRoot)
+    config.set('path','dbfolder',db_folder)
+    config.set('path','dbname',db_name)
 
     with open(cfg, 'w') as f:
         config.write(f)
@@ -367,8 +389,6 @@ def set_path():
 
 def toggle_complete():
     
-    db_name = 'FanfictionDB.db'
-    db_folder = 'Read'
     db_path = os.path.join(basePath,arcRoot,db_folder,db_name)
 
     if os.path.isfile(db_path):
@@ -406,9 +426,7 @@ def toggle_complete():
 
 def about_story():
 
-    db_name = 'FanfictionDB.db'
-    db_folder = 'Read'
-    db_path = os.path.join(basePath,arcRoot,db_folder,db_name)    
+    db_path = os.path.join(basePath,arcRoot,db_folder,db_name)
 
     abort = False
 
