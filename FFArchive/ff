@@ -456,7 +456,7 @@ def about_story():
         
         if abort == False:
         
-            dt = datetime.strptime(dt, "%Y-%m-%d %H:%M:%S")
+            dt = datetime.strptime(dt, "%Y-%m-%d")
         
             _=os.system("clear")
             if r["Abandoned"] == 1:
