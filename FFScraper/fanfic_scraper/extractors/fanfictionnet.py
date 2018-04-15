@@ -22,6 +22,9 @@ def chapter_nav(tag):
 
 class FanfictionNetFanfic(BaseFanfic):
 
+    def get_story_url(self, storyid):
+        return 'https://www.fanfiction.net/s/'+storyid
+
     def extract_chapters(self):
         """Extract chapters function (backbone)."""
         fanfic_name = self.name
@@ -53,6 +56,19 @@ class FanfictionNetFanfic(BaseFanfic):
 
         except:
             return chapters
+
+    def get_update_date(self):
+        r = requests.get(self.url, verify=self.verify_https)
+        soup = bsoup.BeautifulSoup(r.text, 'html5lib')
+
+        for div in soup.find_all('div', {'id':'profile_top'}):
+            span = div.find_all('span')[-2]
+            ts = span.get('data-xutime')
+            update_date = datetime.datetime.fromtimestamp(float(ts)).strftime('%Y-%m-%d')
+
+            break
+
+        return update_date
 
 class FanfictionNetChapter(BaseChapter):
     """Base chapter class."""

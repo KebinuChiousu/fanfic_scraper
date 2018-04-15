@@ -54,6 +54,7 @@ def main():
                     category=InsecureRequestWarning)
 
         fanfic = current_fanfic.fanfic(url, args, verify_https)
+        fanfic.get_chapters()
         print('Downloading fanfic: ' + fanfic.name)
 
         # Get chapters to download

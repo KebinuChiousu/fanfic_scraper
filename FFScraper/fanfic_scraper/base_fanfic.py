@@ -17,15 +17,16 @@ class BaseFanfic:
         # Set download location
         self.download_location = os.path.abspath(
             os.path.join(self.location,self.name))
-        if not os.path.exists(self.download_location):
-            os.makedirs(self.download_location)
         # Set threads and retry values
         self.chapter_threads = program_args.chapterthreads
         self.wait_time = program_args.waittime
         self.max_retries = program_args.retries
         # Set verify mode
         self.verify_https = verify_https
-        # Get all chapters and mode of download
+        self.all_chapters = None
+        self.chapter_count = 0
+
+    def get_chapters(self):
         self.all_chapters = self.extract_chapters()
         self.chapter_count = len(self.all_chapters)
 
@@ -48,6 +49,10 @@ class BaseFanfic:
 
     def download_fanfic(self):
         """Begin download of chapters in the fanfic."""
+
+        if not os.path.exists(self.download_location):
+            os.makedirs(self.download_location)
+        
         with concurrent.futures.ThreadPoolExecutor(
                 max_workers=self.chapter_threads) as executor:
             future_to_chapter = {
