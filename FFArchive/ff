@@ -1,13 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import os
 import sys
 import shutil
 import fnmatch
 import subprocess
-from ConfigParser import SafeConfigParser
-from datetime import datetime
+from configparser import SafeConfigParser
+from datetime import date
 import sqlite3
 import textwrap
+from pony.orm import *
+from db_pony import DataBaseLogic, Category, Fanfic
+from collections import defaultdict
 
 category=''
 folder=''
@@ -19,8 +22,109 @@ editor='vi'
 #Initial Values
 basePath = '/home/ubuntu/OneDrive/'
 arcRoot = 'FF_Archive'
+db = None
 db_name = 'FanfictionDB.db'
 db_folder = 'Read'
+
+class FanficDB:
+
+    def __init__(self):
+        db_path = os.path.join(basePath,arcRoot,db_folder,db_name)
+        dbhandle = DataBaseLogic(db_path)
+
+    def get_cat_id(self, categoryName):
+
+        with db_session:
+            cat = Category.get(Name=categoryName)
+            ret = cat.Id
+
+        return ret
+
+    def set_complete(self,fic_id):
+
+        with db_session:
+            fic = Fanfic.get(Id = fic_id)
+            c = fic.Complete
+
+            if c == 1:
+                c = 0
+            else:
+                c = 1
+
+            fic.Complete = c
+
+    def get_fic_id(self,cat_id,folder):
+
+        with db_session:
+            ff = select(f for f in Fanfic
+                        if f.Category_Id == cat_id
+                        and f.Folder == folder)
+
+            for f in ff:
+                ret = f.Id
+
+        return ret
+
+    def get_fanfic(self,cat_id,folder):
+        d = defaultdict(list)
+        ret = []
+
+        with db_session:
+            ff = select(f for f in Fanfic
+                        if f.Category_Id == cat_id
+                        and f.Folder == folder)
+
+            for f in ff:
+                d = defaultdict(list)
+                for k,v in f.to_dict().items():
+                    d[k].append(v)
+                ret.append(d)
+
+        return ret[0]
+
+def about_story():
+
+    source = os.path.join(basePath,arcRoot,folder,category,sfolder)
+    cat = category.replace('_',' ')
+    cat_id = db.get_cat_id(cat)
+    r = db.get_fanfic(cat_id,sfolder)
+
+    _=os.system("clear")
+
+    if r["Abandoned"][0] == 1:
+        print("WARNING: This story is ABANDONED and will NOT be updated.")
+        print("")
+
+    print("Title: ", r["Title"][0])
+    print("Author: ", r["Author"][0])
+    print("Folder Name: ", r["Folder"][0])
+    print("Chapter Count: ", r["Count"][0])
+
+    if r["Complete"][0] == 1:
+        print("Complete: Yes")
+    else:
+        print("Complete: No")
+
+    print("Last Updated: ", r["Update_Date"][0])
+    print("Summary: ", textwrap.fill(r["Description"][0]))
+    print("")
+
+    pause()
+
+    if r["Abandoned"][0] == 1:
+        print("Abandoned story, entering archive mode...")
+        tfile='*.txt'
+        mov_files(source,dfolder,tfile)
+
+def toggle_complete():
+
+    cat = category.replace('_',' ')
+    cat_id = db.get_cat_id(cat)
+    fic_id = db.get_fic_id(cat_id,sfolder)
+
+    db.set_complete(fic_id)
+
+    about_story()
 
 def get_entry(text,value):
     #Substitute {0} in text with value.
@@ -28,20 +132,20 @@ def get_entry(text,value):
 
 def pause():
     #Wait for user input.
-    programPause = raw_input("Press the <ENTER> key to continue...")
+    programPause = input("Press the <ENTER> key to continue...")
 
 def submenu(values,prompt):
     inc=9
     start=0
-    stop=inc    
+    stop=inc
     np=0
     pp=0
  
     while True:
         print(prompt)
-        print('')        
+        print('')
         for i in range(start,len(values)):
-            print i, values[i]
+            print(i, values[i])
             j=i
             # limit number of entries to stop var.
             if i >= stop:
@@ -49,17 +153,17 @@ def submenu(values,prompt):
                 if i < (len(values)-1):
                     np=stop+1
                     i=i+1
-                    print np, "Next Page"
+                    print(np, "Next Page")
                     break
         #if stop > inc, allow prev page.
         if stop > inc:
             pp=i+1
             i=i+1
-            print pp, "Prev Page"
+            print(pp, "Prev Page")
         print('')
         #parse input into number, blank is invalid.
         try:
-            sel=int(raw_input("Enter Selection: "))
+            sel=int(input("Enter Selection: "))
         except:
             sel = j+1
         # Validate input is valid for current menu.
@@ -78,7 +182,7 @@ def submenu(values,prompt):
              stop=start+9
              _=os.system("clear")
          else:    
-             print "Unknown Option Selected!"
+             print("Unknown Option Selected!")
              pause()
              _=os.system("clear")
 
@@ -114,7 +218,7 @@ def menu_story():
         if tfile:
             format_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
         else:
-            print "File must be selected first!"
+            print("File must be selected first!")
 
 def menu_sync():
 
@@ -132,25 +236,25 @@ def menu_sync():
 def choose_value(path,value):
     #Get sub-folders in path
     subdirs = next(os.walk(path))[1]
-    subdirs.sort()    
-    
+    subdirs.sort()
+
     if len(subdirs) > 0:
         ret = submenu(subdirs,value)
     else:
         ret = ''
-        print "No folders found!"
+        print("No folders found!")
         pause()
 
-    return ret    
+    return ret
 
 def choose_file(path,value):
     global sfolder
     global tfile
-    
+
     #get files in path
     lfiles = get_files(path,'*.txt')
     ret=''
- 
+
     if len(lfiles) > 0:
         lfiles.append('*.txt')
         lfiles.sort()
@@ -193,14 +297,14 @@ def list_files(path,value):
 def print_list(matches):
     divisor = 6
     result = ''
- 
+
     for i in range(int(len(matches)/divisor)):
             j = divisor * (i *1)
             result = ''
             for j in range(j,j+(divisor)):
                 result=result+matches[j]+'\t'
             print(result)
-    
+
     k = len(matches) % divisor
     l = (int(len(matches) / divisor)*divisor)
 
@@ -215,7 +319,7 @@ def run_script(value):
 
 def format_file(value):
 
-    print "Processing File... please wait."
+    print("Processing File... please wait.")
 
     t_file = value+".tmp"
 
@@ -255,17 +359,17 @@ def mov_files(path,dfolder,value):
     ensure_dir(dpath)
 
     list_files(path,value)
-    confirm=raw_input("Enter Y to proceed: ")
+    confirm=input("Enter Y to proceed: ")
     if confirm.lower() == 'y':
-        print "Archiving files"
+        print("Archiving files")
         try:
             matches = get_files(path,value)
             for i in range(len(matches)):
-                print "Archiving: ", matches[i]
+                print("Archiving: ", matches[i])
                 shutil.move(os.path.join(path,matches[i]),os.path.join(dpath,matches[i]))
-            print "Archive complete."
+            print("Archive complete.")
         except:
-            print "Problem Archiving File."
+            print("Problem Archiving File.")
 
     tfile = ''
     pause()
@@ -275,7 +379,7 @@ def get_config():
     home = os.path.expanduser("~")
     cfg = os.path.join(home,".ff")
     ensure_dir(cfg)
-     
+
     return os.path.join(cfg,"config.ini")
 
 def load_config():
@@ -373,116 +477,19 @@ def save_config():
 
 def set_path():
     global basePath
-    
+
     msg = 'Sync Folder: {0}'
-    print msg.format(basePath)
-    
-    root=raw_input("Enter root path to sync folder: ")
-    
+    print(msg.format(basePath))
+
+    root=input("Enter root path to sync folder: ")
+
     if os.path.exists(root):
         basePath = root
     else:
-        print "Invalid path, please try again."
+        print("Invalid path, please try again.")
         pause()
         _=os.system("clear")
         set_path()
-
-def toggle_complete():
-    
-    db_path = os.path.join(basePath,arcRoot,db_folder,db_name)
-
-    if os.path.isfile(db_path):
-
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
-        c = conn.cursor()
-
-        cat = (category.replace('_',' '),)
-  
-        c.execute("SELECT * FROM Category WHERE Name=?;",cat)
-        
-        r = c.fetchone()
-
-        cat_id = r['Id']
-
-        f = (cat_id,sfolder)
-
-        c.execute("Select Complete from Fanfic Where Category_Id=? And Folder=?;",f)
-        r = c.fetchone()
-
-        t = r['Complete']
-
-        if t == 1:
-            t = 0
-        else:
-            t = 1
-
-        f = (t,cat_id,sfolder)
-
-        c.execute("UPDATE Fanfic set Complete = ? Where Category_Id=? And Folder=?;",f)
-        conn.commit()
-
-    about_story()
-
-def about_story():
-
-    db_path = os.path.join(basePath,arcRoot,db_folder,db_name)
-
-    abort = False
-
-    if os.path.isfile(db_path):
-    
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
-        c = conn.cursor()
-    
-        cat = (category.replace('_',' '),)
-    
-        c.execute("SELECT * FROM Category WHERE Name=?;",cat)
-        
-        r = c.fetchone()  
-    
-        cat_id = r['Id']
-    
-        f = (cat_id,sfolder)
-    
-        c.execute("SELECT * FROM Fanfic Where Category_Id=? And Folder=?;",f)
-        r= c.fetchone()
-    
-        try:
-            dt = r["Update_Date"]
-        except:
-            abort = True
-        
-        if abort == False:
-        
-            dt = datetime.strptime(dt, "%Y-%m-%d")
-        
-            _=os.system("clear")
-            if r["Abandoned"] == 1:
-                print "WARNING: This story is ABANDONED and will NOT be updated."
-            print "Title: ", r["Title"]
-            print "Author: ", r["Author"]
-            print "Folder Name: ", r["Folder"]
-            print "Chapter Count: ", r["Count"]
-            if r["Complete"] == 1:
-                print "Complete: Yes"
-            else:
-                print "Complete: No"
-            print "Last Updated: ", dt.strftime("%B %d, %Y")
-            print "Summary: ", textwrap.fill(r["Description"])
-            print ""
-        
-            pause()
-
-            if r["Abandoned"] == 1:
-                print "Abandoned story, entering archive mode..."
-                tfile='*.txt'
-                mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
-        
-        else:
-            print "Unable to locate story."
-            pause()
 
 def mainmenu():
     global basePath
@@ -496,28 +503,28 @@ def mainmenu():
 
     while True:
         menu = {}
-        menu[' 1'] = get_entry("Source Folder: {0}",folder)
-        menu[' 2'] = get_entry("Source Category: {0}",category)
-        menu[' 3'] = get_entry("Story: {0}",sfolder)
-        menu[' 4'] = get_entry("Dest Folder: {0}",dfolder+"/"+category+"/"+sfolder)
-        menu[' 5'] = get_entry("Text File: {0}",tfile)
-        menu[' 6'] = "Read File"
-        menu[' 7'] = "Move File"
-        menu[' 8'] = "Story Options"
-        menu[' 9'] = "Sync Options"
-        menu['10'] = "Config Options"
-        menu['11'] = "Exit"
+        menu[1] = get_entry("Source Folder: {0}",folder)
+        menu[2] = get_entry("Source Category: {0}",category)
+        menu[3] = get_entry("Story: {0}",sfolder)
+        menu[4] = get_entry("Dest Folder: {0}",dfolder+"/"+category+"/"+sfolder)
+        menu[5] = get_entry("Text File: {0}",tfile)
+        menu[6] = "Read File"
+        menu[7] = "Move File"
+        menu[8] = "Story Options"
+        menu[9] = "Sync Options"
+        menu[10] = "Config Options"
+        menu[11] = "Exit"
         options=menu.keys()
-        options.sort()
         _=os.system("clear")
         print("Manage FanFiction Archive")
         print('')
         print(get_entry("Sync Folder: {0}",basePath))
         print('')
-        for entry in options: 
-            print entry, menu[entry]
+        for entry in options:
+            opt = '%02d' % entry
+            print(opt, menu[entry])
         print('')
-        selection=raw_input("Please Select: ") 
+        selection=input("Please Select: ") 
         if selection =='1': 
             root = os.path.join(basePath,arcRoot)
             if not os.path.exists(root):
@@ -565,7 +572,11 @@ def mainmenu():
             else:
                 mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
         elif selection == '8':
-            menu_story()
+            if not sfolder:
+                print("Please choose a story first!")
+                pause()
+            else:
+                menu_story()
         elif selection == '9':
             menu_sync()
         elif selection == '10':
@@ -574,7 +585,15 @@ def mainmenu():
             save_config()
             break
         else: 
-            print "Unknown Option Selected!"
+            print("Unknown Option Selected!")
             pause()
 
-mainmenu()
+def main():
+    global db
+
+    #Initialize DB
+    db = FanficDB()
+    #Call Main Menu
+    mainmenu()
+
+main()
