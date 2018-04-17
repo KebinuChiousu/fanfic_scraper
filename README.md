@@ -4,10 +4,17 @@ Currently supports fanfiction.net (more coming up soon).
 
 ### Installation
 
+### Via pip
+To install the fanfic scraper, simply type this into your terminal (```sudo -EH``` might be necessary):
+```
+pip install fanfic-scraper
+```
+
+### Via pip (local)
 Clone a copy of the repository using the following command:
 
 ```
-git clone https://github.com/KebinuChiousu/FanfictionDB.git
+git clone https://github.com/KebinuChiousu/fanfic_scraper.git
 ```
 
 #### Requirements
@@ -26,7 +33,7 @@ That's it. Use fanfic_scraper.py to download fanfics.
 ## Usage
 
 Find your fanfic of interest at fanfiction.net. Copy the url of the story (https supported).
-For example, If I wanted to download the story "Magical Player".  manga, I need to copy this url:
+For example, If I wanted to download the story "Magical Player", I need to copy this url:
 https://www.fanfiction.net/s/12861961/1/Magical-Player
 
 To download all the chapters of the comic, simply call the script and input the url with a folder name to place the chapters in. Use -f to specify the folder name.
