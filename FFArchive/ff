@@ -53,6 +53,19 @@ class FanficDB:
 
             fic.Complete = c
 
+    def set_abandoned(self,fic_id):
+
+        with db_session:
+            fic = Fanfic.get(Id = fic_id)
+            a = fic.Abandoned
+
+            if a == 1:
+                a = 0
+            else:
+                a = 1
+
+            fic.Abandoned = a
+
     def get_fic_id(self,cat_id,folder):
 
         with db_session:
@@ -111,10 +124,7 @@ def about_story():
 
     pause()
 
-    if r["Abandoned"][0] == 1:
-        print("Abandoned story, entering archive mode...")
-        tfile='*.txt'
-        mov_files(source,dfolder,tfile)
+    menu_story()
 
 def toggle_complete():
 
@@ -124,7 +134,17 @@ def toggle_complete():
 
     db.set_complete(fic_id)
 
-    about_story()
+    menu_story()
+
+def toggle_abandoned():
+
+    cat = category.replace('_',' ')
+    cat_id = db.get_cat_id(cat)
+    fic_id = db.get_fic_id(cat_id,sfolder)
+
+    db.set_abandoned(fic_id)
+
+    menu_story()
 
 def get_entry(text,value):
     #Substitute {0} in text with value.
@@ -207,13 +227,17 @@ def menu_options():
 
 def menu_story():
 
-    menu = ['About Story', 'Toggle Complete', "Format File", "Main Menu"]
+    menu = ['About Story']
+    menu = menu + ['Toggle Complete', 'Toggle Abandoned']
+    menu = menu + [ "Format File", "Main Menu"]
     ret = submenu(menu,"Chose Story Option")
 
     if ret == "About Story":
-       about_story()
+        about_story()
     if ret == "Toggle Complete":
-       toggle_complete()
+        toggle_complete()
+    if ret == "Toggle Abandoned":
+        toggle_abandoned()
     if ret == "Format File":
         if tfile:
             format_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
@@ -225,13 +249,14 @@ def menu_sync():
     sync = ['Download','Upload','Clean Folder','Main Menu']
     ret = submenu(sync,"Choose OneDrive Option")
 
-    home = os.path.expanduser("~")
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+
     if ret == "Download":
-        run_script(os.path.join(home,"bin/sync_dl.sh"))
+        run_script(os.path.join(script_dir,"util/sync_dl.sh"))
     if ret == "Upload":
-        run_script(os.path.join(home,"bin/sync_ul.sh"))
+        run_script(os.path.join(script_dir,"util/sync_ul.sh"))
     if ret == "Clean Folder":
-        run_script(os.path.join(home,"bin/clean-onedrive"))
+        run_script(os.path.join(script_dir,"util/clean-onedrive"))
 
 def choose_value(path,value):
     #Get sub-folders in path
