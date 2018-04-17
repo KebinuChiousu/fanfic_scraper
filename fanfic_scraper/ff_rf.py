@@ -57,7 +57,8 @@ def print_list(matches):
 
 def get_prefix(file):
     matches = []
-    r = re.compile("([a-zA-Z]+[0-9]+[a-zA-Z]+-)|([a-zA-Z]+[0-9]+-)|([a-zA-Z]+)")
+    t = ''
+    r = re.compile("([a-zA-Z]+[0-9]+[a-zA-Z]+-)|([a-zA-Z]+[0-9]+-)|([a-zA-Z]+-)|([a-zA-Z]+)")
 
     m = r.match(file)
     
@@ -68,6 +69,8 @@ def get_prefix(file):
             t = m.group(2)
         elif (m.group(3)):
             t = m.group(3)
+        elif (m.group(4)):
+            t = m.group(4)
 
     return t
 
@@ -88,17 +91,45 @@ def main():
 
     files = txt+htm
 
+    abort = 0
+
     for f in files:
         d = os.path.dirname(f)
         f = os.path.basename(f)
+        cat = os.path.basename(d)
+
+        if '_' in f:
+            target = f.replace('_','-')
+            ren_file(d,f,target)
+            f = target
+
         p = get_prefix(f)
-        n = int(f.replace(p,'').split('.')[0])
-        p = p.split('-')[0] + '-'
-        num = '%03d' % n
-        ext = f.replace(p,'').split('.')[1]
-        target = p+num+'.'+ext
-        print("Renaming: " + f + " to " + target)
-        shutil.move(os.path.join(d,f),os.path.join(d,target))
+        
+        if p == '':
+            abort = 1
+        else:
+            try:
+                n = int(f.replace(p,'').split('.')[0])
+            except:
+                abort = 1
+
+        if (abort == 0):
+            p = p.split('-')[0] + '-'
+            num = '%03d' % n
+            ext = f.replace(p,'').split('.')[1]
+            target = p+num+'.'+ext
+            ren_file(d,f,target)
+        else:
+            abort = 0
+
+def ren_file(folder,orig,new):
+    source = os.path.join(folder,orig)
+    target = os.path.join(folder,new)
+
+    print("Fanfic: " + folder)
+    print("Renaming: " + orig + " to " + new)
+
+    shutil.move(source,target)
 
 if __name__ == "__main__":
     sys.exit(main())
