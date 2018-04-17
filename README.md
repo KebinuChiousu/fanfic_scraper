@@ -28,7 +28,7 @@ The script is written in python. It requires the following packages:
 2. requests
 3. futures (concurrent.futures)
 
-These can simply be installed by running in the FFScraper folder.
+These can simply be installed by running in the project folder.
 ```
 pip install -r requirements.txt
 ```
