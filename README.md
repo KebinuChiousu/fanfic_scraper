@@ -17,6 +17,11 @@ Clone a copy of the repository using the following command:
 git clone https://github.com/KebinuChiousu/fanfic_scraper.git
 ```
 
+In the project folder, type this into your terminal (```sudo -EH``` might be necessary):
+```
+pip install .
+```
+
 #### Requirements
 The script is written in python. It requires the following packages:
 1. BeautifulSoup4
