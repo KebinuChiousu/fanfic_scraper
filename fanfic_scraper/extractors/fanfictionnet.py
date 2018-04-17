@@ -1,6 +1,6 @@
 """Extractor for fanfiction.net."""
 
-from base_fanfic import BaseFanfic, BaseChapter
+from fanfic_scraper.base_fanfic import BaseFanfic, BaseChapter
 from urllib.parse import urlparse, urljoin
 import requests
 import bs4 as bsoup

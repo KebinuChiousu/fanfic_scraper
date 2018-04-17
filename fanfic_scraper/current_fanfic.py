@@ -1,6 +1,6 @@
 """Define current fanfic class based on url."""
 
-from extractors.fanfictionnet import FanfictionNetFanfic
+from fanfic_scraper.extractors.fanfictionnet import FanfictionNetFanfic
 
 def fanfic(fanfic_url, args, verify_https):
     """Send the approriate class."""
