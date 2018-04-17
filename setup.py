@@ -29,8 +29,13 @@ setup(name='fanfic-scraper',
           'tldextract==2.2.0'
       ],
       entry_points={
-          'console_scripts':
-          ['fanfic-scraper=fanfic_scraper.fanfic_scraper:main'],
+          'console_scripts': [
+          'fanfic-scraper=fanfic_scraper.fanfic_scraper:main',
+          'ff=fanfic_scraper.ff:main',
+          'ffdl=fanfic_scraper.ffdl:main',
+          'ff-fif=fanfic_scraper.ff_fif:main',
+          'ff-h2t=fanfic_scraper.ff_h2t:main'
+        ],
       },
       include_package_data=True,
       zip_safe=False)

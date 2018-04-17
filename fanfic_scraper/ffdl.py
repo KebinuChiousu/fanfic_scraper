@@ -13,7 +13,7 @@ import tldextract
 from urllib.parse import urlparse
 import requests
 from pony.orm import *
-from db_pony import DataBaseLogic, Category, Fanfic
+from fanfic_scraper.db_pony import DataBaseLogic, Category, Fanfic
 import sqlite3
 
 basePath = '/home/ubuntu/OneDrive/'
@@ -425,4 +425,5 @@ def main():
         download_stories(args)
 
 
-main()
+if __name__ == "__main__":
+    sys.exit(main())

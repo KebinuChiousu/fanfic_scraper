@@ -9,7 +9,7 @@ from datetime import date
 import sqlite3
 import textwrap
 from pony.orm import *
-from db_pony import DataBaseLogic, Category, Fanfic
+from fanfic_scraper.db_pony import DataBaseLogic, Category, Fanfic
 from collections import defaultdict
 
 category=''
@@ -621,4 +621,5 @@ def main():
     #Call Main Menu
     mainmenu()
 
-main()
+if __name__ == "__main__":
+    sys.exit(main())
