@@ -191,20 +191,20 @@ def submenu(values,prompt):
             ret = values[sel]
             break
         else:
-         # Move 1 page ahead
-         if sel == np:
-             start=start+10
-             stop=start+9
-             _=os.system("clear")
-         # Move 1 page back
-         elif sel == pp:
-             start=start-10
-             stop=start+9
-             _=os.system("clear")
-         else:    
-             print("Unknown Option Selected!")
-             pause()
-             _=os.system("clear")
+            # Move 1 page ahead
+            if sel == np:
+                start=start+10
+                stop=start+9
+                _=os.system("clear")
+            # Move 1 page back
+            elif sel == pp:
+                start=start-10
+                stop=start+9
+                _=os.system("clear")
+            else:
+                print("Unknown Option Selected!")
+                pause()
+                _=os.system("clear")
 
     return ret
 
@@ -609,7 +609,7 @@ def mainmenu():
         elif selection == '11':
             save_config()
             break
-        else: 
+        else:
             print("Unknown Option Selected!")
             pause()
 
