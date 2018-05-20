@@ -5,6 +5,7 @@ import sys
 import shutil
 import fnmatch
 import re
+import argparse
 
 def pause():
     #Wait for user input.
@@ -106,16 +107,20 @@ def get_prefixes(files):
     
     return matches
 
-def main(argv):
-    if len(argv) < 2:
-        sys.stderr.write("Usage: %s <folder_path>" % (argv[0],))
-        return 1
+def main():
+    """Move fanfic chapters into story folders."""
+    parser = argparse.ArgumentParser(
+        description=('Utility to move fanfic chapters into story folders.'))
+
+    parser.add_argument('folder', help='fanfic folder to process')
+
+    args = parser.parse_args()
+
+    source = args.folder
 
     if not os.path.exists(argv[1]):
         sys.stderr.write("ERROR: Folder %r was not found!" % (argv[1],))
         return 1
-    
-    source = argv[1]
     
     files = get_files(source,"*.txt")
     prefs = get_prefixes(files)
@@ -127,4 +132,4 @@ def main(argv):
         mov_files(source,dest,p+"*.txt")
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    sys.exit(main())
