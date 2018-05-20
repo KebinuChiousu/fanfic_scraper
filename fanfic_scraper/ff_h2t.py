@@ -5,6 +5,7 @@ import sys
 import shutil
 import fnmatch
 import subprocess
+import argparse
 
 def pause():
     #Wait for user input.
@@ -59,17 +60,22 @@ def convert_file(source,htm):
     for i in ifile:
         os.remove(i)
 
-def main(argv):
-    if len(argv) < 2:
-        sys.stderr.write("Usage: %s <folder_path>" % (argv[0],))
-        return 1
+def main():
 
-    if not os.path.exists(argv[1]):
+    """Rename fanfic chapters."""
+    parser = argparse.ArgumentParser(
+        description=('Utility to conver html fanfic chapters to text'))
+
+    parser.add_argument('folder', help='fanfic folder to process')
+
+    args = parser.parse_args()
+
+    source = args.folder
+
+    if not os.path.exists(source):
         sys.stderr.write("ERROR: Folder %r was not found!" % (argv[1],))
         return 1
-    
-    source = argv[1]
-    
+
     files = get_files(source,"*.htm")
 
     #print_list(files)
@@ -80,4 +86,4 @@ def main(argv):
         convert_file(source,htm)
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    sys.exit(main())
