@@ -1,4 +1,5 @@
 """Base Fanfic class."""
+import sys
 import os
 from collections import OrderedDict
 import concurrent.futures
@@ -11,6 +12,7 @@ class BaseFanfic:
 
     def __init__(self, fanfic_url, program_args, verify_https):
         """Init function. Creates chapters for given fanfic."""
+        self.title = ''
         self.url = fanfic_url
         self.name = program_args.folder
         self.location = program_args.location
@@ -66,6 +68,9 @@ class BaseFanfic:
                 except Exception as exc:
                     print('Chapter-%g generated an exception: %s'
                           % (chapter_num, exc))
+                    #import traceback
+                    #exc_info = sys.exc_info()
+                    #traceback.print_exception(*exc_info)
                 else:
                     print('Downloaded: Chapter-%g' % (chapter_num))
 
@@ -79,6 +84,7 @@ class BaseChapter:
     def __init__(self, fanfic, chapter_num, chapter_url):
         """Initialize constants required for download."""
         # Extract necessary information from the fanfic object
+        self.fanfic_url = fanfic.url
         self.fanfic_name = fanfic.name
         self.fanfic_download_location = fanfic.download_location
         # Create chapter specific variables
