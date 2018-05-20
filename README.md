@@ -1,6 +1,6 @@
 # fanfic-scraper (Fanfic Downloader)
 Downloads fanfics from various websites.
-Currently supports fanfiction.net (more coming up soon).
+Currently supports fanfiction.net, hpfanficarchive.com (more coming up soon).
 
 ### Installation
 

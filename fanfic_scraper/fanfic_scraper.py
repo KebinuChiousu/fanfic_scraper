@@ -4,8 +4,7 @@ import requests
 import os
 from urllib.parse import urlparse
 from urllib3.exceptions import InsecureRequestWarning
-import current_fanfic
-
+from fanfic_scraper import current_fanfic
 
 def main():
     """Parse input and download fanfic(s)."""
@@ -81,7 +80,7 @@ def main():
         #print(fanfic.chapter_count)
 
         fanfic.download_fanfic()
-        print('Downloaded fanfic: ' + url.split('/')[-1])
+        print('Downloaded fanfic: ' + fanfic.title)
 
 
 if __name__ == '__main__':
