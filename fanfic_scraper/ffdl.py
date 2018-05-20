@@ -138,6 +138,8 @@ def check_url(url):
 
     if 'fanfiction.net' in url:
         return True
+    if 'hpfanficarchive.com' in url:
+        return True
 
     return ret
 

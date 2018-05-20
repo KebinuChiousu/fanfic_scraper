@@ -28,8 +28,8 @@ class FanfictionNetFanfic(BaseFanfic):
     def extract_chapters(self):
         """Extract chapters function (backbone)."""
         fanfic_name = self.name
-        self.title = url.split('/')[-1]
         url = self.url
+        self.title = url.split('/')[-1]
         urlscheme = urlparse(url)
 
         #set story_id from url
