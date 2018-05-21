@@ -87,13 +87,13 @@ class HPFanficArchive(BaseFanfic):
             return chapters
 
     def get_update_date(self):
-        r = requests.get(self.url, verify=self.verify_https)
+        r = send_request(self.url, self.verify_https)
         soup = BeautifulSoup(r.text, 'lxml')
 
         for c in soup.find_all(text=lambda text:isinstance(text, Comment)):
             if c in [' UPDATED START ']:
                 update_date = c.next_element.strip()
-                update_date = datetime.strptime(update_date, '%B %d %Y')
+                update_date = datetime.strptime(update_date, '%B %d, %Y')
                 break
 
         return update_date
