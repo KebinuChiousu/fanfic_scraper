@@ -276,22 +276,27 @@ def choose_file(path,value):
     global sfolder
     global tfile
 
-    #get files in path
-    lfiles = get_files(path,'*.txt')
-    ret=''
-
-    if len(lfiles) > 0:
-        lfiles.append('*.txt')
-        lfiles.sort()
-        ret = submenu(lfiles,value)
+    if not os.path.exists(path):
+        print("No folder found!")
+        ret = ''
+        pause()
     else:
-        lfiles = get_files(path,'*.*')
-        if len(lfiles) == 0:
-            os.rmdir(path)
+        #get files in path
+        lfiles = get_files(path,'*.txt')
+        ret=''
 
-        sfolder=''
-        tfile=''
-        ret=tfile
+        if len(lfiles) > 0:
+            lfiles.append('*.txt')
+            lfiles.sort()
+            ret = submenu(lfiles,value)
+        else:
+            lfiles = get_files(path,'*.*')
+            if len(lfiles) == 0:
+                os.rmdir(path)
+
+            sfolder=''
+            tfile=''
+            ret=tfile
 
     return ret
 
