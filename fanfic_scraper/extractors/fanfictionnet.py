@@ -33,7 +33,7 @@ class FanfictionNetFanfic(BaseFanfic):
         urlscheme = urlparse(url)
 
         #set story_id from url
-        fanfic_id = urlscheme.path.split('/')[2]
+        self.fanfic_id = urlscheme.path.split('/')[2]
 
         # Get chapters
         r = requests.get(url, verify=self.verify_https)
@@ -49,7 +49,7 @@ class FanfictionNetFanfic(BaseFanfic):
                 chapter_num = int(link.get('value'))
                 chapter_link = urljoin(
                     urlscheme.scheme + "://" + urlscheme.netloc,
-                    "s/" + fanfic_id + "/" + str(chapter_num))
+                    "s/" + self.fanfic_id + "/" + str(chapter_num))
                 chapters[chapter_num] = FanfictionNetChapter(
                     self, chapter_num, chapter_link)
 
@@ -164,6 +164,30 @@ class FanfictionNetChapter(BaseChapter):
 
     def render_p(self,value):
         return '<p>'+value+'</p>'
+
+    def story_info(self):
+        r = send_request(self.fanfic_url, self.verify_https)
+
+        title = self.get_fanfic_title(r)
+        author = self.get_fanfic_author(r)
+        category = self.get_fanfic_category(r)
+        desc = self.get_fanfic_description(r)
+        update_date = self.get_update_date(r)
+        publish_date = self.get_publish_date(r)
+        chapter_count = self.get_chapter_count(r)
+
+        info = {}
+
+        info['StoryId'] = self.fanfic_id
+        info['Title'] = title
+        info['Author'] = author
+        info['Category'] = category
+        info['Description'] = desc
+        info['Publish_Date'] = publish_date
+        info['Update_Date'] = update_date
+        info['Count'] = chapter_count
+
+        return info
 
     def download_chapter(self):
 

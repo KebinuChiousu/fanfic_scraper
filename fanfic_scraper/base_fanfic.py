@@ -27,12 +27,13 @@ class BaseFanfic:
         self.verify_https = verify_https
         self.all_chapters = None
         self.chapter_count = 0
+        self.fanfic_id = 0
 
     def get_chapters(self):
         self.all_chapters = self.extract_chapters()
         self.chapter_count = len(self.all_chapters)
 
-    def set_download_chapters(self, potential_keys=None):
+    def set_download_chapters(self, potential_keys=None, silent=False):
         """Set chapters to download."""
         if potential_keys:
             keys = list(set(potential_keys) & set(self.all_chapters.keys()))
@@ -46,8 +47,21 @@ class BaseFanfic:
         self.chapters_to_download = OrderedDict(
             sorted(unsorted_chapters.items(), key=lambda t: t[0]))
         # Print downloading chapters
-        print("Downloading the below chapters:")
-        print(sorted(keys))
+        if not silent:
+            print("Downloading the below chapters:")
+            print(sorted(keys))
+
+    def story_info(self):
+
+        self.get_chapters()
+        potential_keys = [1]
+        self.set_download_chapters(potential_keys, True)
+
+        for chapter_num, chapter in self.chapters_to_download.items():
+            ret = chapter.story_info()
+            break
+
+        return ret
 
     def download_fanfic(self):
         """Begin download of chapters in the fanfic."""
@@ -85,6 +99,7 @@ class BaseChapter:
         """Initialize constants required for download."""
         # Extract necessary information from the fanfic object
         self.fanfic_url = fanfic.url
+        self.fanfic_id = fanfic.fanfic_id
         self.fanfic_name = fanfic.name
         self.fanfic_download_location = fanfic.download_location
         # Create chapter specific variables
@@ -100,6 +115,9 @@ class BaseChapter:
 
     def download_chapter(self):
         """Download chapter (backbone)."""
+        pass
+
+    def story_info(self):
         pass
 
 
