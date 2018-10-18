@@ -10,6 +10,7 @@ import sqlite3
 import textwrap
 from pony.orm import *
 from fanfic_scraper.db_pony import DataBaseLogic, Category, Fanfic
+from fanfic_scraper import cui
 from collections import defaultdict
 
 category=''
@@ -122,7 +123,7 @@ def about_story():
     print("Summary: ", textwrap.fill(r["Description"][0]))
     print("")
 
-    pause()
+    cui.pause()
 
     menu_story()
 
@@ -150,75 +151,17 @@ def get_entry(text,value):
     #Substitute {0} in text with value.
     return text.format(value)
 
-def pause():
-    #Wait for user input.
-    programPause = input("Press the <ENTER> key to continue...")
-
-def submenu(values,prompt):
-    inc=9
-    start=0
-    stop=inc
-    np=0
-    pp=0
- 
-    while True:
-        print(prompt)
-        print('')
-        for i in range(start,len(values)):
-            print(i, values[i])
-            j=i
-            # limit number of entries to stop var.
-            if i >= stop:
-                # Stop offering next if the last entry is reached.
-                if i < (len(values)-1):
-                    np=stop+1
-                    i=i+1
-                    print(np, "Next Page")
-                    break
-        #if stop > inc, allow prev page.
-        if stop > inc:
-            pp=i+1
-            i=i+1
-            print(pp, "Prev Page")
-        print('')
-        #parse input into number, blank is invalid.
-        try:
-            sel=int(input("Enter Selection: "))
-        except:
-            sel = j+1
-        # Validate input is valid for current menu.
-        if (sel >= start) and (sel <= j):
-            ret = values[sel]
-            break
-        else:
-            # Move 1 page ahead
-            if sel == np:
-                start=start+10
-                stop=start+9
-                _=os.system("clear")
-            # Move 1 page back
-            elif sel == pp:
-                start=start-10
-                stop=start+9
-                _=os.system("clear")
-            else:
-                print("Unknown Option Selected!")
-                pause()
-                _=os.system("clear")
-
-    return ret
-
 def menu_editor():
     global editor
 
     menu = ['vi','gedit', 'geany']
-    ret = submenu(menu,"Choose Editor")
+    ret = cui.submenu(menu,"Choose Editor")
 
     editor = ret
 
 def menu_options():
     menu = ['Path','Editor', 'Main Menu']
-    ret = submenu(menu, "Choose Option")
+    ret = cui.submenu(menu, "Choose Option")
 
     if ret == "Editor":
         menu_editor()
@@ -230,7 +173,7 @@ def menu_story():
     menu = ['About Story']
     menu = menu + ['Toggle Complete', 'Toggle Abandoned']
     menu = menu + [ "Format File", "Main Menu"]
-    ret = submenu(menu,"Chose Story Option")
+    ret = cui.submenu(menu,"Chose Story Option")
 
     if ret == "About Story":
         about_story()
@@ -247,7 +190,7 @@ def menu_story():
 def menu_sync():
 
     sync = ['Download','Upload','Clean Folder','Main Menu']
-    ret = submenu(sync,"Choose OneDrive Option")
+    ret = cui.submenu(sync,"Choose OneDrive Option")
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -264,11 +207,11 @@ def choose_value(path,value):
     subdirs.sort()
 
     if len(subdirs) > 0:
-        ret = submenu(subdirs,value)
+        ret = cui.submenu(subdirs,value)
     else:
         ret = ''
         print("No folders found!")
-        pause()
+        cui.pause()
 
     return ret
 
@@ -279,7 +222,7 @@ def choose_file(path,value):
     if not os.path.exists(path):
         print("No folder found!")
         ret = ''
-        pause()
+        cui.pause()
     else:
         #get files in path
         lfiles = get_files(path,'*.txt')
@@ -288,7 +231,7 @@ def choose_file(path,value):
         if len(lfiles) > 0:
             lfiles.append('*.txt')
             lfiles.sort()
-            ret = submenu(lfiles,value)
+            ret = cui.submenu(lfiles,value)
         else:
             lfiles = get_files(path,'*.*')
             if len(lfiles) == 0:
@@ -345,7 +288,7 @@ def print_list(matches):
 
 def run_script(value):
     subprocess.call(value,shell=True)
-    pause()
+    cui.pause()
 
 def format_file(value):
 
@@ -402,7 +345,7 @@ def mov_files(path,dfolder,value):
             print("Problem Archiving File.")
 
     tfile = ''
-    pause()
+    cui.pause()
 
 def get_config():
     #create config dir if it doesn't exist and return path to config.
@@ -517,7 +460,7 @@ def set_path():
         basePath = root
     else:
         print("Invalid path, please try again.")
-        pause()
+        cui.pause()
         _=os.system("clear")
         set_path()
 
@@ -565,7 +508,7 @@ def mainmenu():
         elif selection == '2':
             if not folder:
                 print("Please choose a folder first!")
-                pause()
+                cui.pause()
             else:
                 category = choose_value(os.path.join(basePath,arcRoot,folder),"Choose Category:")
                 sfolder = ''
@@ -573,38 +516,38 @@ def mainmenu():
         elif selection == '3':
             if not category:
                 print("Please choose a category first!")
-                pause()
+                cui.pause()
             else:
                 sfolder = choose_value(os.path.join(basePath,arcRoot,folder,category),"Choose Story Folder:")
                 tfile = ''
         elif selection == '4':
             if not sfolder:
                 print("Please choose a story first!")
-                pause()
+                cui.pause()
             else:
                  dfolder = choose_value(os.path.join(basePath,arcRoot),"Choose Destination Folder:")
         elif selection == '5':
             if not sfolder:
                 print("Please choose a story first!")
-                pause()
+                cui.pause()
             else:
                  tfile = choose_file(os.path.join(basePath,arcRoot,folder,category,sfolder),"Choose File:")
         elif selection == '6':
             if not tfile:
                 print("Please select a file first!")
-                pause()
+                cui.pause()
             else:
                 read_file(os.path.join(basePath,arcRoot,folder,category,sfolder,tfile))
         elif selection == '7':
             if not tfile:
                 print("Please select a file first!")
-                pause()
+                cui.pause()
             else:
                 mov_files(os.path.join(basePath,arcRoot,folder,category,sfolder),dfolder,tfile)
         elif selection == '8':
             if not sfolder:
                 print("Please choose a story first!")
-                pause()
+                cui.pause()
             else:
                 menu_story()
         elif selection == '9':
@@ -616,7 +559,7 @@ def mainmenu():
             break
         else:
             print("Unknown Option Selected!")
-            pause()
+            cui.pause()
 
 def main():
     global db
