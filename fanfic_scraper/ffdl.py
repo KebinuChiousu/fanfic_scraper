@@ -14,6 +14,8 @@ from urllib.parse import urlparse
 import requests
 from pony.orm import *
 from fanfic_scraper.db_pony import DataBaseLogic, Category, Fanfic
+from fanfic_scraper import cui
+import textwrap
 import sqlite3
 
 basePath = '/home/ubuntu/OneDrive/'
@@ -244,6 +246,21 @@ class FanficDB:
         db_path = os.path.join(basePath,arcRoot,db_folder,db_name)
         dbhandle = DataBaseLogic(db_path)
 
+    def add_story(self, folder, cat_id, url, info):
+
+        with db_session:
+            Fanfic(Title = info['Title'],
+                   Author = info['Author'],
+                   Folder = folder,
+                   Count = 0,
+                   Description = info['Description'],
+                   Internet = url,
+                   StoryId = info['StoryId'],
+                   Publish_Date = info['Publish_Date'],
+                   Update_Date = info['Update_Date'],
+                   Last_Checked = info['Publish_Date'],
+                   Category_Id = cat_id)
+
     def get_categories(self):
         d = defaultdict(list)
 
@@ -255,6 +272,16 @@ class FanficDB:
                     d[k].append(v)
 
         return d['Name']
+
+    def get_folder(self, cat_id, folderName):
+
+        with db_session:
+            folders = count(f.Folder for f in Fanfic
+                            if f.Category_Id == cat_id
+                            and f.Folder == folderName)
+
+        return folders
+
 
     def get_cat_id(self, categoryName):
 
@@ -341,7 +368,7 @@ def download_by_category(category):
             if len(tmp2) > 1:
                 url = fic['Internet'][0].split('#')[1]
             else:
-                url = ''
+                url = tmp
         else:
             url = ''
         storyid = fic['StoryId'][0]
@@ -407,6 +434,77 @@ def convert_by_category(category):
         for htm in files:
             convert_file(target,htm)
 
+def add_story(category, cat_id, folder):
+    _=os.system("clear")
+    url = input("Enter Story URL: ")
+    url_check = check_url(url)
+    if url_check:
+        ffargs = set_ffargs('/tmp',folder)
+        fanfic = current_fanfic.fanfic(url, ffargs, True)
+        info = fanfic.story_info()
+        print("ID: {0}".format(info['StoryId']))
+        print("Title: {0}".format(info['Title']))
+        print("Author: {0}".format(info['Author']))
+        print("Summary: ", textwrap.fill(info['Description']))
+        print("Published: {0}".format(info['Publish_Date']))
+        print("Updated: {0}".format(info['Update_Date']))
+        print("Chapter Count: {0}".format(info['Count']))
+        cui.pause()
+        confirm = cui.menu_yesno("Proceed?")
+
+        if confirm == "Yes":
+            db.add_story(folder, cat_id, url, info)
+            print("Story added to database.")
+            cui.pause()
+
+    else:
+        print("Site not supported!!!")
+        cui.pause()
+
+def config_menu():
+    category = "None"
+    folder = "None"
+
+    while True:
+        menu = []
+        menu.append(cui.get_entry("Category: {0}", category))
+        menu.append(cui.get_entry("Folder: {0}", folder))
+        menu.append("Add Story")
+        menu.append("Exit")
+
+        _=os.system("clear")
+
+        print("Fanfic Downloader - Config")
+        print("")
+        ret = cui.submenu(menu, "Enter Selection")
+
+        if "Category:" in ret:
+            cat = db.get_categories()
+            _=os.system("clear")
+            category = cui.submenu(cat,"Choose Category: ")
+            cat_id = db.get_cat_id(category)
+        if "Folder:" in ret:
+            if category != "None":
+                folder = input("Enter Folder Name: ")
+                folder_count = db.get_folder(cat_id, folder)
+                if folder_count > 0:
+                    print("Folder: {0} already exists!".format(folder))
+                    folder = "None"
+                    cui.pause()
+            else:
+                print("Please select category first!")
+                cui.pause()
+        if ret == "Add Story":
+            if category != "None" and folder != "None":
+                add_story(category, cat_id, folder)
+                folder = "None"
+            else:
+                print("Please ensure Category and Folder are not set to None!")
+                cui.pause()
+        if ret == "Exit":
+            sys.exit(0)
+
+
 def main():
     global db
     parser = argparse.ArgumentParser(
@@ -422,7 +520,7 @@ def main():
     args = parser.parse_args()
 
     if args.config:
-        print("Calling config menu...")
+        config_menu()
     else:
         download_stories(args)
 

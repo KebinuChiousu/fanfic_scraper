@@ -55,7 +55,7 @@ class HPFanficArchive(BaseFanfic):
         urlscheme = urlparse(url)
 
         #set story_id from url
-        fanfic_id = parse_qs(urlscheme.query, keep_blank_values=True)['sid'][0]
+        self.fanfic_id = parse_qs(urlscheme.query, keep_blank_values=True)['sid'][0]
 
         # Get chapters
         r = send_request(url, self.verify_https)
@@ -228,6 +228,30 @@ class HPFanficArchiveChapter(BaseChapter):
 
     def render_p(self,value):
         return '<p>'+value+'</p>'
+
+    def story_info(self):
+        r = send_request(self.fanfic_url, self.verify_https)
+
+        title = self.get_fanfic_title(r)
+        author = self.get_fanfic_author(r)
+        category = self.get_fanfic_category(r)
+        genre = self.get_fanfic_genre(r)
+        desc = self.get_fanfic_description(r)
+        update_date = self.get_update_date(r)
+        publish_date = self.get_publish_date(r)
+        chapter_count = self.get_chapter_count(r)
+
+        info = {}
+
+        info['StoryId'] = self.fanfic_id
+        info['Title'] = title
+        info['Author'] = author
+        info['Description'] = desc
+        info['Publish_Date'] = publish_date
+        info['Update_Date'] = update_date
+        info['Count'] = chapter_count
+
+        return info
 
     def download_chapter(self):
 
