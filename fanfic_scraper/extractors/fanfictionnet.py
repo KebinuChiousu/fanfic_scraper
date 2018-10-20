@@ -166,7 +166,7 @@ class FanfictionNetChapter(BaseChapter):
         return '<p>'+value+'</p>'
 
     def story_info(self):
-        r = send_request(self.fanfic_url, self.verify_https)
+        r = requests.get(self.chapter_url, verify=self.verify_https)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)
