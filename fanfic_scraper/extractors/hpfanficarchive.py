@@ -161,9 +161,11 @@ class HPFanficArchiveChapter(BaseChapter):
         soup = BeautifulSoup(r.text, 'html5lib')
 
         desc = soup.find_all('div', {'class':'content'})[2]
-        desc = desc.find_all('p')[0]
-        desc = desc.get_text()
-
+        para = desc.find_all('p')
+        temp = []
+        for p in para:
+            temp.append(p.get_text())
+        desc = "".join(temp)
         return desc
 
     def get_update_date(self,r):
