@@ -20,6 +20,18 @@ def chapter_nav(tag):
 
     return test
 
+def send_request(url,verify):
+
+    #Needed to bypass paranoid filtering for some hosts...
+    proxies = {
+               'http': 'socks5:127.0.0.1:9050',
+               'https': 'socks5:127.0.0.1:9050'
+              }
+
+    r = requests.get(url, proxies=proxies, verify=verify)
+
+    return r
+
 class FanfictionNetFanfic(BaseFanfic):
 
     def get_story_url(self, storyid):
@@ -36,7 +48,7 @@ class FanfictionNetFanfic(BaseFanfic):
         self.fanfic_id = urlscheme.path.split('/')[2]
 
         # Get chapters
-        r = requests.get(url, verify=self.verify_https)
+        r = send_request(url, self.verify_https)
         soup = bsoup.BeautifulSoup(r.text, 'html5lib')
 
         chapters = defaultdict(FanfictionNetChapter)
@@ -59,7 +71,7 @@ class FanfictionNetFanfic(BaseFanfic):
             return chapters
 
     def get_update_date(self):
-        r = requests.get(self.url, verify=self.verify_https)
+        r = send_request(url, self.verify_https)
         soup = bsoup.BeautifulSoup(r.text, 'html5lib')
 
         for div in soup.find_all('div', {'id':'profile_top'}):
@@ -166,7 +178,7 @@ class FanfictionNetChapter(BaseChapter):
         return '<p>'+value+'</p>'
 
     def story_info(self):
-        r = requests.get(self.chapter_url, verify=self.verify_https)
+        r = send_request(self.chapter_url, self.verify_https)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)
@@ -193,7 +205,7 @@ class FanfictionNetChapter(BaseChapter):
 
         filename = self.fanfic_name+'-%03d.htm' % (self.chapter_num)
 
-        r = requests.get(self.chapter_url, verify=self.verify_https)
+        r = send_request(self.chapter_url, self.verify_https)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)
