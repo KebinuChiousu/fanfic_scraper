@@ -18,6 +18,7 @@ from fanfic_scraper import cui
 import textwrap
 import sqlite3
 
+
 basePath = '/home/ubuntu/OneDrive/'
 arcRoot = 'FF_Archive'
 db = None
@@ -145,23 +146,6 @@ def check_url(url):
 
     return ret
 
-def validate_https(url):
-
-    urlscheme = urlparse(url)
-    verify_https = False
-    if urlscheme.scheme == 'https':
-        try:
-            requests.get(url)
-            verify_https = True
-        except requests.exceptions.SSLError:
-            verify_https = False
-            print('Could not validate https certificate for url:' +
-                  '%s. Proceeding with Insecure certificate.' % (url))
-            requests.packages.urllib3.disable_warnings(
-                category=InsecureRequestWarning)
-
-    return verify_https
-
 def set_ffargs(location,folder):
 
     parser = argparse.ArgumentParser(
@@ -175,7 +159,7 @@ def set_ffargs(location,folder):
     #    "-c", "--chapters", default=False,
     #    help="Specify chapters to download separated by : (10:15).")
     parser.add_argument(
-        "-ct", "--chapterthreads", default=5,
+        "-ct", "--chapterthreads", default=1,
         help="Number of parallel chapters downloads.")
     parser.add_argument(
         "-wt", "--waittime", default=15,
@@ -384,13 +368,11 @@ def download_by_category(category):
             next_chapter = chapters + 1
 
             #Initialize class so we can retrieve actual story url
-            fanfic = current_fanfic.fanfic(url, ffargs, False)
+            fanfic = current_fanfic.fanfic(url, ffargs)
             #Get fanfic url
             url = fanfic.get_story_url(storyid)
-            #Check to see if https verification needs to be disabled.
-            verify_https = validate_https(url)
             #Initialize class with correct url.
-            fanfic = current_fanfic.fanfic(url, ffargs, verify_https)
+            fanfic = current_fanfic.fanfic(url, ffargs)
             #Download list of chapters
             fanfic.get_chapters()
             # Get current chapter count from site

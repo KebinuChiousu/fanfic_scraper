@@ -5,12 +5,14 @@ from collections import OrderedDict
 import concurrent.futures
 import shutil
 import requests
+from requests.auth import HTTPBasicAuth
+from time import sleep
 
 
 class BaseFanfic:
     """ Base Fanfic class. Contains chapters."""
 
-    def __init__(self, fanfic_url, program_args, verify_https):
+    def __init__(self, fanfic_url, program_args):
         """Init function. Creates chapters for given fanfic."""
         self.title = ''
         self.url = fanfic_url
@@ -24,10 +26,23 @@ class BaseFanfic:
         self.wait_time = program_args.waittime
         self.max_retries = program_args.retries
         # Set verify mode
-        self.verify_https = verify_https
+        self.verify_https = True
         self.all_chapters = None
         self.chapter_count = 0
         self.fanfic_id = 0
+
+    def send_request(self, url):
+
+        # https://github.com/TeamHG-Memex/aquarium
+
+        proxy_url='http://127.0.0.1:8050/render.html?proxy=tor&url={0}'.format(url)
+        auth= HTTPBasicAuth('user', 'userpass')
+
+        r = requests.get(proxy_url, auth=auth)
+
+        sleep(5)
+
+        return r
 
     def get_chapters(self):
         self.all_chapters = self.extract_chapters()
@@ -112,6 +127,19 @@ class BaseChapter:
         self.verify_https = fanfic.verify_https
         # Get download chapter location
         self.chapter_location = fanfic.download_location
+
+    def send_request(self, url):
+
+        # https://github.com/TeamHG-Memex/aquarium
+
+        proxy_url='http://127.0.0.1:8050/render.html?proxy=tor&url={0}'.format(url)
+        auth= HTTPBasicAuth('user', 'userpass')
+
+        r = requests.get(proxy_url, auth=auth)
+
+        sleep(5)
+
+        return r
 
     def download_chapter(self):
         """Download chapter (backbone)."""
