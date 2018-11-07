@@ -10,7 +10,7 @@ import os
 import shutil
 import textwrap
 from datetime import datetime
-from random import shuffle, uniform
+from random import shuffle, uniform, randint
 from copy import deepcopy
 from time import sleep
 
@@ -20,17 +20,6 @@ def chapter_nav(tag):
 
     return test
 
-def send_request(url,verify):
-
-    #Needed to bypass paranoid filtering for some hosts...
-    proxies = {
-               'http': 'socks5:127.0.0.1:9050',
-               'https': 'socks5:127.0.0.1:9050'
-              }
-
-    r = requests.get(url, proxies=proxies, verify=verify)
-
-    return r
 
 class HPFanficArchive(BaseFanfic):
 
@@ -58,7 +47,7 @@ class HPFanficArchive(BaseFanfic):
         self.fanfic_id = parse_qs(urlscheme.query, keep_blank_values=True)['sid'][0]
 
         # Get chapters
-        r = send_request(url, self.verify_https)
+        r = self.send_request(url)
         soup = BeautifulSoup(r.text, 'html5lib')
 
         self.title = self.get_fanfic_title(r)
@@ -87,7 +76,7 @@ class HPFanficArchive(BaseFanfic):
             return chapters
 
     def get_update_date(self):
-        r = send_request(self.url, self.verify_https)
+        r = self.send_request(self.url)
         soup = BeautifulSoup(r.text, 'lxml')
 
         for c in soup.find_all(text=lambda text:isinstance(text, Comment)):
@@ -232,7 +221,8 @@ class HPFanficArchiveChapter(BaseChapter):
         return '<p>'+value+'</p>'
 
     def story_info(self):
-        r = send_request(self.fanfic_url, self.verify_https)
+
+        r = self.send_request(self.chapter_url)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)
@@ -259,7 +249,7 @@ class HPFanficArchiveChapter(BaseChapter):
 
         filename = self.fanfic_name+'-%03d.htm' % (self.chapter_num)
 
-        r = send_request(self.fanfic_url, self.verify_https)
+        r = self.send_request(self.chapter_url)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)

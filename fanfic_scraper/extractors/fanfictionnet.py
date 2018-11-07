@@ -10,9 +10,11 @@ import os
 import shutil
 import textwrap
 import datetime
-from random import shuffle, uniform
+from random import shuffle, uniform, randint
 from copy import deepcopy
 from time import sleep
+from fake_useragent import UserAgent
+
 
 def chapter_nav(tag):
     test = (tag.name == 'select')
@@ -20,17 +22,6 @@ def chapter_nav(tag):
 
     return test
 
-def send_request(url,verify):
-
-    #Needed to bypass paranoid filtering for some hosts...
-    proxies = {
-               'http': 'socks5:127.0.0.1:9050',
-               'https': 'socks5:127.0.0.1:9050'
-              }
-
-    r = requests.get(url, proxies=proxies, verify=verify)
-
-    return r
 
 class FanfictionNetFanfic(BaseFanfic):
 
@@ -48,7 +39,7 @@ class FanfictionNetFanfic(BaseFanfic):
         self.fanfic_id = urlscheme.path.split('/')[2]
 
         # Get chapters
-        r = send_request(url, self.verify_https)
+        r = self.send_request(url)
         soup = bsoup.BeautifulSoup(r.text, 'html5lib')
 
         chapters = defaultdict(FanfictionNetChapter)
@@ -71,7 +62,7 @@ class FanfictionNetFanfic(BaseFanfic):
             return chapters
 
     def get_update_date(self):
-        r = send_request(url, self.verify_https)
+        r = self.send_request(url)
         soup = bsoup.BeautifulSoup(r.text, 'html5lib')
 
         for div in soup.find_all('div', {'id':'profile_top'}):
@@ -178,7 +169,7 @@ class FanfictionNetChapter(BaseChapter):
         return '<p>'+value+'</p>'
 
     def story_info(self):
-        r = send_request(self.chapter_url, self.verify_https)
+        r = self.send_request(self.chapter_url)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)
@@ -205,7 +196,7 @@ class FanfictionNetChapter(BaseChapter):
 
         filename = self.fanfic_name+'-%03d.htm' % (self.chapter_num)
 
-        r = send_request(self.chapter_url, self.verify_https)
+        r = self.send_request(self.chapter_url)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)
@@ -247,7 +238,7 @@ class FanfictionNetChapter(BaseChapter):
             f1.write(self.render_p('Updated: '+update_date))
         f1.write(self.render_p('========='))
         f1.write(story)
-        
+
 
         f1.flush()
         os.fsync(f1.fileno())

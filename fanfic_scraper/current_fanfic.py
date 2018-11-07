@@ -3,9 +3,9 @@
 from fanfic_scraper.extractors.fanfictionnet import FanfictionNetFanfic
 from fanfic_scraper.extractors.hpfanficarchive import HPFanficArchive
 
-def fanfic(fanfic_url, args, verify_https):
+def fanfic(fanfic_url, args):
     """Send the approriate class."""
     if 'fanfiction.net' in fanfic_url:
-        return FanfictionNetFanfic(fanfic_url, args, verify_https)
+        return FanfictionNetFanfic(fanfic_url, args)
     if 'hpfanficarchive.com' in fanfic_url:
-        return HPFanficArchive(fanfic_url, args, verify_https)
+        return HPFanficArchive(fanfic_url, args)
