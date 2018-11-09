@@ -6,7 +6,6 @@ import concurrent.futures
 import shutil
 import requests
 from requests.auth import HTTPBasicAuth
-from time import sleep
 
 
 class BaseFanfic:
@@ -39,8 +38,6 @@ class BaseFanfic:
         auth= HTTPBasicAuth('user', 'userpass')
 
         r = requests.get(proxy_url, auth=auth)
-
-        sleep(5)
 
         return r
 
