@@ -62,7 +62,7 @@ class FanfictionNetFanfic(BaseFanfic):
             return chapters
 
     def get_update_date(self):
-        r = self.send_request(url)
+        r = self.send_request(self.url)
         soup = bsoup.BeautifulSoup(r.text, 'html5lib')
 
         for div in soup.find_all('div', {'id':'profile_top'}):
