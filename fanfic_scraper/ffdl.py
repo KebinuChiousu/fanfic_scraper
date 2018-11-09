@@ -17,6 +17,7 @@ from fanfic_scraper.db_pony import DataBaseLogic, Category, Fanfic
 from fanfic_scraper import cui
 import textwrap
 import sqlite3
+from time import sleep
 
 
 basePath = '/home/ubuntu/OneDrive/'
@@ -399,6 +400,10 @@ def download_by_category(category):
                 db.update_last_checked(fic_id,date.today())
             else:
                 db.update_last_checked(fic_id,date.today())
+
+            sleep(2)
+        else:
+            sleep(0.2)
 
     print('',end='\n')
 
