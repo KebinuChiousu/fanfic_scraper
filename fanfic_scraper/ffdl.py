@@ -401,7 +401,7 @@ def download_by_category(category):
             else:
                 db.update_last_checked(fic_id,date.today())
 
-            sleep(2)
+            sleep(4)
         else:
             sleep(0.2)
 
