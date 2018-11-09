@@ -134,8 +134,6 @@ class BaseChapter:
 
         r = requests.get(proxy_url, auth=auth)
 
-        sleep(5)
-
         return r
 
     def download_chapter(self):

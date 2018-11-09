@@ -427,7 +427,7 @@ def add_story(category, cat_id, folder):
     url_check = check_url(url)
     if url_check:
         ffargs = set_ffargs('/tmp',folder)
-        fanfic = current_fanfic.fanfic(url, ffargs, True)
+        fanfic = current_fanfic.fanfic(url, ffargs)
         info = fanfic.story_info()
         print("ID: {0}".format(info['StoryId']))
         print("Title: {0}".format(info['Title']))
