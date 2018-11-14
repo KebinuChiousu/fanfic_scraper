@@ -114,6 +114,10 @@ def submenu(values,prompt,input_value=False):
                 start=start-10
                 stop=start+9
                 _=os.system("clear")
+            elif sel < (len(values) - 10):
+                start=sel
+                stop=start+9
+                _=os.system("clear")
             else:
                 print("Unknown Option Selected!")
                 pause()
