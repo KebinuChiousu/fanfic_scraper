@@ -44,10 +44,14 @@ class FanfictionNetFanfic(BaseFanfic):
 
         chapters = defaultdict(FanfictionNetChapter)
 
-        try:
+        #try:
 
-            chapter_list = soup.find_all(chapter_nav)[0]
+        chapter_list = soup.find_all(chapter_nav)
 
+        if chapter_list:
+            chapter_list = chapter_list[0]
+
+        if chapter_list:
             for link in chapter_list:
                 chapter_num = int(link.get('value'))
                 chapter_link = urljoin(
@@ -55,11 +59,18 @@ class FanfictionNetFanfic(BaseFanfic):
                     "s/" + self.fanfic_id + "/" + str(chapter_num))
                 chapters[chapter_num] = FanfictionNetChapter(
                     self, chapter_num, chapter_link)
+        else:
+            chapter_num = 1
+            chapter_link = urljoin(
+                urlscheme.scheme + "://" + urlscheme.netloc,
+                "s/" + self.fanfic_id + "/" + str(chapter_num))
+            chapters[chapter_num] = FanfictionNetChapter(
+                self, chapter_num, chapter_link)
 
-            return chapters
+        return chapters
 
-        except:
-            return chapters
+        #except:
+        #    return chapters
 
     def get_update_date(self):
         r = self.send_request(self.url)
@@ -122,6 +133,11 @@ class FanfictionNetChapter(BaseChapter):
         for div in soup.find_all('div', {'id':'profile_top'}):
             span = div.find_all('span')[-2]
             ts = span.get('data-xutime')
+
+            if ts is None:
+                span = div.find_all('span')[-1]
+                ts = span.get('data-xutime')
+
             update_date = datetime.datetime.fromtimestamp(float(ts)).strftime('%Y-%m-%d')
 
             break
@@ -154,9 +170,14 @@ class FanfictionNetChapter(BaseChapter):
     def get_chapter_count(self,r):
         soup = bsoup.BeautifulSoup(r.text, 'html5lib')
 
-        chapter_list = soup.find_all(chapter_nav)[0]
+        chapter_list = soup.find_all(chapter_nav)
 
-        return len(chapter_list)
+        if chapter_list:
+            chapter_count = len(chapter_list[0])
+        else:
+            chapter_count = 1
+
+        return chapter_count
 
     def get_chapter_html(self,r):
         soup = bsoup.BeautifulSoup(r.text, 'html5lib')
