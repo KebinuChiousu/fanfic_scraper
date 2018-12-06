@@ -142,6 +142,8 @@ def check_url(url):
 
     if 'fanfiction.net' in url:
         return True
+    if 'fanfictionproxy.net' in url:
+        return True
     if 'hpfanficarchive.com' in url:
         return True
 
