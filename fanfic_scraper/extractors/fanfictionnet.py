@@ -79,6 +79,11 @@ class FanfictionNetFanfic(BaseFanfic):
         for div in soup.find_all('div', {'id':'profile_top'}):
             span = div.find_all('span')[-2]
             ts = span.get('data-xutime')
+
+            if ts is None:
+                span = div.find_all('span')[-1]
+                ts = span.get('data-xutime')
+
             update_date = datetime.datetime.fromtimestamp(float(ts)).strftime('%Y-%m-%d')
 
             break
