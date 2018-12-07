@@ -164,11 +164,17 @@ class FanfictionNetChapter(BaseChapter):
     def get_chapter_title(self,r):
         soup = bsoup.BeautifulSoup(r.text, 'html5lib')
 
-        chapter_list = soup.find_all(chapter_nav)[0]
-        for link in chapter_list:
-            if int(link.get('value')) == self.chapter_num:
-                chapter_title = link.get_text()
-                break
+        chapter_list = soup.find_all(chapter_nav)
+
+        if chapter_list:
+            chapter_list = chapter_list[0]
+
+            for link in chapter_list:
+                if int(link.get('value')) == self.chapter_num:
+                    chapter_title = link.get_text()
+                    break
+        else:
+            chapter_title = str(self.chapter_num)
 
         return chapter_title
 
