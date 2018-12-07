@@ -40,19 +40,8 @@ def main():
     for url in args.urls:
         # If https, check before using verify False
         urlscheme = urlparse(url)
-        verify_https = False
-        if urlscheme.scheme == 'https':
-            try:
-                requests.get(url)
-                verify_https = True
-            except requests.exceptions.SSLError:
-                verify_https = False
-                print('Could not validate https certificate for url:' +
-                      '%s. Proceeding with Insecure certificate.' % (url))
-                requests.packages.urllib3.disable_warnings(
-                    category=InsecureRequestWarning)
 
-        fanfic = current_fanfic.fanfic(url, args, verify_https)
+        fanfic = current_fanfic.fanfic(url, args)
         fanfic.get_chapters()
         print('Downloading fanfic: ' + fanfic.name)
 
