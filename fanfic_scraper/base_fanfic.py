@@ -94,9 +94,9 @@ class BaseFanfic:
                 except Exception as exc:
                     print('Chapter-%g generated an exception: %s'
                           % (chapter_num, exc))
-                    #import traceback
-                    #exc_info = sys.exc_info()
-                    #traceback.print_exception(*exc_info)
+                    import traceback
+                    exc_info = sys.exc_info()
+                    traceback.print_exception(*exc_info)
                 else:
                     print('Downloaded: Chapter-%g' % (chapter_num))
 
