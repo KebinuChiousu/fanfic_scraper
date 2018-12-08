@@ -564,8 +564,17 @@ def mainmenu():
 def main():
     global db
 
-    #Initialize DB
-    db = FanficDB()
+    load_config()
+
+    try:
+        #Initialize DB
+        db = FanficDB()
+    except:
+        set_path()
+        save_config()
+        ensure_dir(os.path.join(basePath,arcRoot))
+        ensure_dir(os.path.join(basePath,arcRoot,db_folder))
+        db = FanficDB()
     #Call Main Menu
     mainmenu()
 
