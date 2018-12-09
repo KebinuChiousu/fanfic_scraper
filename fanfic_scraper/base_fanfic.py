@@ -6,6 +6,7 @@ import concurrent.futures
 import shutil
 import requests
 from requests.auth import HTTPBasicAuth
+import urllib.parse
 
 
 class BaseFanfic:
@@ -128,6 +129,8 @@ class BaseChapter:
     def send_request(self, url):
 
         # https://github.com/TeamHG-Memex/aquarium
+
+        url = urllib.parse.quote_plus(url)
 
         proxy_url='http://127.0.0.1:8050/render.html?proxy=tor&url={0}'.format(url)
         auth= HTTPBasicAuth('user', 'userpass')
