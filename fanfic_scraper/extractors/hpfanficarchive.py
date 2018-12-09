@@ -222,7 +222,7 @@ class HPFanficArchiveChapter(BaseChapter):
 
     def story_info(self):
 
-        r = self.send_request(self.chapter_url)
+        r = self.send_request(self.fanfic_url)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)
@@ -249,7 +249,8 @@ class HPFanficArchiveChapter(BaseChapter):
 
         filename = self.fanfic_name+'-%03d.htm' % (self.chapter_num)
 
-        r = self.send_request(self.chapter_url)
+        print(self.chapter_url)
+        r = self.send_request(self.fanfic_url)
 
         title = self.get_fanfic_title(r)
         author = self.get_fanfic_author(r)
@@ -259,6 +260,8 @@ class HPFanficArchiveChapter(BaseChapter):
         update_date = self.get_update_date(r)
         publish_date = self.get_publish_date(r)
         chapter_count = self.get_chapter_count(r)
+
+        r = self.send_request(self.chapter_url)
 
         chapter_title = self.get_chapter_title(r)
         story = self.get_chapter_html(r)
