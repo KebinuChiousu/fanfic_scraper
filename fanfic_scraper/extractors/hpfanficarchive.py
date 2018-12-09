@@ -260,8 +260,6 @@ class HPFanficArchiveChapter(BaseChapter):
         publish_date = self.get_publish_date(r)
         chapter_count = self.get_chapter_count(r)
 
-        r = send_request(self.chapter_url, self.verify_https)
-
         chapter_title = self.get_chapter_title(r)
         story = self.get_chapter_html(r)
 
