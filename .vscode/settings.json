@@ -1,0 +1,7 @@
+{
+    "python.pythonPath": "/usr/bin/python3",
+    "python.linting.pylintArgs": ["--disable-msg", "W0614"],
+    "python.linting.flake8Args": ["--ignore", "E902, E741, F403, F841, W503"],
+    "python.linting.pep8Args": ["--ignore", "W503"]
+
+}
