@@ -634,7 +634,9 @@ def main():
 
     load_config()
 
-    set_path()
+    if not os.path.exists(basePath):
+        set_path()
+
     save_config()
     ensure_dir(os.path.join(basePath, arcRoot))
     ensure_dir(os.path.join(basePath, arcRoot, db_folder))
