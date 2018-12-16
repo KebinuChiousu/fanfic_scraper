@@ -636,10 +636,10 @@ def main():
 
     if not os.path.exists(basePath):
         set_path()
+        save_config()
+        ensure_dir(os.path.join(basePath, arcRoot))
+        ensure_dir(os.path.join(basePath, arcRoot, db_folder))
 
-    save_config()
-    ensure_dir(os.path.join(basePath, arcRoot))
-    ensure_dir(os.path.join(basePath, arcRoot, db_folder))
     # Initialize DB
     db = FanficDB()
     # Call Main Menu
