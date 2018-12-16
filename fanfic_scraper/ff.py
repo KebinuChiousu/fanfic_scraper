@@ -6,6 +6,7 @@ import shutil
 import fnmatch
 import subprocess
 import textwrap
+import json
 from configparser import SafeConfigParser, Error
 from pony.orm import db_session, select
 from fanfic_scraper.db_pony import DataBaseLogic, Category, Fanfic
@@ -208,21 +209,116 @@ def menu_sync():
 
     if check == '/usr/bin/rclone':
 
-        sync = ['Download', 'Upload', 'Clean Folder', 'Main Menu']
+        if sync_server == '' or sync_path == '':
+            sync = ["Config", "Main Menu"]
+        else:
+            sync = ["Config",
+                    "Sync from Remote",
+                    "Sync to Remote",
+                    "Main Menu"]
+
         ret = cui.submenu(sync, "Choose Sync Option")
 
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-
-        if ret == "Download":
-            run_script(os.path.join(script_dir, "util/sync_dl.sh"))
-        if ret == "Upload":
-            run_script(os.path.join(script_dir, "util/sync_ul.sh"))
-        if ret == "Clean Folder":
-            run_script(os.path.join(script_dir, "util/clean-onedrive"))
+        if ret == "Config":
+            setup_sync()
+        if ret == "Sync from Remote":
+            source = sync_server + ":" + sync_path + "/" + arcRoot
+            dest = basePath + "/" + arcRoot
+            run_sync(source, dest, False)
+        if ret == "Sync to Remote":
+            source = basePath + "/" + arcRoot
+            dest = sync_server + ":" + sync_path + "/" + arcRoot
+            run_sync(source, dest, True)
+        if ret == "Main Menu":
+            mainmenu()
 
     else:
         print("Command: rclone is required for sync to work!")
         cui.pause()
+
+
+def setup_sync():
+    global sync_server
+    global sync_path
+
+    while True:
+        menu = {}
+        menu[1] = get_entry("Server: {0}", sync_server)
+        menu[2] = get_entry("Path: {0}", sync_path)
+        menu[3] = "Previous Menu"
+
+        options = menu.keys()
+        _ = os.system("clear")
+        print("Setup Sync Config")
+        print('')
+
+        for entry in options:
+            opt = '%02d' % entry
+            print(opt, menu[entry])
+        print('')
+        selection = input("Please Select: ")
+
+        nodes = []
+
+        if selection == "1":
+            ret = subprocess.run(["rclone", "config", "dump"],
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+            cfg = ret.stdout.decode('utf-8')
+            cfg2 = json.loads(cfg)
+            for node in cfg2:
+                nodes.append(node)
+
+            print("")
+            sync_server = cui.submenu(nodes, "Select Server")
+
+        if selection == "2":
+            if sync_server == "":
+                print("Please specify server first!")
+                cui.pause()
+            else:
+                sync_path = set_sync_path(sync_server)
+
+        if selection == "3":
+            menu_sync()
+
+
+def set_sync_path(server):
+
+    tpath = ""
+
+    while True:
+        tpath = input("Enter root path to sync folder: ")
+        ret = subprocess.run(["rclone", "lsf", "--dirs-only"] +
+                             ["--max-depth", str(1)] +
+                             [server + ":" + tpath],
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        check = ret.stdout.decode('utf-8').splitlines()
+        for folder in check:
+            if arcRoot in folder:
+                return tpath
+        else:
+            print("Invalid Folder!")
+            cui.pause()
+
+
+def run_sync(source, dest, update):
+
+    cmd1 = ["rclone", "sync", "--progress"]
+
+    # Prevent upload from overwriting htm folder or database as a safeguard.
+    if update:
+        cmd2 = ["--exclude", "htm/**", "--exclude", "FanfictionDB.db"]
+        cmd = cmd1 + cmd2 + [source, dest]
+    else:
+        cmd = cmd1 + [source, dest]
+
+    print(cmd)
+    subprocess.call(cmd)
+    cui.pause()
+
+    menu_sync()
 
 
 def choose_value(path, value):
@@ -430,7 +526,7 @@ def load_config():
             t_dbname = config.get('path', 'dbname')
             t_sync_server = config.get('sync', 'server')
             t_sync_path = config.get('sync', 'path')
-        except SafeConfigParser.Error as err:
+        except:
             i = 0
 
         if t_sync_server:
@@ -623,7 +719,7 @@ def mainmenu():
             menu_options()
         elif selection == '11':
             save_config()
-            break
+            sys.exit(0)
         else:
             print("Unknown Option Selected!")
             cui.pause()
