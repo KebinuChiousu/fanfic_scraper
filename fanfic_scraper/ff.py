@@ -21,6 +21,7 @@ tfile = ''
 editor = 'vi'
 sync_server = ''
 sync_path = ''
+sync_safe = True
 
 # Initial Values
 basePath = '/home/ubuntu/OneDrive/'
@@ -228,8 +229,13 @@ def menu_sync():
         if ret == "Sync to Remote":
             source = basePath + "/" + arcRoot
             dest = sync_server + ":" + sync_path + "/" + arcRoot
-            run_sync(source, dest, True)
+            if sync_safe:
+                run_sync(source, dest, True)
+            else:
+                run_sync(source, dest, False)
+
         if ret == "Main Menu":
+            save_config()
             mainmenu()
 
     else:
@@ -240,12 +246,14 @@ def menu_sync():
 def setup_sync():
     global sync_server
     global sync_path
+    global sync_safe
 
     while True:
         menu = {}
         menu[1] = get_entry("Server: {0}", sync_server)
         menu[2] = get_entry("Path: {0}", sync_path)
-        menu[3] = "Previous Menu"
+        menu[3] = get_entry("Safe Sync: {0}", sync_safe)
+        menu[4] = "Previous Menu"
 
         options = menu.keys()
         _ = os.system("clear")
@@ -280,6 +288,16 @@ def setup_sync():
                 sync_path = set_sync_path(sync_server)
 
         if selection == "3":
+            if sync_path == "":
+                print("Please specify path first!")
+                cui.pause()
+            else:
+                if cui.menu_yesno("Do not overrite database?") == "Yes":
+                    sync_safe = True
+                else:
+                    sync_safe = False
+
+        if selection == "4":
             menu_sync()
 
 
@@ -500,6 +518,7 @@ def load_config():
     global db_name
     global sync_server
     global sync_path
+    global sync_safe
 
     t_editor = ''
     t_path = ''
@@ -507,6 +526,7 @@ def load_config():
     t_dbfolder = ''
     t_sync_server = ''
     t_sync_path = ''
+    t_sync_safe = '1'
     config = SafeConfigParser()
 
     cfg = get_config()
@@ -526,6 +546,7 @@ def load_config():
             t_dbname = config.get('path', 'dbname')
             t_sync_server = config.get('sync', 'server')
             t_sync_path = config.get('sync', 'path')
+            t_sync_safe = config.get('sync', 'safe')
         except:
             i = 0
 
@@ -546,6 +567,11 @@ def load_config():
 
         if t_dbname:
             db_name = t_dbname
+
+        if t_sync_safe == '1':
+            sync_safe = True
+        else:
+            sync_safe = False
 
         spath = os.path.join(basePath, arcRoot, t_folder)
         dpath = os.path.join(basePath, arcRoot, t_dfolder)
@@ -594,6 +620,11 @@ def save_config():
     config.set('path', 'dbname', db_name)
     config.set('sync', 'server', sync_server)
     config.set('sync', 'path', sync_path)
+
+    if sync_safe:
+        config.set('sync', 'safe', '1')
+    else:
+        config.set('sync', 'safe', '0')
 
     with open(cfg, 'w') as f:
         config.write(f)
