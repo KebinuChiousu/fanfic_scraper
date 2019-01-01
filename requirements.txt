@@ -11,3 +11,4 @@ pony==0.7.3
 tldextract==2.2.0
 PySocks==1.5.6
 requests[socks]>=2.10.0
+fake_useragent>=0.1.11
