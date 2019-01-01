@@ -323,7 +323,7 @@ def set_sync_path(server):
 
 def run_sync(source, dest, update):
 
-    cmd1 = ["rclone", "sync", "--progress"]
+    cmd1 = ["rclone", "sync", "--progress", "--checksum"]
 
     # Prevent upload from overwriting htm folder or database as a safeguard.
     if update:
