@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 import argparse
-import requests
 import os
 from urllib.parse import urlparse
-from urllib3.exceptions import InsecureRequestWarning
 from fanfic_scraper import current_fanfic
+
 
 def main():
     """Parse input and download fanfic(s)."""
@@ -19,15 +18,17 @@ def main():
     parser.add_argument('urls', metavar='url', nargs='+',
                         help='fanfic urls to download')
     parser.add_argument(
-        "-f", "--folder", required=True, help="Name of folder to place fanfic in.")
+        "-f", "--folder", required=True,
+        help="Name of folder to place fanfic in.")
     parser.add_argument(
-        "-l", "--location", default=os.getcwd(), help="set download location")
+        "-l", "--location", default=os.getcwd(),
+        help="set download location")
     parser.add_argument(
         "-c", "--chapters", default=False,
         help="Specify chapters to download separated by : (10:15).")
     parser.add_argument(
         "-ct", "--chapterthreads", default=5,
-        help="Number of parallel chapters downloads.")    
+        help="Number of parallel chapters downloads.")
     parser.add_argument(
         "-wt", "--waittime", default=15,
         help="Wait time before retry if encountered with an error")
@@ -53,8 +54,8 @@ def main():
                     potential_keys = [int(start_stop[0])]
                 elif len(start_stop) == 2:
                     potential_keys = [
-                        i * 1 for i in range(int(start_stop[0]),int(start_stop[1])+1)
-                        ]
+                        i * 1 for i in range(int(start_stop[0]),
+                                             int(start_stop[1]) + 1)]
                 else:
                     raise SyntaxError(
                         "Chapter inputs should be separated by ':'")
@@ -65,8 +66,7 @@ def main():
         else:
             fanfic.set_download_chapters()
 
-
-        #print(fanfic.chapter_count)
+        # print(fanfic.chapter_count)
 
         fanfic.download_fanfic()
         print('Downloaded fanfic: ' + fanfic.title)

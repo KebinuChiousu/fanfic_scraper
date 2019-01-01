@@ -3,7 +3,6 @@ import sys
 import os
 from collections import OrderedDict
 import concurrent.futures
-import shutil
 import requests
 from requests.auth import HTTPBasicAuth
 import urllib.parse
@@ -20,7 +19,7 @@ class BaseFanfic:
         self.location = program_args.location
         # Set download location
         self.download_location = os.path.abspath(
-            os.path.join(self.location,self.name))
+            os.path.join(self.location, self.name))
         # Set threads and retry values
         self.chapter_threads = program_args.chapterthreads
         self.wait_time = program_args.waittime
@@ -35,8 +34,9 @@ class BaseFanfic:
 
         # https://github.com/TeamHG-Memex/aquarium
 
-        proxy_url='http://127.0.0.1:8050/render.html?proxy=tor&url={0}'.format(url)
-        auth= HTTPBasicAuth('user', 'userpass')
+        proxy_url = 'http://127.0.0.1:8050/render.html?'
+        proxy_url = proxy_url + 'proxy=tor&url={0}'.format(url)
+        auth = HTTPBasicAuth('user', 'userpass')
 
         r = requests.get(proxy_url, auth=auth)
 
@@ -81,7 +81,7 @@ class BaseFanfic:
 
         if not os.path.exists(self.download_location):
             os.makedirs(self.download_location)
-        
+
         with concurrent.futures.ThreadPoolExecutor(
                 max_workers=self.chapter_threads) as executor:
             future_to_chapter = {
@@ -104,6 +104,7 @@ class BaseFanfic:
     def extract_chapters(self):
         """Extract chapters function (backbone)."""
         pass
+
 
 class BaseChapter:
     """Base Chapter class."""
@@ -132,8 +133,9 @@ class BaseChapter:
 
         url = urllib.parse.quote_plus(url)
 
-        proxy_url='http://127.0.0.1:8050/render.html?proxy=tor&url={0}'.format(url)
-        auth= HTTPBasicAuth('user', 'userpass')
+        proxy_url = 'http://127.0.0.1:8050/render.html?'
+        proxy_url = proxy_url + 'proxy=tor&url={0}'.format(url)
+        auth = HTTPBasicAuth('user', 'userpass')
 
         r = requests.get(proxy_url, auth=auth)
 
@@ -145,5 +147,3 @@ class BaseChapter:
 
     def story_info(self):
         pass
-
-
