@@ -326,6 +326,10 @@ class FanficDB:
 
 def download_stories(args):
 
+    # Ensure download folder exists prior to starting download.
+    location = os.path.join(basePath, arcRoot, dl_folder)
+    ensure_dir(location)
+
     cat = db.get_categories()
 
     for cat_name in cat:
@@ -342,6 +346,7 @@ def download_by_category(category):
 
     location = os.path.join(basePath, arcRoot, dl_folder, cat_folder)
 
+    # Ensure category folder exists prior to starting download.
     ensure_dir(location)
 
     cat_id = db.get_cat_id(category)
