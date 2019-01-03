@@ -225,15 +225,11 @@ def menu_sync():
         if ret == "Sync from Remote":
             source = sync_server + ":" + sync_path + "/" + arcRoot
             dest = basePath + "/" + arcRoot
-            run_sync(source, dest, False)
+            run_sync(source, dest, sync_safe)
         if ret == "Sync to Remote":
             source = basePath + "/" + arcRoot
             dest = sync_server + ":" + sync_path + "/" + arcRoot
-            if sync_safe:
-                run_sync(source, dest, True)
-            else:
-                run_sync(source, dest, False)
-
+            run_sync(source, dest, sync_safe)
         if ret == "Main Menu":
             save_config()
             mainmenu()
