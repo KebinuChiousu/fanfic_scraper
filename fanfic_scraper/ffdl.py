@@ -257,17 +257,32 @@ class FanficDB:
                    Last_Checked=info['Publish_Date'],
                    Category_Id=cat_id)
 
+    def add_cat(self, category):
+
+        with db_session:
+            Category(Name=category)
+
     def get_categories(self):
         d = defaultdict(list)
 
         with db_session:
-            categories = select(c for c in Category).order_by(Category.Name)
+            categories = select(c for c in Category
+                                if c.Id > 0).order_by(Category.Name)
 
             for c in categories:
                 for k, v in c.to_dict().items():
                     d[k].append(v)
 
         return d['Name']
+
+    def get_cat_count(self, categoryName):
+
+        with db_session:
+            category = count(c for c in Category
+                             if c.Name == categoryName
+                             and c.Id > 0)
+
+        return category
 
     def get_folder(self, cat_id, folderName):
 
@@ -469,6 +484,21 @@ def add_story(category, cat_id, folder):
         cui.pause()
 
 
+def add_cat():
+    _ = os.system("clear")
+    category = input("Enter Category Name: ")
+    cat_count = db.get_cat_count(category)
+
+    if cat_count > 0:
+        print("Category: {0} already exists!".format(category))
+        category = "None"
+        cui.pause()
+    else:
+        db.add_cat(category)
+
+    return category
+
+
 def config_menu():
     category = "None"
     folder = "None"
@@ -477,6 +507,7 @@ def config_menu():
         menu = []
         menu.append(cui.get_entry("Category: {0}", category))
         menu.append(cui.get_entry("Folder: {0}", folder))
+        menu.append("Add Category")
         menu.append("Add Story")
         menu.append("Exit")
 
@@ -502,6 +533,8 @@ def config_menu():
             else:
                 print("Please select category first!")
                 cui.pause()
+        if ret == "Add Category":
+            category = add_cat()
         if ret == "Add Story":
             if category != "None" and folder != "None":
                 add_story(category, cat_id, folder)
