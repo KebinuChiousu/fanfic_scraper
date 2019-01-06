@@ -360,11 +360,16 @@ def choose_file(path, value):
         cui.pause()
     else:
         # get files in path
-        lfiles = get_files(path, '*.txt')
+        lfiles1 = get_files(path, '*.txt')
+        lfiles2 = get_files(path, '*.pdf')
+
+        lfiles = lfiles1 + lfiles2
+
         ret = ''
 
         if len(lfiles) > 0:
             lfiles.append('*.txt')
+            lfiles.append('*.pdf')
             lfiles.sort()
             ret = cui.submenu(lfiles, value)
         else:
@@ -460,7 +465,13 @@ def format_file(value):
 
 
 def read_file(value):
-    subprocess.call(editor + ' ' + value, shell=True)
+
+    filename, file_extension = os.path.splitext(value)
+
+    if file_extension == ".pdf":
+        subprocess.call('xdg-open ' + value, shell=True)
+    else:
+        subprocess.call(editor + ' ' + value, shell=True)
 
 
 def ensure_dir(path):
