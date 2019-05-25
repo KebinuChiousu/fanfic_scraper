@@ -13,7 +13,7 @@ all: uninstall install clean
 develop:
 	@echo -e "$(BOLD)installing in develop mode $(PROJECT_NAME) $(PROJECT_VERSION)$(RESET)"
 	@echo -e -n "$(DIM)"
-	@pip install -e .
+	@pip3 install -e .
 	@echo -e -n "$(RESET)"
 
 .PHONY: install
