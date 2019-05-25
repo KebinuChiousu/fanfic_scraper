@@ -139,19 +139,6 @@ def IsNotStale(update_date, last_checked):
     return ret
 
 
-def check_url(url):
-    ret = False
-
-    if 'fanfiction.net' in url:
-        return True
-    if 'fanfictionproxy.net' in url:
-        return True
-    if 'hpfanficarchive.com' in url:
-        return True
-
-    return ret
-
-
 def set_ffargs(location, folder):
 
     parser = argparse.ArgumentParser(description=('fanfic_scraper args'))
@@ -394,7 +381,7 @@ def download_by_category(category):
         fic_id = fic['Id'][0]
 
         date_check = IsNotStale(update, last)
-        url_check = check_url(url)
+        url_check = current_fanfic.check_url(url)
 
         if url_check is True and date_check is True:
 

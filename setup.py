@@ -1,10 +1,10 @@
 from setuptools import setup
 
 setup(name='fanfic-scraper',
-      version='0.7.3.4',
+      version='0.7.3.5',
       description='Scrapes fanfics, maintains download db, organized folders for reading.',
       url='https://github.com/KebinuChiousu/fanfic-scraper',
-      download_url='https://github.com/KebinuChiousu/fanfic_scraper/archive/v0.7.3.4.tar.gz',
+      download_url='https://github.com/KebinuChiousu/fanfic_scraper/archive/v0.7.3.5.tar.gz',
       author='Kevin Meredith',
       author_email='kevin@meredithkm.info',
       license='MIT',

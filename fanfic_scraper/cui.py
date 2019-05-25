@@ -130,12 +130,13 @@ def submenu(values, prompt, input_value=False):
     return ret
 
 
-def menu_yesno(title=''):
+def menu_yesno(title='', clear=True):
     """ Prompt for yes no """
 
     while True:
 
-        _ = os.system("clear")
+        if clear:
+            _ = os.system("clear")
 
         menu = ['Yes', 'No']
         ret = submenu(menu, title)
