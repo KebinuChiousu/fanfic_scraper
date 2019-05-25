@@ -20,19 +20,19 @@ develop:
 install:
 	@echo -e "$(BOLD)installing $(PROJECT_NAME) $(PROJECT_VERSION)$(RESET)"
 	@echo -e -n "$(DIM)"
-	@pip install .
+	@pip3 install .
 	@echo -e -n "$(RESET)"
 
 .PHONY: uninstall
 uninstall:
 	@echo -e "$(BOLD)uninstalling '$(PROJECT_NAME)'$(RESET)"
-	-@pip uninstall -y $(PROJECT_NAME) 2> /dev/null
+	-@pip3 uninstall -y $(PROJECT_NAME) 2> /dev/null
 
 .PHONY: dist
 dist:
 	@echo -e "$(BOLD)packaging $(PROJECT_NAME) $(PROJECT_VERSION)$(RESET)"
 	@echo -e -n "$(DIM)"
-	@python setup.py sdist --dist-dir=dist
+	@python3 setup.py sdist --dist-dir=dist
 	@echo -e -n "$(RESET)"
 
 .PHONY: release
