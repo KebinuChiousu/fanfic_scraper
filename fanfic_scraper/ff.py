@@ -7,11 +7,15 @@ import fnmatch
 import subprocess
 import textwrap
 import json
+import argparse
+from datetime import date
+from collections import defaultdict
 from configparser import SafeConfigParser, Error
-from pony.orm import db_session, select
+from fanfic_scraper import current_fanfic
+from pony.orm import db_session, select, count
 from fanfic_scraper.db_pony import DataBaseLogic, Category, Fanfic
 from fanfic_scraper import cui
-from collections import defaultdict
+
 
 category = ''
 folder = ''
@@ -99,6 +103,68 @@ class FanficDB:
                 ret.append(d)
 
         return ret[0]
+    
+    def get_fanfic_byId(self, fic_id):
+        d = defaultdict(list)
+        ret = []
+
+        with db_session:
+            ff = select(f for f in Fanfic
+                        if f.Id == fic_id)
+
+            for f in ff:
+                d = defaultdict(list)
+                for k, v in f.to_dict().items():
+                    d[k].append(v)
+                ret.append(d)
+
+        return ret[0]
+
+    def update_chapter_count(self, fic_id, chapters):
+
+        with db_session:
+            ff = Fanfic.get(Id=fic_id)
+            ff.Count = chapters
+
+    def update_last_checked(self, fic_id, last):
+
+        with db_session:
+            ff = Fanfic.get(Id=fic_id)
+            ff.Last_Checked = last
+
+    def update_last_updated(self, fic_id, update):
+
+        with db_session:
+            ff = Fanfic.get(Id=fic_id)
+            ff.Update_Date = update
+
+
+def set_ffargs(location, folder):
+
+    parser = argparse.ArgumentParser(description=('fanfic_scraper args'))
+
+    parser.add_argument(
+        "-f", "--folder", required=True,
+        help="Name of folder to place fanfic in.")
+    parser.add_argument(
+        "-l", "--location", default=os.getcwd(),
+        help="set download location")
+    #parser.add_argument(
+    #    "-c", "--chapters", default=False,
+    #    help="Specify chapters to download separated by : (10:15).")
+    parser.add_argument(
+        "-ct", "--chapterthreads", default=1,
+        help="Number of parallel chapters downloads.")
+    parser.add_argument(
+        "-wt", "--waittime", default=15,
+        help="Wait time before retry if encountered with an error")
+    parser.add_argument(
+        "-rt", "--retries", default=10,
+        help="Number of retries before giving up")
+
+    args = parser.parse_args(['--location=' + location, '--folder=' + folder])
+
+    return args
 
 
 def about_story():
@@ -131,6 +197,165 @@ def about_story():
     cui.pause()
 
     menu_story()
+
+
+def download_story():
+    global basePath
+    global folder
+    global sfolder
+    global category
+
+    location = source = os.path.join(basePath, arcRoot, folder, category)
+    source = os.path.join(location, sfolder)
+    cat = category.replace('_', ' ')
+    cat_id = db.get_cat_id(cat)
+    fic = db.get_fanfic(cat_id, sfolder)
+
+    _ = os.system("clear")
+    
+    abandon = fic['Abandoned'][0]
+    complete = fic['Complete'][0]
+    title = fic['Title'][0]
+    author = fic['Author'][0]
+    folder = fic['Folder'][0]
+    chapters = fic['Count'][0]
+    update = fic['Update_Date'][0]
+    last = fic['Last_Checked'][0]
+    fic_id = fic['Id'][0]
+
+    if abandon == 1:
+        print("WARNING: This story is ABANDONED and will NOT be updated.")
+        print("")
+
+    print("Title: ", title)
+    print("Author: ", author)
+    print("Folder Name: ", folder)
+    print("Chapter Count: ", chapters)
+
+    if complete == 1:
+        print("Complete: Yes")
+    else:
+        print("Complete: No")
+
+    print("Last Updated: ", update)
+    print("")
+
+    if (abandon == 1) or (complete == 1):
+        cui.pause()
+    else:
+        ret = cui.menu_yesno('Download?', False)
+        if ret == "Yes":
+            chapter = input("Start Chapter [{0}]: ".format(chapters))
+            if chapter == "":
+                chapter = chapters
+            else:
+                chapter = int(chapter)
+            process_story(location, fic_id, chapter)
+            convert_story(source)
+            cui.pause()
+            menu_story()
+        else:
+            menu_story()
+
+def process_story(location, fic_id, chapter):
+
+    fic = db.get_fanfic_byId(fic_id)
+
+    potential_keys = []
+
+    title = fic['Title'][0]
+    author = fic['Author'][0]
+    folder = fic['Folder'][0]
+    chapters = fic['Count'][0]
+    update = fic['Update_Date'][0]
+    last = fic['Last_Checked'][0]
+
+    if fic['Internet'][0]:
+        tmp = fic['Internet'][0]
+        tmp2 = tmp.split('#')
+        if len(tmp2) > 1:
+            url = fic['Internet'][0].split('#')[1]
+        else:
+            url = tmp
+    else:
+        url = ''
+        
+    storyid = fic['StoryId'][0]
+    fic_id = fic['Id'][0]
+
+    url_check = current_fanfic.check_url(url)
+
+    if url_check is True:
+
+        ffargs = set_ffargs(location, folder)
+
+        # Initialize class so we can retrieve actual story url
+        fanfic = current_fanfic.fanfic(url, ffargs)
+            
+        # Get fanfic url
+        url = fanfic.get_story_url(storyid)
+            
+        # Initialize class with correct url.
+        fanfic = current_fanfic.fanfic(url, ffargs)
+            
+        # Download list of chapters
+        fanfic.get_chapters()
+        # Get current chapter count from site
+        cc = fanfic.chapter_count
+
+        if cc >= chapter:
+            if cc == chapter:
+                potential_keys = [chapter]
+            else:
+                potential_keys = [
+                    i * 1 for i in range(chapter, (cc + 1))]
+        
+        # Show story about to be updated.
+        update = fanfic.get_update_date()
+                
+        print('', end='\n')
+        print(title, '/', folder, '/', update)
+        
+        # Set chapters to download
+        fanfic.set_download_chapters(potential_keys)
+        
+        print('Downloading fanfic: ', title, '/', folder)
+
+        # Download Story
+        fanfic.download_fanfic()
+        
+        print('Downloaded fanfic: ', title, '/', folder)
+        
+        db.update_chapter_count(fic_id, cc)
+        db.update_last_updated(fic_id, update)
+        db.update_last_checked(fic_id, date.today())
+
+        print('', end='\n')
+
+
+def convert_story(location):
+
+    files = get_files(location, "*.htm")
+
+    for htm in files:
+        convert_file(location, htm)
+
+
+def convert_file(source, htm):
+
+    txt = htm.split('.')[0] + '.txt'
+    ifile = [os.path.abspath(os.path.join(source, htm))]
+    ofile = os.path.abspath(os.path.join(source, txt))
+    cmd = ['html2text', '--ignore-emphasis', '-b 80']
+    msg = 'Converting file: {0} to text file: {1}'
+
+    print(msg.format(htm, txt))
+
+    with open(ofile, "w") as outfile:
+        subprocess.call(cmd + ifile, stdout=outfile)
+
+    for i in ifile:
+        os.remove(i)
 
 
 def toggle_complete():
@@ -181,13 +406,15 @@ def menu_options():
 
 def menu_story():
 
-    menu = ['About Story']
+    menu = ['About Story', 'Download Story']
     menu = menu + ['Toggle Complete', 'Toggle Abandoned']
     menu = menu + ["Format File", "Main Menu"]
     ret = cui.submenu(menu, "Chose Story Option")
 
     if ret == "About Story":
         about_story()
+    if ret == "Download Story":
+        download_story()
     if ret == "Toggle Complete":
         toggle_complete()
     if ret == "Toggle Abandoned":
