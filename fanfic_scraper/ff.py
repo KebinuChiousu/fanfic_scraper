@@ -205,7 +205,7 @@ def download_story():
     global sfolder
     global category
 
-    location = source = os.path.join(basePath, arcRoot, folder, category)
+    location = os.path.join(basePath, arcRoot, folder, category)
     source = os.path.join(location, sfolder)
     cat = category.replace('_', ' ')
     cat_id = db.get_cat_id(cat)
@@ -217,7 +217,7 @@ def download_story():
     complete = fic['Complete'][0]
     title = fic['Title'][0]
     author = fic['Author'][0]
-    folder = fic['Folder'][0]
+    sfolder = fic['Folder'][0]
     chapters = fic['Count'][0]
     update = fic['Update_Date'][0]
     last = fic['Last_Checked'][0]
@@ -229,7 +229,7 @@ def download_story():
 
     print("Title: ", title)
     print("Author: ", author)
-    print("Folder Name: ", folder)
+    print("Folder Name: ", sfolder)
     print("Chapter Count: ", chapters)
 
     if complete == 1:
