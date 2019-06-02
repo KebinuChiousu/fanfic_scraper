@@ -11,35 +11,37 @@ all: uninstall install clean
 
 .PHONY: develop
 develop:
+	@make clean
 	@echo -e "$(BOLD)installing in develop mode $(PROJECT_NAME) $(PROJECT_VERSION)$(RESET)"
 	@echo -e -n "$(DIM)"
-	@pip3 install -e .
+	dephell deps convert
+	cd ..; pipx install -e fanfic_scraper
 	@echo -e -n "$(RESET)"
 
 .PHONY: install
 install:
 	@echo -e "$(BOLD)installing $(PROJECT_NAME) $(PROJECT_VERSION)$(RESET)"
 	@echo -e -n "$(DIM)"
-	@pip3 install .
+	pipx install fanfic_scraper
 	@echo -e -n "$(RESET)"
 
 .PHONY: uninstall
 uninstall:
 	@echo -e "$(BOLD)uninstalling '$(PROJECT_NAME)'$(RESET)"
-	-@pip3 uninstall -y $(PROJECT_NAME) 2> /dev/null
+	pipx uninstall $(PROJECT_NAME)
 
 .PHONY: dist
 dist:
 	@echo -e "$(BOLD)packaging $(PROJECT_NAME) $(PROJECT_VERSION)$(RESET)"
 	@echo -e -n "$(DIM)"
-	@python3 setup.py sdist --dist-dir=dist
+	poetry build
 	@echo -e -n "$(RESET)"
 
 .PHONY: release
 release:
-	twine upload dist/*
+	poetry publish
 
 .PHONY: clean
 clean:
 	@echo -e "$(BOLD)cleaning $(PROJECT_NAME) $(PROJECT_VERSION) repository$(RESET)"
-	@rm -rf build dist $(PROJECT_NAME).egg-info
+	@rm -rf build dist pip-wheel-metadata $(PROJECT_NAME).egg-info

@@ -1,39 +1,30 @@
-# fanfic-scraper (Fanfic Downloader)
+
+## fanfic-scraper (Fanfic Downloader)
+
 Downloads fanfics from various websites.
 Currently supports fanfiction.net, hpfanficarchive.com (more coming up soon).
 
-### Installation
+### Build Dependencies
 
-### Via pip
-To install the fanfic scraper, simply type this into your terminal (```sudo -EH``` might be necessary):
-```
-pip install fanfic-scraper
-```
+This projects uses the following dependencies
 
-### Via pip (local)
-Clone a copy of the repository using the following command:
+#### development
 
-```
-git clone https://github.com/KebinuChiousu/fanfic_scraper.git
-```
+make
+[poetry](<https://poetry.eustace.io/>)
+[dephell](<https://dephell.readthedocs.io/en/latest/>)
 
-In the project folder, type this into your terminal (```sudo -EH``` might be necessary):
-```
-pip install .
-```
+#### release
 
-#### Requirements
-The script is written in python. It requires the following packages:
-1. BeautifulSoup4
-2. requests
-3. futures (concurrent.futures)
+[pipx](<https://pipxproject.github.io/pipx/>)
 
-These can simply be installed by running in the project folder.
-```
-pip install -r requirements.txt
-```
+## Installation
 
-That's it. Use fanfic_scraper.py to download fanfics.
+To install the fanfic scraper, simply type this into your terminal:
+
+```shell
+pipx install fanfic-scraper
+```
 
 ## Usage
 
