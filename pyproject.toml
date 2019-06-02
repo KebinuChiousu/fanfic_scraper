@@ -4,6 +4,7 @@ version = "0.7.4"
 description = "Scrapes fanfics, maintains download db, organizes folders when reading."
 authors = ["Kevin Meredith <kevin@meredithkm.info>"]
 license = "MIT"
+homepage = "https://github.com/KebinuChiousu/fanfic_scraper"
 
 [tool.poetry.dependencies]
 python = "^3.5"
