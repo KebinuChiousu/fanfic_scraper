@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "fanfic_scraper"
+version = "0.7.4"
+description = "Scrapes fanfics, maintains download db, organizes folders when reading."
+authors = ["Kevin Meredith <kevin@meredithkm.info>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.5"
+beautifulsoup4 = "^4.7"
+requests = "^2.22"
+html5lib = "^1.0"
+html2text = "^2018.1"
+pony = "^0.7.10"
+tldextract = "^2.2"
+pysocks = "^1.7"
+fake_useragent = "^0.1.11"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.scripts]
+fanfic-scraper = 'fanfic_scraper.fanfic_scraper:main'
+ff = 'fanfic_scraper.ff:main'
+ffdl = 'fanfic_scraper.ffdl:main'
+ff-fif = 'fanfic_scraper.ff_fif:main'
+ff-h2t = 'fanfic_scraper.ff_h2t:main'
+ff-rf = 'fanfic_scraper.ff_rf:main'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
