@@ -446,7 +446,7 @@ def convert_by_category(category):
 def add_story(category, cat_id, folder):
     _ = os.system("clear")
     url = input("Enter Story URL: ")
-    url_check = check_url(url)
+    url_check = current_fanfic.check_url(url)
     if url_check:
         ffargs = set_ffargs('/tmp', folder)
         fanfic = current_fanfic.fanfic(url, ffargs)
