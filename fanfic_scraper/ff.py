@@ -26,6 +26,7 @@ editor = 'vi'
 sync_server = ''
 sync_path = ''
 sync_safe = True
+use_proxy = None
 
 # Initial Values
 basePath = '/home/ubuntu/OneDrive/'
@@ -139,7 +140,7 @@ class FanficDB:
             ff.Update_Date = update
 
 
-def set_ffargs(location, folder):
+def set_ffargs(location, folder, use_proxy):
 
     parser = argparse.ArgumentParser(description=('fanfic_scraper args'))
 
@@ -161,6 +162,9 @@ def set_ffargs(location, folder):
     parser.add_argument(
         "-rt", "--retries", default=10,
         help="Number of retries before giving up")
+    parser.add_argument(
+        "-p", "--useproxy", default=use_proxy,
+        help="Use proxy when connecting.")
 
     args = parser.parse_args(['--location=' + location, '--folder=' + folder])
 
@@ -204,6 +208,7 @@ def download_story():
     global folder
     global sfolder
     global category
+    global use_proxy
 
     location = os.path.join(basePath, arcRoot, folder, category)
     source = os.path.join(location, sfolder)
@@ -250,14 +255,14 @@ def download_story():
                 chapter = chapters
             else:
                 chapter = int(chapter)
-            process_story(location, fic_id, chapter)
+            process_story(location, fic_id, chapter, use_proxy)
             convert_story(source)
             cui.pause()
             menu_story()
         else:
             menu_story()
 
-def process_story(location, fic_id, chapter):
+def process_story(location, fic_id, chapter, use_proxy):
 
     fic = db.get_fanfic_byId(fic_id)
 
@@ -287,7 +292,7 @@ def process_story(location, fic_id, chapter):
 
     if url_check is True:
 
-        ffargs = set_ffargs(location, folder)
+        ffargs = set_ffargs(location, folder, use_proxy)
 
         # Initialize class so we can retrieve actual story url
         fanfic = current_fanfic.fanfic(url, ffargs)
@@ -753,6 +758,7 @@ def load_config():
     global sync_server
     global sync_path
     global sync_safe
+    global use_proxy
 
     t_editor = ''
     t_path = ''
@@ -761,6 +767,7 @@ def load_config():
     t_sync_server = ''
     t_sync_path = ''
     t_sync_safe = '1'
+    t_useproxy = ''
     config = SafeConfigParser()
 
     cfg = get_config()
@@ -781,6 +788,7 @@ def load_config():
             t_sync_server = config.get('sync', 'server')
             t_sync_path = config.get('sync', 'path')
             t_sync_safe = config.get('sync', 'safe')
+            t_useproxy = config.get('download', 'proxy_enable')
         except:
             i = 0
 
@@ -806,6 +814,9 @@ def load_config():
             sync_safe = True
         else:
             sync_safe = False
+
+        if t_useproxy:
+            use_proxy = t_useproxy
 
         spath = os.path.join(basePath, arcRoot, t_folder)
         dpath = os.path.join(basePath, arcRoot, t_dfolder)
@@ -841,6 +852,8 @@ def save_config():
         config.add_section('path')
     if not config.has_section('sync'):
         config.add_section('sync')
+    if not config.has_section('download'):
+        config.add_section('download')
 
     config.set('archive', 'sourcefolder', folder)
     config.set('archive', 'category', category)
@@ -854,6 +867,7 @@ def save_config():
     config.set('path', 'dbname', db_name)
     config.set('sync', 'server', sync_server)
     config.set('sync', 'path', sync_path)
+    config.set('download', 'proxy_enable', str(use_proxy))
 
     if sync_safe:
         config.set('sync', 'safe', '1')

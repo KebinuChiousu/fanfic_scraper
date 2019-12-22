@@ -27,18 +27,26 @@ class BaseFanfic:
         # Set verify mode
         self.verify_https = True
         self.all_chapters = None
+        self.use_proxy = program_args.useproxy
         self.chapter_count = 0
         self.fanfic_id = 0
 
     def send_request(self, url):
+        r = None
 
-        # https://github.com/TeamHG-Memex/aquarium
+        if int(self.use_proxy) == 1:
 
-        proxy_url = 'http://127.0.0.1:8050/render.html?'
-        proxy_url = proxy_url + 'proxy=tor&url={0}'.format(url)
-        auth = HTTPBasicAuth('user', 'userpass')
+            # https://github.com/TeamHG-Memex/aquarium
 
-        r = requests.get(proxy_url, auth=auth)
+            proxy_url = 'http://127.0.0.1:8050/render.html?'
+            proxy_url = proxy_url + 'proxy=tor&url={0}'.format(url)
+            auth = HTTPBasicAuth('user', 'userpass')
+
+            r = requests.get(proxy_url, auth=auth)
+
+        else:
+
+            r = requests.get(url)
 
         return r
 
@@ -114,6 +122,7 @@ class BaseChapter:
         # Extract necessary information from the fanfic object
         self.fanfic_url = fanfic.url
         self.fanfic_id = fanfic.fanfic_id
+        self.use_proxy = fanfic.use_proxy
         self.fanfic_name = fanfic.name
         self.fanfic_download_location = fanfic.download_location
         # Create chapter specific variables
@@ -128,18 +137,27 @@ class BaseChapter:
         self.chapter_location = fanfic.download_location
 
     def send_request(self, url):
+        r = None
+        new_url = url
 
-        # https://github.com/TeamHG-Memex/aquarium
+        if int(self.use_proxy) == 1:
 
-        url = urllib.parse.quote_plus(url)
+            new_url = urllib.parse.quote_plus(url)
 
-        proxy_url = 'http://127.0.0.1:8050/render.html?'
-        proxy_url = proxy_url + 'proxy=tor&url={0}'.format(url)
-        auth = HTTPBasicAuth('user', 'userpass')
+            # https://github.com/TeamHG-Memex/aquarium
 
-        r = requests.get(proxy_url, auth=auth)
+            proxy_url = 'http://127.0.0.1:8050/render.html?'
+            proxy_url = proxy_url + 'proxy=tor&url={0}'.format(new_url)
+            auth = HTTPBasicAuth('user', 'userpass')
+
+            r = requests.get(proxy_url, auth=auth)
+
+        else:
+
+            r = requests.get(url)
 
         return r
+
 
     def download_chapter(self):
         """Download chapter (backbone)."""

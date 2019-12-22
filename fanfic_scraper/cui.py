@@ -11,6 +11,17 @@ def get_entry(text, value):
     return text.format(value)
 
 
+def get_bool(value):
+    ret = ''
+
+    if value == 1:
+        ret = "True"
+    else:
+        ret = "False"
+
+    return ret
+
+
 def submenu_nav(values, prompt, idx, count, input_value=False, back=False):
     stop = len(values) - 1
     np = 0
@@ -148,3 +159,18 @@ def menu_yesno(title='', clear=True):
         else:
             print("Invalid Option!")
             pause()
+
+
+def check_binary(file_name):
+
+    ret = subprocess.run(["which", file_name],
+                         stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+    check = ret.stdout.decode('utf-8').splitlines()[0]
+
+    if filename in check:
+        ret = 0
+    else:
+        ret = 1
+
+    return ret

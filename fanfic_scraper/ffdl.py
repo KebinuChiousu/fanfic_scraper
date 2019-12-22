@@ -22,6 +22,7 @@ db = None
 db_name = 'FanfictionDB.db'
 db_folder = 'Read'
 dl_folder = 'htm'
+use_proxy = None
 
 
 def ensure_dir(path):
@@ -44,11 +45,13 @@ def config_load():
     global db_folder
     global db_name
     global dl_folder
+    global use_proxy
     t_path = ''
     t_root = ''
     t_dbname = ''
     t_dbfolder = ''
     t_dlfolder = ''
+    t_useproxy = ''
     config = SafeConfigParser()
 
     cfg = get_config()
@@ -62,6 +65,7 @@ def config_load():
             t_dbfolder = config.get('path', 'dbfolder')
             t_dbname = config.get('path', 'dbname')
             t_dlfolder = config.get('path', 'downloadfolder')
+            t_useproxy = config.get('download', 'proxy_enable')
         except:
             i = 0
 
@@ -75,6 +79,8 @@ def config_load():
             db_name = t_dbname
         if t_dlfolder:
             dl_folder = t_dlfolder
+        if t_useproxy:
+            use_proxy = int(t_useproxy)
 
 
 def config_save():
@@ -92,6 +98,11 @@ def config_save():
     config.set('path', 'dbfolder', db_folder)
     config.set('path', 'dbname', db_name)
     config.set('path', 'downloadfolder', dl_folder)
+
+    if not config.has_section('download'):
+        config.add_section('download')
+
+    config.set('download', 'proxy_enable', str(use_proxy))
 
     with open(cfg, 'w') as f:
         config.write(f)
@@ -139,8 +150,7 @@ def IsNotStale(update_date, last_checked):
     return ret
 
 
-def set_ffargs(location, folder):
-
+def set_ffargs(location, folder, use_proxy):
     parser = argparse.ArgumentParser(description=('fanfic_scraper args'))
 
     parser.add_argument(
@@ -161,6 +171,9 @@ def set_ffargs(location, folder):
     parser.add_argument(
         "-rt", "--retries", default=10,
         help="Number of retries before giving up")
+    parser.add_argument(
+        "-p", "--useproxy", default=use_proxy,
+        help="Use proxy when connecting.")
 
     args = parser.parse_args(['--location=' + location, '--folder=' + folder])
 
@@ -336,11 +349,11 @@ def download_stories(args):
 
     for cat_name in cat:
         # print("Processing:", cat_name)
-        download_by_category(cat_name)
+        download_by_category(cat_name, args.useproxy)
         convert_by_category(cat_name)
 
 
-def download_by_category(category):
+def download_by_category(category, use_proxy):
 
     potential_keys = []
 
@@ -385,7 +398,7 @@ def download_by_category(category):
 
         if url_check is True and date_check is True:
 
-            ffargs = set_ffargs(location, folder)
+            ffargs = set_ffargs(location, folder, use_proxy)
 
             next_chapter = chapters + 1
 
@@ -496,6 +509,7 @@ def config_menu():
         menu.append(cui.get_entry("Folder: {0}", folder))
         menu.append("Add Category")
         menu.append("Add Story")
+        menu.append("Download Options")
         menu.append("Exit")
 
         _ = os.system("clear")
@@ -529,12 +543,42 @@ def config_menu():
             else:
                 print("Please ensure Category and Folder are not set to None!")
                 cui.pause()
+        if ret == "Download Options":
+            _ = os.system("clear")
+            download_menu()
         if ret == "Exit":
+            config_save()
             sys.exit(0)
+
+
+def download_menu():
+    global use_proxy
+
+    while True:
+        menu = []
+        menu.append(cui.get_entry("Use Proxy: {0}", cui.get_bool(use_proxy)))
+        menu.append("Back to Config")
+
+        _ = os.system("clear")
+
+        print("Fanfic Downloader - Download Options")
+        print("")
+        ret = cui.submenu(menu, "Enter Selection")
+
+        if "Use Proxy:" in ret:
+            _ = os.system("clear")
+            ret = cui.menu_yesno()
+            if ret == "Yes":
+                use_proxy = 1
+            else:
+                use_proxy = 0
+        if ret == "Back to Config":
+            config_menu()
 
 
 def main():
     global db
+    global use_proxy
     parser = argparse.ArgumentParser(
         description=(
             'Automates fanfic downloads latest chapters using fanfic_scraper. '
@@ -545,6 +589,10 @@ def main():
 
     config_load()
     db = FanficDB()
+
+    parser.add_argument(
+        "-p", "--useproxy", default=use_proxy,
+        help="Use proxy when connecting.")
 
     args = parser.parse_args()
 
