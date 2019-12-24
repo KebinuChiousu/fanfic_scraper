@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fanfic_scraper"
-version = "0.7.4"
+version = "0.7.5"
 description = "Scrapes fanfics, maintains download db, organizes folders when reading."
 authors = ["Kevin Meredith <kevin@meredithkm.info>"]
 license = "MIT"
@@ -22,6 +22,7 @@ lxml = "^4.4.2"
 fissix = "^19.2b1"
 dephell = {extras = ["full"], version = "^0.8.0"}
 pipx = "^0.14.0"
+flake8 = "^3.7.9"
 
 [tool.poetry.scripts]
 fanfic-scraper = 'fanfic_scraper.fanfic_scraper:main'
