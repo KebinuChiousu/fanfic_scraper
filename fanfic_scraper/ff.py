@@ -438,10 +438,12 @@ def menu_sync():
     ret = subprocess.run(["which", "rclone"],
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
-    check = ret.stdout.decode('utf-8').splitlines()[0]
+    check = ret.stdout.decode('utf-8')
 
-    if check == '/usr/bin/rclone':
-
+    if not check:
+        print("Command: rclone is required for sync to work!")
+        cui.pause()
+    else:
         if sync_server == '' or sync_path == '':
             sync = ["Config", "Main Menu"]
         else:
@@ -466,9 +468,7 @@ def menu_sync():
             save_config()
             mainmenu()
 
-    else:
-        print("Command: rclone is required for sync to work!")
-        cui.pause()
+   
 
 
 def setup_sync():
