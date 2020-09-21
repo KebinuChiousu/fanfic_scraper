@@ -15,7 +15,7 @@ develop:
 	@echo -e "$(BOLD)installing in develop mode $(PROJECT_NAME) $(PROJECT_VERSION)$(RESET)"
 	@echo -e -n "$(DIM)"
 	dephell deps convert
-	cd ..; pipx install -e fanfic_scraper
+	pipx install -e .
 	@echo -e -n "$(RESET)"
 
 .PHONY: install
