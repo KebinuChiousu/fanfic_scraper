@@ -23,6 +23,7 @@ fissix = "^19.2b1"
 dephell = {extras = ["full"], version = "^0.8.0"}
 pipx = "^0.14.0"
 flake8 = "^3.7.9"
+pylint = "^2.6.0"
 
 [tool.poetry.scripts]
 fanfic-scraper = 'fanfic_scraper.fanfic_scraper:main'
