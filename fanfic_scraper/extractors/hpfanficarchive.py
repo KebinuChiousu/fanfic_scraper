@@ -30,7 +30,7 @@ class HPFanficArchive(BaseFanfic):
         return title
 
     def get_story_url(self, storyid):
-        base_url = 'https://www.hpfanficarchive.com/stories/viewstory.php?sid='
+        base_url = 'http://www.hpfanficarchive.com/stories/viewstory.php?sid='
         return base_url + storyid
 
     def extract_chapters(self):
