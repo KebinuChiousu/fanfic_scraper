@@ -102,6 +102,9 @@ def config_save():
     if not config.has_section('download'):
         config.add_section('download')
 
+    if use_proxy is None:
+        use_proxy = 0
+
     config.set('download', 'proxy_enable', str(use_proxy))
 
     with open(cfg, 'w') as f:
