@@ -26,7 +26,7 @@ editor = 'vi'
 sync_server = ''
 sync_path = ''
 sync_safe = True
-use_proxy = None
+use_proxy = 0
 
 # Initial Values
 basePath = '/home/ubuntu/OneDrive/'

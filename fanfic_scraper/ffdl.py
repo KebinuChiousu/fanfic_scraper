@@ -22,7 +22,7 @@ db = None
 db_name = 'FanfictionDB.db'
 db_folder = 'Read'
 dl_folder = 'htm'
-use_proxy = None
+use_proxy = 0
 
 
 def ensure_dir(path):
