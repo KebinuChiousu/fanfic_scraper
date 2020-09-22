@@ -76,6 +76,12 @@ class FanficDB:
 
             fic.Abandoned = a
 
+    def reset_update(self, fic_id):
+
+        with db_session:
+            fic = Fanfic.get(Id=fic_id)
+            fic.Update_date = fic.Publish_Date
+
     def get_fic_id(self, cat_id, folder):
 
         with db_session:
@@ -384,6 +390,14 @@ def toggle_abandoned():
 
     menu_story()
 
+def reset_update_date():
+    cat = category.replace('_', ' ')
+    cat_id = db.get_cat_id(cat)
+    fic_id = db.get_fic_id(cat_id, sfolder)
+
+    db.reset_update(fic_id)
+
+    menu_story()
 
 def get_entry(text, value):
     # Substitute {0} in text with value.
@@ -413,6 +427,7 @@ def menu_story():
 
     menu = ['About Story', 'Download Story']
     menu = menu + ['Toggle Complete', 'Toggle Abandoned']
+    menu = menu + ['Reset Updated']
     menu = menu + ["Format File", "Main Menu"]
     ret = cui.submenu(menu, "Chose Story Option")
 
@@ -424,6 +439,8 @@ def menu_story():
         toggle_complete()
     if ret == "Toggle Abandoned":
         toggle_abandoned()
+    if ret == "Reset Updated":
+        reset_update_date()
     if ret == "Format File":
         if tfile:
             format_file(os.path.join(basePath, arcRoot,
