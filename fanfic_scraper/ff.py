@@ -80,7 +80,9 @@ class FanficDB:
 
         with db_session:
             fic = Fanfic.get(Id=fic_id)
-            fic.Update_date = fic.Publish_Date
+            p = fic.Publish_Date
+           
+            fic.Last_Checked = p
 
     def get_fic_id(self, cat_id, folder):
 
