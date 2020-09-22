@@ -863,6 +863,9 @@ def save_config():
 
     config.read(cfg)
 
+    if use_proxy is None:
+        use_proxy = 0
+
     if not config.has_section('archive'):
         config.add_section('archive')
     if not config.has_section('options'):
