@@ -466,11 +466,12 @@ def convert_by_category(category):
 
 
 def add_story(category, cat_id, folder):
+    global use_proxy
     _ = os.system("clear")
     url = input("Enter Story URL: ")
     url_check = current_fanfic.check_url(url)
     if url_check:
-        ffargs = set_ffargs('/tmp', folder)
+        ffargs = set_ffargs('/tmp', folder, use_proxy)
         fanfic = current_fanfic.fanfic(url, ffargs)
         info = fanfic.story_info()
         print("ID: {0}".format(info['StoryId']))
