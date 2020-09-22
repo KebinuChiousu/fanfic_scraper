@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fanfic_scraper"
-version = "0.7.5"
+version = "0.7.6"
 description = "Scrapes fanfics, maintains download db, organizes folders when reading."
 authors = ["Kevin Meredith <kevin@meredithkm.info>"]
 license = "MIT"
