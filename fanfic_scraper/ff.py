@@ -857,6 +857,20 @@ def load_config():
 
 
 def save_config():
+    global basePath
+    global folder
+    global dfolder
+    global sfolder
+    global category
+    global tfile
+    global editor
+    global db_folder
+    global db_name
+    global sync_server
+    global sync_path
+    global sync_safe
+    global use_proxy
+    
     cfg = get_config()
 
     config = SafeConfigParser()

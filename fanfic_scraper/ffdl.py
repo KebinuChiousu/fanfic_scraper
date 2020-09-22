@@ -82,8 +82,14 @@ def config_load():
         if t_useproxy:
             use_proxy = int(t_useproxy)
 
-
 def config_save():
+    global basePath
+    global arcRoot
+    global db_folder
+    global db_name
+    global dl_folder
+    global use_proxy
+    
     cfg = get_config()
 
     config = SafeConfigParser()
