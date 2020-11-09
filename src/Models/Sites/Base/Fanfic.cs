@@ -17,15 +17,21 @@ namespace web_scraper.Models.Sites.Base
 
         public abstract string ProcessChapters(string link, int index);
 
-        public virtual string WriteDate(string publish, string update, int index, int lstop)
+        public virtual string WriteDate(DateTime? publish, DateTime? update, int index, int lstop)
         {
-            string ret = "";
+            string dte = "";
 
-            if (index == 1)
-                ret = "<p>" + publish + "</p>";
-            else if (index == lstop)
-                ret = "<p>" + update + "</p>";
+            if ((publish != null) && (index == 1))
+            {
+                dte = Convert.ToDateTime(publish).ToLongDateString();
+            }
 
+            if ((update != null) && (index == lstop))
+            {
+                dte = Convert.ToDateTime(update).ToLongDateString();
+            }
+
+            string ret = "<p>" + dte + "</p>";
             return ret;
         }
 
@@ -33,7 +39,7 @@ namespace web_scraper.Models.Sites.Base
 
         public abstract string GrabSeries(string htmlDoc);
 
-        public abstract string GrabDate(string htmlDoc, string title);
+        public abstract DateTime? GrabDate(string htmlDoc, string title);
 
         public abstract string GrabAuthor(string htmlDoc);
 

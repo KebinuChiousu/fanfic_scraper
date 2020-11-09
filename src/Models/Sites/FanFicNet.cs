@@ -57,8 +57,7 @@ namespace web_scraper.Models.Sites
             return value;
         }
 
-        public override DateTime? GrabDate(string htmlDoc, string title
-                        )
+        public override DateTime? GrabDate(string htmlDoc, string title)
         {
             DateTime? ret = null;
 
@@ -367,12 +366,12 @@ namespace web_scraper.Models.Sites
         public override string GetStoryID(string link)
         {
             string ret;
-            URL hl;
+            Url hl;
             string[] parms;
 
-            hl = ExtractUrl(link);
+            hl = UrlHelper.ExtractUrl(link);
 
-            parms = Split(hl.URI, "/");
+            parms = Strings.Split(hl.Uri, "/");
 
             ret = parms[2];
 
