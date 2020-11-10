@@ -22,7 +22,7 @@ db = None
 db_name = 'FanfictionDB.db'
 db_folder = 'Read'
 dl_folder = 'htm'
-use_proxy = None
+use_proxy = 0
 
 
 def ensure_dir(path):
@@ -82,8 +82,14 @@ def config_load():
         if t_useproxy:
             use_proxy = int(t_useproxy)
 
-
 def config_save():
+    global basePath
+    global arcRoot
+    global db_folder
+    global db_name
+    global dl_folder
+    global use_proxy
+    
     cfg = get_config()
 
     config = SafeConfigParser()
@@ -101,6 +107,9 @@ def config_save():
 
     if not config.has_section('download'):
         config.add_section('download')
+
+    if use_proxy is None:
+        use_proxy = 0
 
     config.set('download', 'proxy_enable', str(use_proxy))
 
@@ -457,6 +466,7 @@ def convert_by_category(category):
 
 
 def add_story(category, cat_id, folder):
+    global use_proxy
     _ = os.system("clear")
     url = input("Enter Story URL: ")
     url_check = current_fanfic.check_url(url)

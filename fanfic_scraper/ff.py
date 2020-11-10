@@ -26,7 +26,7 @@ editor = 'vi'
 sync_server = ''
 sync_path = ''
 sync_safe = True
-use_proxy = None
+use_proxy = 0
 
 # Initial Values
 basePath = '/home/ubuntu/OneDrive/'
@@ -75,6 +75,14 @@ class FanficDB:
                 a = 1
 
             fic.Abandoned = a
+
+    def reset_update(self, fic_id):
+
+        with db_session:
+            fic = Fanfic.get(Id=fic_id)
+            p = fic.Publish_Date
+           
+            fic.Last_Checked = p
 
     def get_fic_id(self, cat_id, folder):
 
@@ -384,6 +392,14 @@ def toggle_abandoned():
 
     menu_story()
 
+def reset_update_date():
+    cat = category.replace('_', ' ')
+    cat_id = db.get_cat_id(cat)
+    fic_id = db.get_fic_id(cat_id, sfolder)
+
+    db.reset_update(fic_id)
+
+    menu_story()
 
 def get_entry(text, value):
     # Substitute {0} in text with value.
@@ -413,6 +429,7 @@ def menu_story():
 
     menu = ['About Story', 'Download Story']
     menu = menu + ['Toggle Complete', 'Toggle Abandoned']
+    menu = menu + ['Reset Updated']
     menu = menu + ["Format File", "Main Menu"]
     ret = cui.submenu(menu, "Chose Story Option")
 
@@ -424,6 +441,8 @@ def menu_story():
         toggle_complete()
     if ret == "Toggle Abandoned":
         toggle_abandoned()
+    if ret == "Reset Updated":
+        reset_update_date()
     if ret == "Format File":
         if tfile:
             format_file(os.path.join(basePath, arcRoot,
@@ -438,10 +457,12 @@ def menu_sync():
     ret = subprocess.run(["which", "rclone"],
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE)
-    check = ret.stdout.decode('utf-8').splitlines()[0]
+    check = ret.stdout.decode('utf-8')
 
-    if check == '/usr/bin/rclone':
-
+    if not check:
+        print("Command: rclone is required for sync to work!")
+        cui.pause()
+    else:
         if sync_server == '' or sync_path == '':
             sync = ["Config", "Main Menu"]
         else:
@@ -466,9 +487,7 @@ def menu_sync():
             save_config()
             mainmenu()
 
-    else:
-        print("Command: rclone is required for sync to work!")
-        cui.pause()
+   
 
 
 def setup_sync():
@@ -838,11 +857,28 @@ def load_config():
 
 
 def save_config():
+    global basePath
+    global folder
+    global dfolder
+    global sfolder
+    global category
+    global tfile
+    global editor
+    global db_folder
+    global db_name
+    global sync_server
+    global sync_path
+    global sync_safe
+    global use_proxy
+    
     cfg = get_config()
 
     config = SafeConfigParser()
 
     config.read(cfg)
+
+    if use_proxy is None:
+        use_proxy = 0
 
     if not config.has_section('archive'):
         config.add_section('archive')
