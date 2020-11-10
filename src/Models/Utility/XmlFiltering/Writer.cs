@@ -7,7 +7,7 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace web_scraper.Models.Utility.XmlFiltering
 {
-  public class Writer : web_scraper.Models.Utility.XmlWrapping.Writer
+  public class Writer : XmlWrapping.Writer
     {
     public bool FilterOutput;
     public bool ReduceConsecutiveSpace;

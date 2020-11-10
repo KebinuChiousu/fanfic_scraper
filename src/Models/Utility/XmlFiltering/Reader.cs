@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace web_scraper.Models.Utility.XmlFiltering
 {
-  public class Reader : web_scraper.Models.Utility.XmlWrapping.Reader
+  public class Reader : XmlWrapping.Reader
     {
     public bool StripPrefix;
 
