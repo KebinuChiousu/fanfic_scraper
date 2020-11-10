@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "web_scraper", "src\web_scraper.csproj", "{E0513C6C-D8DA-486E-9C4F-7682B03C09EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "web_scraper", "Fanfic.Scraper\web_scraper.csproj", "{E0513C6C-D8DA-486E-9C4F-7682B03C09EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{129279AD-64EC-4AF8-B388-E7970275E5F7}"
 	ProjectSection(SolutionItems) = preProject
