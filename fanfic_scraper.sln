@@ -9,9 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Utility", "Web.Utility\Web.Utility.csproj", "{30A65E28-5326-4B4E-8395-64D4EF34137B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Utility", "Web.Utility\Web.Utility.csproj", "{30A65E28-5326-4B4E-8395-64D4EF34137B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
