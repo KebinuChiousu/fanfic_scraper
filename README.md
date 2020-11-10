@@ -1,5 +1,5 @@
 
 ## FanFic.Scraper (Fanfic Downloader)
 
-Downloads fanfics from various websites.
-Currently supports fanfiction.net.
+* Downloads fanfics from various websites.
+* Currently supports fanfiction.net.
