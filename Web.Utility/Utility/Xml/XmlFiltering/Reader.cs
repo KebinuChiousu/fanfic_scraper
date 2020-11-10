@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
 
-namespace web_scraper.Models.Utility.XmlFiltering
+namespace Web.Utility.Xml.XmlFiltering
 {
   public class Reader : XmlWrapping.Reader
     {

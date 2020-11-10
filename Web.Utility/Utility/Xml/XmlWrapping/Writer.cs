@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Xml;
 
-namespace web_scraper.Models.Utility.XmlWrapping
+namespace Web.Utility.Xml.XmlWrapping
 {
   public class Writer : XmlWriter
   {

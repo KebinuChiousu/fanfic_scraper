@@ -1,16 +1,15 @@
 using System;
 using Microsoft.VisualBasic;
-using HtmlAgilityPack;
 using System.Xml;
 using System.Data;
 
-using web_scraper.Models;
-using web_scraper.Models.Utility;
+using Web;
+using Web.Utility.Helper;
 
 namespace web_scraper.Models.Sites.Base
 {
 
-    public abstract class Fanfic
+    public abstract class FanFic
     {
         protected DataSet datasetRSS;
         protected string StoryURL;
@@ -103,7 +102,7 @@ namespace web_scraper.Models.Sites.Base
 
             if (!Information.IsNothing(xmldoc))
                 // Read in XML from file
-                datasetRSS.ReadXml(Functions.StringToStream(xmldoc.OuterXml));
+                datasetRSS.ReadXml(Util.StringToStream(xmldoc.OuterXml));
             else
                 datasetRSS = null;
 
@@ -112,9 +111,9 @@ namespace web_scraper.Models.Sites.Base
 
         public abstract Story GrabStoryInfo(int idx);        
 
-        public Story GetStoryInfoByID(string StoryID)
+        public Story GetStoryInfoById(string StoryId)
         {
-            Story fic = default(Story);
+            Story fic = default;
 
             int idx;
 
@@ -122,7 +121,7 @@ namespace web_scraper.Models.Sites.Base
             {
                 fic = GrabStoryInfo(idx);
 
-                if (Strings.InStr(fic.ID, StoryID) != 0)
+                if (Strings.InStr(fic.ID, StoryId) != 0)
                     break;
             }
 
@@ -133,41 +132,39 @@ namespace web_scraper.Models.Sites.Base
 
         protected string GenerateAtomFeed(Story[] fic)
         {
-            string html = "";
-            int node_idx;
+            int nodeIdx;
+            string html = "<feed>";
 
-            html = "<feed>";
-
-            for (node_idx = 0; node_idx <= Information.UBound(fic); node_idx++)
+            for (nodeIdx = 0; nodeIdx <= Information.UBound(fic); nodeIdx++)
             {
                 html += "<entry>";
                 html += "<author>";
                 html += "<name>";
-                html += fic[node_idx].Author;
+                html += fic[nodeIdx].Author;
                 html += "</name>";
                 html += "<uri>";
-                html += fic[node_idx].AuthorURL;
+                html += fic[nodeIdx].AuthorURL;
                 html += "</uri>";
                 html += "</author>";
                 html += "<published>";
-                html += fic[node_idx].PublishDate.ToString();
+                html += fic[nodeIdx].PublishDate.ToString();
                 html += "</published>";
                 html += "<updated>";
-                html += fic[node_idx].UpdateDate.ToString();
+                html += fic[nodeIdx].UpdateDate.ToString();
                 html += "</updated>";
                 html += "<title>";
-                html += fic[node_idx].Title;
+                html += fic[nodeIdx].Title;
                 html += "</title>";
-                html += "<link rel=\"alternate\" href=\"" + fic[node_idx].StoryURL + "\" />";
+                html += "<link rel=\"alternate\" href=\"" + fic[nodeIdx].StoryURL + "\" />";
                 html += "<id>";
-                html += fic[node_idx].ID;
+                html += fic[nodeIdx].ID;
                 html += ":";
-                html += fic[node_idx].Category;
+                html += fic[nodeIdx].Category;
                 html += ":";
-                html += fic[node_idx].ChapterCount;
+                html += fic[nodeIdx].ChapterCount;
                 html += "</id>";
                 html += "<summary type=\"html\">";
-                html += System.Web.HttpUtility.HtmlEncode(fic[node_idx].Summary);
+                html += System.Web.HttpUtility.HtmlEncode(fic[nodeIdx].Summary);
                 html += "</summary>";
                 html += "</entry>";
             }
@@ -179,22 +176,10 @@ namespace web_scraper.Models.Sites.Base
 
         public abstract string ErrorMessage { get; }
 
-        public virtual string HostName
-        {
-            get
-            {
-                return "";
-            }
-        }
+        public virtual string HostName => "";
 
         public abstract string Name { get; }
 
-        public DataSet dsRSS
-        {
-            get
-            {
-                return datasetRSS;
-            }
-        }
+        public DataSet RSS => datasetRSS;
     }
 }

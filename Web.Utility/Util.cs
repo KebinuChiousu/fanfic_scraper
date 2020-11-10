@@ -1,14 +1,14 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Microsoft.VisualBasic;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
 
-namespace web_scraper.Models.Utility
+namespace Web
 {
-    static class Functions
+    public static class Util
     {
 
         /// <summary>  
@@ -18,10 +18,11 @@ namespace web_scraper.Models.Utility
         /// <param name="a">Position of Character</param>  
         /// <param name="b">Length </param>  
         /// <returns></returns>  
-        public static string Mid(string s, int a, int b)  
-        {  
-            string temp = s.Substring(a, b);  
-            return temp;  
+        public static string Mid(string s, int a, int b)
+        {
+            string temp = s.Substring(a, b);
+
+            return temp;
         }
 
         public static string Mid(string s, int a)
@@ -35,7 +36,9 @@ namespace web_scraper.Models.Utility
             if (value == null)
             {
                 return true;
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
@@ -98,17 +101,16 @@ namespace web_scraper.Models.Utility
             return System.IO.Path.GetTempFileName();
         }
 
-        public static bool runAndWait(string command, string commandLine
+        public static bool RunAndWait(string command, string commandLine
                         )
         {
-            bool ret = false;
-            Process runProcess;
+            bool ret;
 
-            string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Functions)).CodeBase);
+            string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Util)).CodeBase);
 
             try
             {
-                runProcess = new Process();
+                var runProcess = new Process();
 
                 {
                     var withBlock = runProcess.StartInfo;
@@ -155,7 +157,6 @@ namespace web_scraper.Models.Utility
 
             int X;
 
-            prevChar = "";
             nextChar = "";
             curChar = "";
             strRet = "";
@@ -167,7 +168,7 @@ namespace web_scraper.Models.Utility
 
                 if (nextChar != Constants.vbNullString & curChar != nextChar)
                 {
-                    curChar = curChar + nextChar;
+                    curChar +=  nextChar;
                     nextChar = "";
                 }
                 else if (curChar == Constants.vbLf)
@@ -180,7 +181,7 @@ namespace web_scraper.Models.Utility
                 else if (curChar == Constants.vbCr)
                     nextChar = Constants.vbLf;
 
-                strRet = strRet + curChar;
+                strRet += curChar;
             }
 
             return strRet;
@@ -203,8 +204,6 @@ namespace web_scraper.Models.Utility
 
         public static string ConvertToAscii(string str)
         {
-            Encoding ecp1252 = Encoding.GetEncoding(1252);
-
             ASCIIEncoding ascii = new ASCIIEncoding();
             byte[] bytearray;
             byte[] asciiarray;
@@ -231,8 +230,7 @@ namespace web_scraper.Models.Utility
             string @base = Folder;
 
             string[] strFiles = Directory.GetFiles(@base, "*.htm", SearchOption.TopDirectoryOnly);
-            string filename = "";
-            string newfilename = "";
+            string newfilename;
             int idx;
             FileInfo fi;
 
@@ -242,7 +240,7 @@ namespace web_scraper.Models.Utility
             {
                 for (idx = Information.UBound(strFiles); idx >= 0; idx += -1)
                 {
-                    filename = strFiles[idx];
+                    string filename = strFiles[idx];
                     fi = new FileInfo(filename);
 
                     newfilename = fi.Name.Split(".")[0];
@@ -264,8 +262,7 @@ namespace web_scraper.Models.Utility
             string @base = Folder;
 
             string[] strFiles = Directory.GetFiles(@base, "*.htm", SearchOption.TopDirectoryOnly);
-            string filename = "";
-            string newfilename = "";
+            string newfilename;
             int idx;
             FileInfo fi;
 
@@ -275,7 +272,7 @@ namespace web_scraper.Models.Utility
             {
                 for (idx = Information.UBound(strFiles); idx >= 0; idx += -1)
                 {
-                    filename = strFiles[idx];
+                    string filename = strFiles[idx];
                     fi = new FileInfo(filename);
                     newfilename = fi.Name.Split(".")[0];
 
@@ -290,7 +287,6 @@ namespace web_scraper.Models.Utility
                 }
             }
         }
-        
-    }
 
+    }
 }

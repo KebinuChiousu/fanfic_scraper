@@ -14,7 +14,7 @@ using HtmlAgilityPack;
 using System.Xml;
 using System.Web;
 
-namespace web_scraper.Models.Utility
+namespace Web.Utility.Helper
 {
     public static class HtmlHelper
     {
@@ -42,8 +42,6 @@ namespace web_scraper.Models.Utility
 
             outputFile.Close();
 
-            doc = null/* TODO Change to default(_) if this is not a reference type */;
-
             return ret;
         }
 
@@ -63,8 +61,6 @@ namespace web_scraper.Models.Utility
             {
                 title = "";
             }
-
-            doc = null/* TODO Change to default(_) if this is not a reference type */;
 
             return title;
         }
@@ -125,7 +121,7 @@ namespace web_scraper.Models.Utility
 
             doc = CleanHTML(ref htmlDoc);
 
-            string result = "";
+            string result;
             string[] values;
             int idx = 0;
 
@@ -140,7 +136,7 @@ namespace web_scraper.Models.Utility
                 temp = doc.DocumentNode.SelectNodes("//select[@title='" + param + "']");
             }
 
-            if (Functions.IsNothing(temp))
+            if (Util.IsNothing(temp))
                 return null;
 
             if (temp.Count == 0)
@@ -166,11 +162,9 @@ namespace web_scraper.Models.Utility
                     }
                         
                     values[idx] = node.NextSibling.InnerText;
-                    idx = idx + 1;
+                    idx += 1;
                 }
             }
-
-            doc = null/* TODO Change to default(_) if this is not a reference type */;
 
             return values;
         }
@@ -197,7 +191,7 @@ namespace web_scraper.Models.Utility
             else
                 temp = node.SelectNodes("//" + NodeName + "[@" + Attr + "='" + AttrValue + "']");
 
-            if (Functions.IsNothing(temp))
+            if (Util.IsNothing(temp))
                 return null/* TODO Change to default(_) if this is not a reference type */;
 
             if (temp.Count == 0)
@@ -208,9 +202,6 @@ namespace web_scraper.Models.Utility
             doc = CleanHTML(ref result);
 
             ret = doc.DocumentNode.SelectNodes("//li");
-
-            doc = null/* TODO Change to default(_) if this is not a reference type */;
-            temp = null/* TODO Change to default(_) if this is not a reference type */;
 
             return ret;
         }
@@ -229,15 +220,18 @@ namespace web_scraper.Models.Utility
         [DebuggerStepThrough()]
         public static bool IsHtmlEncoded(string text)
         {
-            bool ret = false;
-            string result;
+            bool ret;
 
-            result = System.Web.HttpUtility.HtmlDecode(text);
+            string result = System.Web.HttpUtility.HtmlDecode(text);
 
             if (result != text)
+            {
                 ret = true;
+            }
             else
+            {
                 ret = false;
+            }
 
             return ret;
         }
@@ -255,14 +249,14 @@ namespace web_scraper.Models.Utility
             return ret;
         }
 
-        public static void StripTag(ref string html, string attribute, string value, bool PartialMatch = false)
+        public static void StripTag(ref string html, string attribute, string value)
         {
             HtmlDocument doc = new HtmlDocument();
             StringWriter outputFile;
 
             outputFile = new StringWriter();
 
-            html = Functions.CleanString(html);
+            html = Util.CleanString(html);
 
             doc.LoadHtml(html);
 
@@ -296,7 +290,7 @@ namespace web_scraper.Models.Utility
 
             outputFile = new StringWriter();
 
-            html = Functions.CleanString(html);
+            html = Util.CleanString(html);
 
             doc.LoadHtml(html);
 

@@ -5,7 +5,7 @@ using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace web_scraper.Models.Utility.XmlFiltering
+namespace Web.Utility.Xml.XmlFiltering
 {
   public class Writer : XmlWrapping.Writer
     {
@@ -18,10 +18,10 @@ namespace web_scraper.Models.Utility.XmlFiltering
     public bool ConvertPrefixesToTags;
     private string LastElement;
     private string LastPrefix;
-    private bool HasPrefix;
+    // private bool HasPrefix;
     private bool PrefixSameAsRoot;
     private string root;
-    private string[] xmlns;
+    // private string[] xmlns;
 
     public string[] AllowedTags
     {

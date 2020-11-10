@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Schema;
 
-namespace web_scraper.Models.Utility.XmlWrapping
+namespace Web.Utility.Xml.XmlWrapping
 {
   public class Reader : XmlReader
   {

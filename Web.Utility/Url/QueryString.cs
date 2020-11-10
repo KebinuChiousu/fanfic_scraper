@@ -1,4 +1,4 @@
-namespace web_scraper.Models.Utility
+namespace Web
 {
     public struct QueryString
     {

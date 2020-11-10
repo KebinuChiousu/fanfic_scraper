@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 
-namespace web_scraper.Models.Utility
+namespace Web.Utility.Helper
 {
     public static class UrlHelper
     {
@@ -109,7 +109,7 @@ namespace web_scraper.Models.Utility
                 if ((curChar < 48 | curChar > 57) & (curChar < 65 | curChar > 90) & (curChar < 97 | curChar > 122))
                     newStr = newStr + "%" + Conversion.Hex(curChar);
                 else
-                    newStr = newStr + Strings.Chr(curChar);
+                    newStr += Strings.Chr(curChar);
             }
 
             return newStr;
@@ -141,12 +141,12 @@ namespace web_scraper.Models.Utility
                     else
                         curChar = Strings.Chr(0);
 
-                    X = X + 2;
+                    X += 2;
                 }
 
                 if (curChar != Strings.Chr(0))
                 {
-                    newStr = newStr + curChar;
+                    newStr += curChar;
                 }
 
             }

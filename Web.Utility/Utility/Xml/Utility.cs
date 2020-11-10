@@ -11,12 +11,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 using System.Xml;
+using Web.Utility.Helper;
+using Web.Utility.Xml;
 
-namespace web_scraper.Models.Utility
+namespace Web.Utility.Xml
 {
-    static class XmlUtilty
+    public static class Utility
     {
-        public enum paramType
+        public enum ParamType
         {
             Tag = 1,
             Attribute = 2
@@ -80,7 +82,7 @@ namespace web_scraper.Models.Utility
             return result;
         }
 
-        public static void SearchForParameter(XmlNode xml_node, string param, ref string result, paramType type, bool PartialMatch)
+        public static void SearchForParameter(XmlNode xml_node, string param, ref string result, ParamType type, bool PartialMatch)
         {
             int attr_count;
             string name;
@@ -95,7 +97,7 @@ namespace web_scraper.Models.Utility
 
                 switch (type)
                 {
-                    case paramType.Tag:
+                    case ParamType.Tag:
                         {
                             name = child_node.LocalName;
                             if (name == param)
@@ -107,7 +109,7 @@ namespace web_scraper.Models.Utility
                             break;
                         }
 
-                    case paramType.Attribute:
+                    case ParamType.Attribute:
                         {
                             if (!Information.IsNothing(child_node.Attributes))
                             {
@@ -117,7 +119,6 @@ namespace web_scraper.Models.Utility
                                 {
                                     if (child_node.Attributes.Count > 0)
                                     {
-                                        name = child_node.Attributes[attr_count].Name;
                                         value = child_node.Attributes[attr_count].Value;
 
                                         switch (PartialMatch)
@@ -160,7 +161,7 @@ namespace web_scraper.Models.Utility
                         )
         {
             string value = "";
-            string temp = "";
+            string temp;
 
             XmlNodeList xmlList;
 
@@ -190,6 +191,80 @@ namespace web_scraper.Models.Utility
             }
 
             return value;
+        }
+
+        public static XmlDocument DownloadXML(string URL)
+        {
+
+            string xml;
+            XmlDocument xmldoc = new XmlDocument();
+
+            xml = Browser.DownloadPage(URL);
+
+            try
+            {
+                xmldoc.LoadXml(xml);
+            }
+            catch
+            {
+                xmldoc = null;
+            }
+
+            return xmldoc;
+
+        }
+
+
+        public static XmlDocument CleanXML(XmlDocument source, bool filter = false)
+        {
+            string xml;
+            XmlDocument xmlDoc = new XmlDocument();
+
+            xml = ConvertXMLtoFeed(source.OuterXml, filter);
+
+            HtmlHelper.StripTag(ref xml, "dd");
+
+            xmlDoc.LoadXml(xml);
+
+            return xmlDoc;
+
+        }
+        
+        public static string ConvertXMLtoFeed(string xml, bool Filter = false
+                                )
+        {
+            string result;
+
+            XmlFiltering.Reader reader;
+            StringWriter outputFile;
+            XmlFiltering.Writer writer;
+
+
+            reader = new XmlFiltering.Reader(xml)
+            {
+                StripPrefix = false
+            };
+
+            outputFile = new StringWriter();
+
+            writer = new XmlFiltering.Writer(outputFile)
+            {
+                FilterOutput = Filter,
+                ConvertPrefixesToTags = true
+            };
+
+            reader.Read();
+            while (!reader.EOF)
+                writer.WriteNode(reader, true);
+
+            writer.WriteEndDocument();
+            writer.Flush();
+
+            result = outputFile.ToString();
+
+            outputFile.Close();
+
+            return result;
         }
     }
 }
