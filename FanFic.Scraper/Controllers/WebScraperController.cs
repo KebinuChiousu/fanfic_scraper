@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using web_scraper.Models.Sites.Base;
+using web_scraper.Models.Base;
 
 namespace web_scraper.Controllers
 {
