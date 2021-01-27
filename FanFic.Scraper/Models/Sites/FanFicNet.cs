@@ -4,22 +4,24 @@ using Microsoft.VisualBasic;
 using System.Xml;
 using HtmlAgilityPack;
 
-using web_scraper.Models.Sites.Base;
-using web_scraper.Models.Utility;
+using web_scraper.Models.Base;
+using Web;
+using Web.Utility.Xml;
+using Web.Utility.Helper;
 
 namespace web_scraper.Models.Sites
 {
-    class FanFicNet : Fanfic
+
+    class FanFicNet : FanFic
     {
-        public override string GrabTitle(string htmldoc
-                        )
+        public override string GrabTitle(string htmldoc)
         {
             string value;
             HtmlDocument doc;
             int ch = 0;
             string title;
 
-            doc = HtmlHelper.CleanHTML(ref htmldoc);
+            doc = Web.Utility.Helper.HtmlHelper.CleanHTML(ref htmldoc);
 
             value = doc.DocumentNode.SelectSingleNode("//title").InnerText;
             value = Strings.Replace(value, "| FanFiction", "");
@@ -30,7 +32,7 @@ namespace web_scraper.Models.Sites
             {
                 title = Strings.Trim(Strings.Mid(value, 1, ch - 1));
                 value = Strings.Replace(value, title, "");
-                ch = Functions.LastPos(value, ",");
+                ch = Util.LastPos(value, ",");
                 value = title + "<br><br>" + Strings.Mid(value, 1, ch - 1);
             }
 
@@ -50,7 +52,7 @@ namespace web_scraper.Models.Sites
             value = Strings.Replace(value, "| FanFiction", "");
 
             if (value != "")
-                value = Strings.Trim(Strings.Mid(value, Functions.LastPos(value, ",") + 1));
+                value = Strings.Trim(Strings.Mid(value, Util.LastPos(value, ",") + 1));
 
             doc = null/* TODO Change to default(_) if this is not a reference type */;
 
@@ -67,10 +69,10 @@ namespace web_scraper.Models.Sites
 
         Retry:
             
-            if (Functions.IsNothing(datasetRSS))
+            if (Util.IsNothing(datasetRSS))
                 base.GrabFeed(ref rss_link);
 
-            fic = GetStoryInfoByID(GetStoryID(StoryURL));
+            fic = GetStoryInfoById(GetStoryID(StoryURL));
 
             if (Strings.LCase(fic.Author) != Strings.LCase(author))
             {
@@ -227,7 +229,7 @@ namespace web_scraper.Models.Sites
                 xmldoc = null;
             else
             {
-                xmldoc = Xml.DownloadXML(rss);
+                xmldoc = Utility.DownloadXML(rss);
                 //xmldoc = Xml.CleanXML(xmldoc);
                 //xmldoc = Xml.CleanFeed(xmldoc);
             }

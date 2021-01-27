@@ -14,15 +14,17 @@ using Microsoft.VisualBasic;
 using System.Web;
 
 using web_scraper.Models.Sites;
-using web_scraper.Models.Sites.Base;
-using web_scraper.Models.Utility;
+using web_scraper.Models.Base;
+using Web;
+using Web.Utility.Helper;
+
 
 namespace web_scraper.Models
 {
     public class BusinessLogic
     {
 
-        private Fanfic cls = null;
+        private FanFic cls = null;
 
         public BusinessLogic()
         {
@@ -159,7 +161,7 @@ namespace web_scraper.Models
 
             txtResult = HttpUtility.HtmlDecode(txtResult);
 
-            sr = new StreamReader(Functions.StringToStream(txtResult));
+            sr = new StreamReader(Util.StringToStream(txtResult));
 
             FileMask = Strings.Replace(FileMask, "-", "");
 
@@ -204,7 +206,7 @@ namespace web_scraper.Models
 
             txtResult = HttpUtility.HtmlDecode(txtResult);
 
-            sr = new StreamReader(Functions.StringToStream(txtResult));
+            sr = new StreamReader(Util.StringToStream(txtResult));
 
             filemask = Strings.Replace(filemask, "-", "");
 
@@ -258,9 +260,9 @@ namespace web_scraper.Models
             return id;
         }
 
-        public Story GetStoryInfoByID(string StoryID)
+        public Story GetStoryInfoById(string StoryID)
         {
-            Story fic = cls.GetStoryInfoByID(StoryID);
+            Story fic = cls.GetStoryInfoById(StoryID);
             return fic;
         }
 
@@ -288,7 +290,7 @@ namespace web_scraper.Models
 
             ret = LoadSiteByHost(host);
 
-            if (Functions.IsNothing(cls))
+            if (Util.IsNothing(cls))
                 ret = false;
 
             return ret;
@@ -300,7 +302,7 @@ namespace web_scraper.Models
         {
             bool ret = false;
 
-            if (!Functions.IsNothing(cls))
+            if (!Util.IsNothing(cls))
             {
                 if (host == cls.HostName)
                     return true;
