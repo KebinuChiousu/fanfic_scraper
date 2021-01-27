@@ -106,7 +106,7 @@ namespace Web
         {
             bool ret;
 
-            string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Util)).CodeBase);
+            string path = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Util)).Location);
 
             try
             {
