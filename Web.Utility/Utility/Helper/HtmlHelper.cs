@@ -283,6 +283,49 @@ namespace Web.Utility.Helper
             doc = null/* TODO Change to default(_) if this is not a reference type */;
         }
 
+        public static void StripTag(ref string html, string attribute, string value, bool PartialMatch = false)
+        {
+            HtmlDocument doc = new HtmlDocument();
+            StringWriter outputFile;
+
+            outputFile = new StringWriter();
+
+            html = Util.CleanString(html);
+
+            doc.LoadHtml(html);
+
+            List<HtmlNode> nodesToRemove = null;
+
+            nodesToRemove = doc.DocumentNode.Descendants()
+                                    .Where(n => n.Attributes.Contains(attribute))
+                                    .ToList();
+
+            foreach (var node in nodesToRemove)
+            {
+                if (PartialMatch)
+                {
+                    if (node.Attributes[attribute].Value.Contains(value))
+                        node.Remove();
+                }
+                else
+                {
+                    if (node.Attributes[attribute].Value == value)
+                        node.Remove();
+                }                
+            }
+
+            doc.OptionOutputAsXml = true;
+
+            doc.Save(outputFile);
+
+            html = outputFile.ToString();
+
+            outputFile.Close();
+
+            doc = null/* TODO Change to default(_) if this is not a reference type */;
+        }
+
+
         public static void StripTag(ref string html, string tag, bool PartialMatch = false)
         {
             HtmlDocument doc = new HtmlDocument();
