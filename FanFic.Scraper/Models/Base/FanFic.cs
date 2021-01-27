@@ -6,7 +6,7 @@ using System.Data;
 using Web;
 using Web.Utility.Helper;
 
-namespace web_scraper.Models.Sites.Base
+namespace web_scraper.Models.Base
 {
 
     public abstract class FanFic

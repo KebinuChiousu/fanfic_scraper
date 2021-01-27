@@ -1,6 +1,6 @@
 using System;
 
-namespace web_scraper.Models.Sites.Base
+namespace web_scraper.Models.Base
 {
     public struct Story
     {
