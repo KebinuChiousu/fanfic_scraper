@@ -5,6 +5,7 @@ from collections import OrderedDict
 import concurrent.futures
 import requests
 from requests.auth import HTTPBasicAuth
+from requests.adapters import HTTPAdapter
 import urllib.parse
 
 
@@ -37,6 +38,9 @@ class BaseFanfic:
         if int(self.use_proxy) == 1:
 
             # https://github.com/TeamHG-Memex/aquarium
+
+            s = requests.Session()
+            s.mount('http://127.0.0.1:8050', HTTPAdapter(max_retries=5))
 
             proxy_url = 'http://127.0.0.1:8050/render.html?'
             proxy_url = proxy_url + 'proxy=tor&url={0}'.format(url)
@@ -141,6 +145,9 @@ class BaseChapter:
         new_url = url
 
         if int(self.use_proxy) == 1:
+
+            s = requests.Session()
+            s.mount('http://127.0.0.1:8050', HTTPAdapter(max_retries=5))
 
             new_url = urllib.parse.quote_plus(url)
 
