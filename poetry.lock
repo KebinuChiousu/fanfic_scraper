@@ -438,11 +438,11 @@ python-versions = "*"
 
 [[package]]
 name = "fissix"
-version = "19.2b1"
-description = "Backport of lib2to3, with enhancements"
+version = "21.11.13"
+description = "Monkeypatches to override default behavior of lib2to3."
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [package.dependencies]
 appdirs = "*"
@@ -1025,7 +1025,7 @@ testing = ["func-timeout", "jaraco.itertools"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "fb266f38d9aca9e857ce663aedaad58f514141e1fc7d1fd5ee11e88d7cbf6cb9"
+content-hash = "c40809d20fe0a08cebfef6f5c1c23b13d5ffd88df8a77683c13e0eade288cc20"
 
 [metadata.files]
 aiofiles = [
@@ -1176,7 +1176,8 @@ fake-useragent = [
     {file = "fake-useragent-0.1.11.tar.gz", hash = "sha256:c104998b750eb097eefc28ae28e92d66397598d2cf41a31aa45d5559ef1adf35"},
 ]
 fissix = [
-    {file = "fissix-19.2b1.tar.gz", hash = "sha256:0ca4e479e4ab08e22d0aadc58d99f359ed9dc808698657c2ce841a71590c42eb"},
+    {file = "fissix-21.11.13-py3-none-any.whl", hash = "sha256:55cd7541944bd15cfd8b0b2117fd63b84dcce5e3780ff7f77894059a87e5243a"},
+    {file = "fissix-21.11.13.tar.gz", hash = "sha256:496a51b86afb4c64cf15cfed38a0f3a371f300b298c962c881e33620f076a514"},
 ]
 flake8 = [
     {file = "flake8-3.8.3-py2.py3-none-any.whl", hash = "sha256:15e351d19611c887e482fb960eae4d44845013cc142d42896e9862f775d8cf5c"},

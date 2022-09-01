@@ -19,7 +19,7 @@ fake_useragent = "^0.1.11"
 lxml = "^4.4.2"
 
 [tool.poetry.dev-dependencies]
-fissix = "^19.2b1"
+fissix = "^21.11"
 dephell = {extras = ["full"], version = "^0.8.0"}
 pipx = "^0.14.0"
 flake8 = "^3.7.9"
