@@ -36,14 +36,14 @@ python-versions = "*"
 
 [[package]]
 name = "argcomplete"
-version = "1.12.0"
+version = "2.0.0"
 description = "Bash tab completion for argparse"
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [package.dependencies]
-importlib-metadata = {version = ">=0.23,<2", markers = "python_version == \"3.6\" or python_version == \"3.7\""}
+importlib-metadata = {version = ">=0.23,<5", markers = "python_version == \"3.7\" or python_version == \"3.6\""}
 
 [package.extras]
 test = ["coverage", "flake8", "pexpect", "wheel"]
@@ -163,7 +163,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "colorama"
-version = "0.4.3"
+version = "0.4.5"
 description = "Cross-platform colored terminal text."
 category = "dev"
 optional = false
@@ -384,14 +384,6 @@ python-versions = ">=3.6"
 packaging = "*"
 
 [[package]]
-name = "distro"
-version = "1.5.0"
-description = "Distro - an OS platform information API"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "docker"
 version = "4.3.1"
 description = "A Python library for the Docker Engine API."
@@ -521,18 +513,20 @@ idna = ">=2.0"
 
 [[package]]
 name = "importlib-metadata"
-version = "1.7.0"
+version = "4.8.3"
 description = "Read metadata from Python packages"
 category = "dev"
 optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+python-versions = ">=3.6"
 
 [package.dependencies]
+typing-extensions = {version = ">=3.6.4", markers = "python_version < \"3.8\""}
 zipp = ">=0.5"
 
 [package.extras]
-docs = ["rst.linker", "sphinx"]
-testing = ["importlib-resources (>=1.3)", "packaging", "pep517"]
+docs = ["jaraco.packaging (>=8.2)", "rst.linker (>=1.9)", "sphinx"]
+perf = ["ipython"]
+testing = ["flufl.flake8", "importlib-resources (>=1.3)", "packaging", "pep517", "pyfakefs", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-flake8", "pytest-mypy", "pytest-perf (>=0.9.2)"]
 
 [[package]]
 name = "isort"
@@ -677,15 +671,18 @@ ptyprocess = ">=0.5"
 
 [[package]]
 name = "pipx"
-version = "0.14.0.0"
+version = "1.0.0"
 description = "Install and Run Python Applications in Isolated Environments"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-argcomplete = ">=1.9.4,<2.0"
-userpath = "*"
+argcomplete = ">=1.9.4"
+colorama = {version = ">=0.4.4", markers = "sys_platform == \"win32\""}
+importlib-metadata = {version = ">=3.3.0", markers = "python_version < \"3.8\""}
+packaging = ">=20.0"
+userpath = ">=1.6.0"
 
 [[package]]
 name = "platformdirs"
@@ -936,7 +933,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "userpath"
-version = "1.4.1"
+version = "1.7.0"
 description = "Cross-platform tool for adding locations to the user PATH, no elevated privileges required!"
 category = "dev"
 optional = false
@@ -944,7 +941,6 @@ python-versions = "*"
 
 [package.dependencies]
 click = "*"
-distro = {version = "*", markers = "platform_system == \"Linux\""}
 
 [[package]]
 name = "volatile"
@@ -1025,7 +1021,7 @@ testing = ["func-timeout", "jaraco.itertools"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "fb266f38d9aca9e857ce663aedaad58f514141e1fc7d1fd5ee11e88d7cbf6cb9"
+content-hash = "d28d0bd3f190d9b2ed00e342d0243f560afe13cc9d284aa272e7026e108f111b"
 
 [metadata.files]
 aiofiles = [
@@ -1051,8 +1047,8 @@ appdirs = [
     {file = "appdirs-1.4.4.tar.gz", hash = "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41"},
 ]
 argcomplete = [
-    {file = "argcomplete-1.12.0-py2.py3-none-any.whl", hash = "sha256:91dc7f9c7f6281d5a0dce5e73d2e33283aaef083495c13974a7dd197a1cdc949"},
-    {file = "argcomplete-1.12.0.tar.gz", hash = "sha256:2fbe5ed09fd2c1d727d4199feca96569a5b50d44c71b16da9c742201f7cc295c"},
+    {file = "argcomplete-2.0.0-py2.py3-none-any.whl", hash = "sha256:cffa11ea77999bb0dd27bb25ff6dc142a6796142f68d45b1a26b11f58724561e"},
+    {file = "argcomplete-2.0.0.tar.gz", hash = "sha256:6372ad78c89d662035101418ae253668445b391755cfe94ea52f1b9d22425b20"},
 ]
 astroid = [
     {file = "astroid-2.9.0-py3-none-any.whl", hash = "sha256:776ca0b748b4ad69c00bfe0fff38fa2d21c338e12c84aa9715ee0d473c422778"},
@@ -1094,8 +1090,8 @@ click = [
     {file = "click-7.1.2.tar.gz", hash = "sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a"},
 ]
 colorama = [
-    {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
-    {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
+    {file = "colorama-0.4.5-py2.py3-none-any.whl", hash = "sha256:854bf444933e37f5824ae7bfc1e98d5bce2ebe4160d46b5edf346a89358e99da"},
+    {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
 ]
 dataclasses = [
     {file = "dataclasses-0.6-py3-none-any.whl", hash = "sha256:454a69d788c7fda44efd71e259be79577822f5e3f53f029a22d08004e951dc9f"},
@@ -1157,10 +1153,6 @@ dephell-versioning = [
     {file = "dephell_versioning-0.1.2-py3-none-any.whl", hash = "sha256:28f611bd3ec1644e3d6972f901b9aa67a1fe2ed3fe57566f82afd9c43f5a335a"},
     {file = "dephell_versioning-0.1.2.tar.gz", hash = "sha256:9ba7636704af7bd64af5a64ab8efb482c8b0bf4868699722f5e2647763edf8e5"},
 ]
-distro = [
-    {file = "distro-1.5.0-py2.py3-none-any.whl", hash = "sha256:df74eed763e18d10d0da624258524ae80486432cd17392d9c3d96f5e83cd2799"},
-    {file = "distro-1.5.0.tar.gz", hash = "sha256:0e58756ae38fbd8fc3020d54badb8eae17c5b9dcbed388b17bb55b8a5928df92"},
-]
 docker = [
     {file = "docker-4.3.1-py2.py3-none-any.whl", hash = "sha256:13966471e8bc23b36bfb3a6fb4ab75043a5ef1dac86516274777576bed3b9828"},
     {file = "docker-4.3.1.tar.gz", hash = "sha256:bad94b8dd001a8a4af19ce4becc17f41b09f228173ffe6a4e0355389eef142f2"},
@@ -1202,8 +1194,8 @@ idna-ssl = [
     {file = "idna-ssl-1.1.0.tar.gz", hash = "sha256:a933e3bb13da54383f9e8f35dc4f9cb9eb9b3b78c6b36f311254d6d0d92c6c7c"},
 ]
 importlib-metadata = [
-    {file = "importlib_metadata-1.7.0-py2.py3-none-any.whl", hash = "sha256:dc15b2969b4ce36305c51eebe62d418ac7791e9a157911d58bfb1f9ccd8e2070"},
-    {file = "importlib_metadata-1.7.0.tar.gz", hash = "sha256:90bb658cdbbf6d1735b6341ce708fc7024a3e14e99ffdc5783edea9f9b077f83"},
+    {file = "importlib_metadata-4.8.3-py3-none-any.whl", hash = "sha256:65a9576a5b2d58ca44d133c42a241905cc45e34d2c06fd5ba2bafa221e5d7b5e"},
+    {file = "importlib_metadata-4.8.3.tar.gz", hash = "sha256:766abffff765960fcc18003801f7044eb6755ffae4521c8e8ce8e83b9c9b0668"},
 ]
 isort = [
     {file = "isort-5.5.3-py3-none-any.whl", hash = "sha256:c16eaa7432a1c004c585d79b12ad080c6c421dd18fe27982ca11f95e6898e432"},
@@ -1372,8 +1364,8 @@ pexpect = [
     {file = "pexpect-4.8.0.tar.gz", hash = "sha256:fc65a43959d153d0114afe13997d439c22823a27cefceb5ff35c2178c6784c0c"},
 ]
 pipx = [
-    {file = "pipx-0.14.0.0-py3-none-any.whl", hash = "sha256:2c4548e19b35117fb592371ddf520ae1349db33414f4ceb20f37d54d0465ac42"},
-    {file = "pipx-0.14.0.0.tar.gz", hash = "sha256:33c6e2f48c8b5b9e79cb5d61d3887562ecdbc2bf2e63818ca419a88d94359bc8"},
+    {file = "pipx-1.0.0-py3-none-any.whl", hash = "sha256:b106042da7b0b225e3b2f681c7b4703aa964360adcf2deea591ad6e33882d2bc"},
+    {file = "pipx-1.0.0.tar.gz", hash = "sha256:91e2bca934a5e82785d7b4ae44b95553611311691bd87da31915d08a0ad2df1c"},
 ]
 platformdirs = [
     {file = "platformdirs-2.4.0-py3-none-any.whl", hash = "sha256:8868bbe3c3c80d42f20156f22e7131d2fb321f5bc86a2a345375c6481a67021d"},
@@ -1543,8 +1535,8 @@ urllib3 = [
     {file = "urllib3-1.25.10.tar.gz", hash = "sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a"},
 ]
 userpath = [
-    {file = "userpath-1.4.1-py2.py3-none-any.whl", hash = "sha256:801bbfed9c9de8bf33e615a2017031280bd5c85436d27a061801c594bbe99f63"},
-    {file = "userpath-1.4.1.tar.gz", hash = "sha256:211544ea02d8715fdc06f429cf66cd18c9877a31751d966d6de11b24faaed255"},
+    {file = "userpath-1.7.0-py2.py3-none-any.whl", hash = "sha256:4c3d3b611706a8b0c6309510c8b1a774c54eb491cafe7df58dc5571c0bee30e2"},
+    {file = "userpath-1.7.0.tar.gz", hash = "sha256:dcd66c5fa9b1a3c12362f309bbb5bc7992bac8af86d17b4e6b1a4b166a11c43f"},
 ]
 volatile = [
     {file = "volatile-2.1.0.tar.gz", hash = "sha256:9be36ad508e3354e016c115de0397dc2203b9800a73d9d177ca9d37a8d3a31d3"},

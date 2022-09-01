@@ -21,7 +21,7 @@ lxml = "^4.4.2"
 [tool.poetry.dev-dependencies]
 fissix = "^19.2b1"
 dephell = {extras = ["full"], version = "^0.8.0"}
-pipx = "^0.14.0"
+pipx = "^1.0.0"
 flake8 = "^3.7.9"
 pylint = "^2.12.0"
 
