@@ -12,7 +12,6 @@ This projects uses the following dependencies
 
 make
 [poetry](<https://poetry.eustace.io/>)
-[dephell](<https://dephell.readthedocs.io/en/latest/>)
 
 #### release
 
