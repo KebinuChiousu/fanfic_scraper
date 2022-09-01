@@ -146,14 +146,10 @@ class BaseChapter:
 
         if int(self.use_proxy) == 1:
 
-<<<<<<< HEAD
-            new_url = urllib.parse.quote_plus(url)
-=======
-        s = requests.Session()
-        s.mount('http://127.0.0.1:8050', HTTPAdapter(max_retries=5))
+            s = requests.Session()
+            s.mount('http://127.0.0.1:8050', HTTPAdapter(max_retries=5))
 
-        url = urllib.parse.quote_plus(url)
->>>>>>> 5473778 (Add retry)
+            new_url = urllib.parse.quote_plus(url)
 
             # https://github.com/TeamHG-Memex/aquarium
 
