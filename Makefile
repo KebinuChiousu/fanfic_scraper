@@ -1,5 +1,5 @@
-PROJECT_NAME := $(shell python3 setup.py --name)
-PROJECT_VERSION := $(shell python3 setup.py --version)
+PROJECT_NAME := $(shell python3 info.py --name)
+PROJECT_VERSION := $(shell python3 info.py --version)
 
 SHELL := /bin/bash
 BOLD := \033[1m
@@ -8,6 +8,11 @@ RESET := \033[0m
 
 .PHONY: all
 all: uninstall install clean
+
+.PHONY: info
+info:
+	@echo -e "$(BOLD)Project: $(PROJECT_NAME)"
+	@echo -e "Version: $(PROJECT_VERSION)$(RESET)"
 
 .PHONY: develop
 develop:
