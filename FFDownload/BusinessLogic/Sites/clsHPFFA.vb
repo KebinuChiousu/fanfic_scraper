@@ -198,6 +198,8 @@ Public Class HPFFA
 
         End If
 
+        Return ret
+
     End Function
 
     Public Overrides Function GrabSeries(htmlDoc As String) As String
