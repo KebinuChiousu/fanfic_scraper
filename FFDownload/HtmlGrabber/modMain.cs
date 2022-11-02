@@ -5,7 +5,7 @@ using System.Windows.Forms;
 namespace HtmlGrabber
 {
 
-    static class modMain
+    static class Program
     {
 
         public static clsFanfic cls;

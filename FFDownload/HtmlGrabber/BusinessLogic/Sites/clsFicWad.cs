@@ -26,7 +26,7 @@ namespace HtmlGrabber
 
             string check = "<li class=\"blocked\">";
 
-            html = modMain.Browser.DownloadPage(url, cookie_name);
+            html = Program.Browser.DownloadPage(url, cookie_name);
             doc = modHTML.CleanHTML(ref html);
             html = doc.DocumentNode.InnerHtml;
 
@@ -88,9 +88,9 @@ namespace HtmlGrabber
 
                     fields = new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("username", Username), new KeyValuePair<string, string>("password", Password), new KeyValuePair<string, string>("keeploggedin", "on"), new KeyValuePair<string, string>("submit", "Log in") };
 
-                    modMain.Browser.LogIn(target, "login", fields, cookie_name);
+                    Program.Browser.LogIn(target, "login", fields, cookie_name);
 
-                    html = modMain.Browser.DownloadPage(url, cookie_name);
+                    html = Program.Browser.DownloadPage(url, cookie_name);
                     doc = modHTML.CleanHTML(ref html);
                     html = doc.DocumentNode.InnerHtml;
 

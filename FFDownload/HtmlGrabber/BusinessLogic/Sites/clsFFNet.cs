@@ -228,7 +228,7 @@ namespace HtmlGrabber
             if (Strings.InStr(rss, "atom") == 0)
             {
 
-                txtresult = modMain.Browser.DownloadPage(rss);
+                txtresult = Program.Browser.DownloadPage(rss);
 
                 try
                 {

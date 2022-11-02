@@ -30,7 +30,7 @@ namespace HtmlGrabber
             Uri u;
             List<KeyValuePair<string, string>> fields;
 
-            html = modMain.Browser.DownloadPage(url, cookie_name);
+            html = Program.Browser.DownloadPage(url, cookie_name);
 
             title = modHTML.GetTitle(html);
 
@@ -48,9 +48,9 @@ namespace HtmlGrabber
 
                     target = "http://www.adult-fanfiction.org/";
 
-                    modMain.Browser.FollowLink(target, "I am 18 years of age or older.", cookie_name);
+                    Program.Browser.FollowLink(target, "I am 18 years of age or older.", cookie_name);
 
-                    html = modMain.Browser.DownloadPage(url, cookie_name);
+                    html = Program.Browser.DownloadPage(url, cookie_name);
 
                 }
 
@@ -70,9 +70,9 @@ namespace HtmlGrabber
                     fields.Add(new KeyValuePair<string, string>("cmbname", FullName));
                     fields.Add(new KeyValuePair<string, string>("submit", "Click here to submit"));
 
-                    modMain.Browser.LogIn(target, "form", fields, cookie_name);
+                    Program.Browser.LogIn(target, "form", fields, cookie_name);
 
-                    html = modMain.Browser.DownloadPage(url, cookie_name);
+                    html = Program.Browser.DownloadPage(url, cookie_name);
 
                 }
 

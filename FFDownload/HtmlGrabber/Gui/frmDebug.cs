@@ -974,7 +974,7 @@ namespace HtmlGrabber
                     link = @params[0];
                 }
 
-                ret = modMain.BL.CheckUrl(ref link);
+                ret = Program.BL.CheckUrl(ref link);
 
             }
 
@@ -996,9 +996,9 @@ namespace HtmlGrabber
             int current;
             int start;
 
-            check = modMain.BL.GetChapters(link);
+            check = Program.BL.GetChapters(link);
 
-            fic = modMain.BL.FanFic;
+            fic = Program.BL.FanFic;
 
 
             start = Conversions.ToInteger(Operators.AddObject(dt.Rows[(int)pos]["Count"], 1));
@@ -1008,7 +1008,7 @@ namespace HtmlGrabber
             if (check)
             {
 
-                string argResult = modMain.BL.Result;
+                string argResult = Program.BL.Result;
                 FormManagement.frmMain.UpdateUI(ref fic, ref argResult, start);
 
                 Application.DoEvents();
@@ -1028,9 +1028,9 @@ namespace HtmlGrabber
 
                     dt.Rows[(int)pos]["Count"] = Conversions.ToInteger(fic.ChapterCount);
 
-                    modMain.BL.ProcessChapters(link, start, Conversions.ToInteger(fic.ChapterCount), folder, cmbChooseDB.Text);
+                    Program.BL.ProcessChapters(link, start, Conversions.ToInteger(fic.ChapterCount), folder, cmbChooseDB.Text);
 
-                    fic = modMain.BL.FanFic;
+                    fic = Program.BL.FanFic;
 
                     dt.Rows[(int)pos]["Update_Date"] = Conversions.ToDate(fic.UpdateDate);
                 }
@@ -1048,7 +1048,7 @@ namespace HtmlGrabber
             else
             {
 
-                modMain.BL.ProcessError(link, start, folder, cmbChooseDB.Text);
+                Program.BL.ProcessError(link, start, folder, cmbChooseDB.Text);
 
             }
 
@@ -1270,8 +1270,8 @@ namespace HtmlGrabber
                     var dr = dt.NewRow();
 
                     link = myCaller.txtUrl.Text;
-                    id = modMain.BL.GetStoryID(link);
-                    fic = modMain.BL.GetStoryInfoByID(id);
+                    id = Program.BL.GetStoryID(link);
+                    fic = Program.BL.GetStoryInfoByID(id);
 
                     dr["Title"] = fic.Title;
                     dr["Author"] = fic.Author;
@@ -1588,7 +1588,7 @@ namespace HtmlGrabber
                 }
                 else
                 {
-                    link = modMain.BL.GetStoryURL(StoryID);
+                    link = Program.BL.GetStoryURL(StoryID);
                 }
 
             }
@@ -1654,8 +1654,8 @@ namespace HtmlGrabber
             dt = (DataTable)grdDB.DataSource;
 
             link = myCaller.txtUrl.Text;
-            id = modMain.BL.GetStoryID(link);
-            fic = modMain.BL.GetStoryInfoByID(id);
+            id = Program.BL.GetStoryID(link);
+            fic = Program.BL.GetStoryInfoByID(id);
 
             dt.Rows[grdDB.CurrentRow.Index]["Title"] = fic.Title;
 

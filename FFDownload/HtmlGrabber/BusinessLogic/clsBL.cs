@@ -28,10 +28,10 @@ namespace HtmlGrabber
                 return false;
             }
 
-            htmldoc = modMain.cls.GrabData(link);
+            htmldoc = Program.cls.GrabData(link);
             txtResult = htmldoc;
 
-            if (Strings.InStr(Strings.LCase(txtResult), modMain.cls.ErrorMessage) == 0)
+            if (Strings.InStr(Strings.LCase(txtResult), Program.cls.ErrorMessage) == 0)
             {
 
                 if (string.IsNullOrEmpty(txtResult))
@@ -40,30 +40,30 @@ namespace HtmlGrabber
                 }
 
 
-                Story.Chapters = modMain.cls.GetChapters(htmldoc);
+                Story.Chapters = Program.cls.GetChapters(htmldoc);
 
 
 
-                htmldoc = modMain.cls.ProcessChapters(link, 0);
+                htmldoc = Program.cls.ProcessChapters(link, 0);
 
 
 
                 Story.StoryURL = link;
 
-                Story.ID = modMain.cls.GetStoryID(link);
-                Story.Title = modMain.cls.GrabTitle(htmldoc);
-                Story.Author = modMain.cls.GrabAuthor(htmldoc);
-                Story.Category = modMain.cls.GrabSeries(htmldoc);
+                Story.ID = Program.cls.GetStoryID(link);
+                Story.Title = Program.cls.GrabTitle(htmldoc);
+                Story.Author = Program.cls.GrabAuthor(htmldoc);
+                Story.Category = Program.cls.GrabSeries(htmldoc);
 
-                Story.PublishDate = modMain.cls.GrabDate(htmldoc, "Published: ");
-                Story.UpdateDate = modMain.cls.GrabDate(htmldoc, "Updated: ");
+                Story.PublishDate = Program.cls.GrabDate(htmldoc, "Published: ");
+                Story.UpdateDate = Program.cls.GrabDate(htmldoc, "Updated: ");
 
                 if (string.IsNullOrEmpty(Story.UpdateDate))
                     Story.UpdateDate = Story.PublishDate;
 
                 Story.ChapterCount = (Information.UBound(Story.Chapters) + 1).ToString();
 
-                txtResult = modMain.cls.GrabBody(htmldoc);
+                txtResult = Program.cls.GrabBody(htmldoc);
 
                 return true;
             }
@@ -99,7 +99,7 @@ namespace HtmlGrabber
 
                 FormManagement.frmMain.UpdateProgess(msg);
 
-                htmldoc = modMain.cls.ProcessChapters(link, idx - 1);
+                htmldoc = Program.cls.ProcessChapters(link, idx - 1);
 
 
 
@@ -143,16 +143,16 @@ namespace HtmlGrabber
 
             {
 
-                Story.Title = modMain.cls.GrabTitle(htmlDoc);
-                Story.Author = modMain.cls.GrabAuthor(htmlDoc);
-                Story.Category = modMain.cls.GrabSeries(htmlDoc);
-                Story.PublishDate = modMain.cls.GrabDate(htmlDoc, "Published: ");
-                Story.UpdateDate = modMain.cls.GrabDate(htmlDoc, "Updated: ");
+                Story.Title = Program.cls.GrabTitle(htmlDoc);
+                Story.Author = Program.cls.GrabAuthor(htmlDoc);
+                Story.Category = Program.cls.GrabSeries(htmlDoc);
+                Story.PublishDate = Program.cls.GrabDate(htmlDoc, "Published: ");
+                Story.UpdateDate = Program.cls.GrabDate(htmlDoc, "Updated: ");
 
                 if (string.IsNullOrEmpty(Story.UpdateDate))
                     Story.UpdateDate = Story.PublishDate;
 
-                data = modMain.cls.GrabBody(htmlDoc);
+                data = Program.cls.GrabBody(htmlDoc);
 
                 Body = "<p></p>" + data;
 
@@ -165,7 +165,7 @@ namespace HtmlGrabber
                     txtResult += "<p>" + Story.Category + "</p>";
                 }
 
-                txtResult += modMain.cls.WriteDate(Story.PublishDate, Story.UpdateDate, chapter, ChapterCount);
+                txtResult += Program.cls.WriteDate(Story.PublishDate, Story.UpdateDate, chapter, ChapterCount);
 
 
 
@@ -281,7 +281,7 @@ namespace HtmlGrabber
 
             clsFanfic.Story fic;
 
-            fic = modMain.cls.GrabStoryInfo(idx);
+            fic = Program.cls.GrabStoryInfo(idx);
 
             return fic;
 
@@ -292,7 +292,7 @@ namespace HtmlGrabber
 
             DataSet ds;
 
-            ds = modMain.cls.GrabFeed(ref link);
+            ds = Program.cls.GrabFeed(ref link);
 
             return ds;
 
@@ -303,7 +303,7 @@ namespace HtmlGrabber
 
             string id;
 
-            id = modMain.cls.GetStoryID(link);
+            id = Program.cls.GetStoryID(link);
 
             return id;
 
@@ -314,7 +314,7 @@ namespace HtmlGrabber
 
             clsFanfic.Story fic;
 
-            fic = modMain.cls.GetStoryInfoByID(StoryID);
+            fic = Program.cls.GetStoryInfoByID(StoryID);
 
             return fic;
 
@@ -325,7 +325,7 @@ namespace HtmlGrabber
 
             string link;
 
-            link = modMain.cls.GetStoryURL(id);
+            link = Program.cls.GetStoryURL(id);
 
             return link;
 
@@ -353,7 +353,7 @@ namespace HtmlGrabber
 
             ret = LoadSiteByHost(host);
 
-            if (modMain.cls == null)
+            if (Program.cls == null)
             {
                 ret = false;
             }
@@ -371,15 +371,15 @@ namespace HtmlGrabber
 
             bool ret = false;
 
-            if (!(modMain.cls == null))
+            if (!(Program.cls == null))
             {
-                if ((host ?? "") == (modMain.cls.HostName ?? ""))
+                if ((host ?? "") == (Program.cls.HostName ?? ""))
                 {
                     return true;
                 }
                 else
                 {
-                    modMain.cls = null;
+                    Program.cls = null;
                 }
             }
 
@@ -387,38 +387,38 @@ namespace HtmlGrabber
             {
                 case "fanfiction.net":
                     {
-                        modMain.cls = new FFNet();
+                        Program.cls = new FFNet();
                         break;
                     }
                 case "adult-fanfiction.org":
                     {
-                        modMain.cls = new AFF();
+                        Program.cls = new AFF();
                         break;
                     }
                 case "ficwad.com":
                     {
-                        modMain.cls = new FicWad();
+                        Program.cls = new FicWad();
                         break;
                     }
                 case "mediaminer.org":
                     {
-                        modMain.cls = new MM();
+                        Program.cls = new MM();
                         break;
                     }
                 case "hpfanficarchive.com":
                     {
-                        modMain.cls = new HPFFA();
+                        Program.cls = new HPFFA();
                         break;
                     }
 
                 default:
                     {
-                        modMain.cls = null;
+                        Program.cls = null;
                         break;
                     }
             }
 
-            if (!(modMain.cls == null))
+            if (!(Program.cls == null))
             {
                 ret = true;
             }
@@ -433,44 +433,44 @@ namespace HtmlGrabber
             bool ret = true;
             string host = "";
 
-            modMain.cls = null;
+            Program.cls = null;
 
             switch (clsname ?? "")
             {
                 case "FFNet":
                     {
-                        modMain.cls = new FFNet();
+                        Program.cls = new FFNet();
                         break;
                     }
                 case "AFF":
                     {
-                        modMain.cls = new AFF();
+                        Program.cls = new AFF();
                         break;
                     }
                 case "FicWad":
                     {
-                        modMain.cls = new FicWad();
+                        Program.cls = new FicWad();
                         break;
                     }
                 case "MediaMiner":
                     {
-                        modMain.cls = new MM();
+                        Program.cls = new MM();
                         break;
                     }
                 case "HPFFA":
                     {
-                        modMain.cls = new HPFFA();
+                        Program.cls = new HPFFA();
                         break;
                     }
 
                 default:
                     {
-                        modMain.cls = null;
+                        Program.cls = null;
                         break;
                     }
             }
 
-            if (!(modMain.cls == null))
+            if (!(Program.cls == null))
             {
                 ret = true;
             }
@@ -507,9 +507,9 @@ namespace HtmlGrabber
         {
             get
             {
-                if (!(modMain.cls == null))
+                if (!(Program.cls == null))
                 {
-                    return modMain.cls.HostName;
+                    return Program.cls.HostName;
                 }
                 else
                 {
@@ -522,9 +522,9 @@ namespace HtmlGrabber
         {
             get
             {
-                if (!(modMain.cls == null))
+                if (!(Program.cls == null))
                 {
-                    return modMain.cls.Name;
+                    return Program.cls.Name;
                 }
                 else
                 {
@@ -537,9 +537,9 @@ namespace HtmlGrabber
         {
             get
             {
-                if (!(modMain.cls == null))
+                if (!(Program.cls == null))
                 {
-                    return modMain.cls.ErrorMessage;
+                    return Program.cls.ErrorMessage;
                 }
                 else
                 {

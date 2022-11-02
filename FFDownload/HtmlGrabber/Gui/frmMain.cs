@@ -1038,7 +1038,7 @@ namespace HtmlGrabber
 
             clsFanfic.Story fic;
 
-            fic = modMain.BL.GrabStoryInfo(idx);
+            fic = Program.BL.GrabStoryInfo(idx);
 
             // Story Name
             lblTitle.Text = fic.Title;
@@ -1081,13 +1081,13 @@ namespace HtmlGrabber
             {
                 case "Get Chapters":
                     {
-                        ret = modMain.BL.GetChapters(txtUrl.Text);
+                        ret = Program.BL.GetChapters(txtUrl.Text);
                         if (!ret)
                             goto oops;
 
-                        fic = modMain.BL.FanFic;
+                        fic = Program.BL.FanFic;
 
-                        string argResult = modMain.BL.Result;
+                        string argResult = Program.BL.Result;
                         UpdateUI(ref fic, ref argResult);
                         break;
                     }
@@ -1095,7 +1095,7 @@ namespace HtmlGrabber
                 case "Process Chapters":
                     {
 
-                        modMain.BL.ProcessChapters(txtUrl.Text, Conversions.ToInteger(txtStart.Text), Conversions.ToInteger(lblChapterCount.Text), txtFileMask.Text);
+                        Program.BL.ProcessChapters(txtUrl.Text, Conversions.ToInteger(txtStart.Text), Conversions.ToInteger(lblChapterCount.Text), txtFileMask.Text);
 
 
 
@@ -1112,7 +1112,7 @@ namespace HtmlGrabber
         oops:
             ;
 
-            txtSource.Text = modMain.BL.Result;
+            txtSource.Text = Program.BL.Result;
             Interaction.MsgBox("Valid URL Must be Entered", MsgBoxStyle.Information);
 
         }
@@ -1143,7 +1143,7 @@ namespace HtmlGrabber
             if (string.IsNullOrEmpty(link))
                 goto abort;
 
-            dsRSS = modMain.BL.GrabFeed(link);
+            dsRSS = Program.BL.GrabFeed(link);
 
             if (dsRSS == null)
                 goto abort;
@@ -1163,7 +1163,7 @@ namespace HtmlGrabber
             for (idx = 0; idx <= loopTo; idx++)
             {
 
-                fic = modMain.BL.GrabStoryInfo(idx);
+                fic = Program.BL.GrabStoryInfo(idx);
 
                 // Story Title
                 cmbStory.Items.Add(fic.Title);
@@ -1195,11 +1195,11 @@ namespace HtmlGrabber
 
             bool ret;
 
-            ret = modMain.BL.CheckUrl(ref link);
+            ret = Program.BL.CheckUrl(ref link);
 
             if (ret)
             {
-                LoadSiteByName(modMain.BL.Name, true);
+                LoadSiteByName(Program.BL.Name, true);
             }
             else
             {
@@ -1216,11 +1216,11 @@ namespace HtmlGrabber
             bool ret = false;
             string host = "";
 
-            ret = modMain.BL.LoadSiteByName(clsname);
+            ret = Program.BL.LoadSiteByName(clsname);
 
             if (ret)
             {
-                Text = modMain.cls.HostName + " - Story Downloader";
+                Text = Program.cls.HostName + " - Story Downloader";
                 lblAtom.Text = "Valid Author URL";
             }
             else

@@ -115,7 +115,7 @@ namespace HtmlGrabber
 
             StoryURL = url;
 
-            html = modMain.Browser.DownloadPage(url);
+            html = Program.Browser.DownloadPage(url);
 
             modHTML.CleanHTML(ref html);
 

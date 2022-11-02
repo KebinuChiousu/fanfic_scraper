@@ -15,7 +15,7 @@ namespace HtmlGrabber
             string xml;
             var xmldoc = new XmlDocument();
 
-            xml = modMain.Browser.DownloadPage(URL);
+            xml = Program.Browser.DownloadPage(URL);
 
             try
             {
