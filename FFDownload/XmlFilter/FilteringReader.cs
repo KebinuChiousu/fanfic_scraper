@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace AspxToCode.Parser.Xml
+namespace XmlFilter
 {
   public class FilteringReader : WrappingReader
   {

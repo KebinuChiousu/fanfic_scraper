@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Xml;
 
-namespace AspxToCode.Parser.Xml
+namespace XmlFilter
 {
   public class WrappingWriter : XmlWriter
   {

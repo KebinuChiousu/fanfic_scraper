@@ -3,7 +3,7 @@ using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 
-namespace AspxToCode.Parser.Xml
+namespace XmlFilter
 {
     public class FilteringWriter : WrappingWriter
     {

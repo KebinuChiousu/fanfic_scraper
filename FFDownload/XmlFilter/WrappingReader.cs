@@ -1,7 +1,7 @@
 ﻿using System.Xml;
 using System.Xml.Schema;
 
-namespace AspxToCode.Parser.Xml
+namespace XmlFilter
 {
   public class WrappingReader : XmlReader, IXmlLineInfo
   {
