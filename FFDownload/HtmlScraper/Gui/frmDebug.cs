@@ -784,7 +784,8 @@ namespace HtmlScraper.Gui
 
             ifr = null;
 
-            //global::HtmlGrabber.My.MySettingsProperty.Settings.Reload();
+            // TODO: Handle Setting Reload
+            // global::HtmlGrabber.My.MySettingsProperty.Settings.Reload();
 
         }
 

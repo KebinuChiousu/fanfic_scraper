@@ -87,9 +87,10 @@ namespace HtmlScraper.Utility
             bool runAndWaitRet = default;
 
             Process runProcess;
-            string path;
+            string path = "";
 
-            path = HtmlScraper.My.MyProject.Application.Info.DirectoryPath;
+            // TODO: Update logic to resolve current path
+            // path = HtmlScraper.My.MyProject.Application.Info.DirectoryPath;
 
             try
             {

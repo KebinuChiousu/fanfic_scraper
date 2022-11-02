@@ -23,10 +23,11 @@ namespace HtmlScraper
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
 
-            Browser = new clsWeb();
+            // TODO: Update Selenium to hide browser window
+            // Browser = new clsWeb();
             InitIniFile();
             Application.Run(new Gui.HtmlGrabber());
-            Browser.Dispose();
+            // Browser.Dispose();
         }
 
         public static void InitIniFile()

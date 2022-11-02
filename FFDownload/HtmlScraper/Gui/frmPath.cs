@@ -360,7 +360,8 @@ namespace HtmlScraper.Gui
             // Legacy Ini Code
             UpdateIniFile();
 
-            global::HtmlGrabber.My.MySettingsProperty.Settings.Reload();
+            // TODO: Handle setting reload
+            // global::HtmlGrabber.My.MySettingsProperty.Settings.Reload();
 
             FormManagement.frmDebug.ReloadDAL("Fanfic", txtPath.Text);
 

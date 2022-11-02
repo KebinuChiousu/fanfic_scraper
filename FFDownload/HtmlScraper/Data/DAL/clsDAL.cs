@@ -100,6 +100,7 @@ namespace HtmlScraper.Data.DAL
         private string GetConfigName(string Key)
         {
 
+            /*
             string ns = HtmlGrabber.My.MyProject.Application.GetType().Namespace;
             string settings = "MySettings";
             string name = "";
@@ -111,6 +112,11 @@ namespace HtmlScraper.Data.DAL
             name += Key;
 
             return name;
+            */
+
+            // TODO: Fix Config Setting Retrieval
+
+            return string.Empty;
 
         }
 
